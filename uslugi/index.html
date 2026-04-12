@@ -103,6 +103,7 @@ footer{padding:64px 0 40px;border-top:1px solid var(--border);margin-top:40px;te
 <div class="carousel-container" id="carousel">
 <div class="carousel-track" id="carousel-track">
 <div class="slide has-preview"><div class="slide-bg-shape"></div><div class="slide-bg-shape-2"></div><div class="slide-content"><h2 class="slide-title">Newsletter AI</h2><p class="slide-desc">Codzienny brief z 15 najważniejszymi historiami z polskich mediów. W pełni zautomatyzowany system: pobiera newsy, wybiera najlepsze, streszcza i wysyła — bez udziału człowieka.</p><a href="/uslugi/newsletter" class="slide-link">Zobacz pełne case study &rarr;</a></div><div class="slide-preview"><img src="newsletter-preview.png" alt="Przykład newslettera"></div></div>
+<div class="slide has-preview"><div class="slide-bg-shape"></div><div class="slide-bg-shape-2"></div><div class="slide-content"><h2 class="slide-title">Inteligentna Skrzynka</h2><p class="slide-desc">AI klasyfikuje przychodzące maile, przypisuje priorytet i kieruje do odpowiednich folderów. Reklamacje dostają natychmiastową odpowiedź, zgłoszenia trafiają do uporządkowanego rejestru. Zespół oszczędza godziny dziennie na sortowaniu.</p><a href="#" data-contact="1" class="slide-link">Zapytaj o szczegóły &rarr;</a></div><div class="slide-preview"><img src="skrzynka-preview.png" alt="Przykład klasyfikacji w Google Sheets"></div></div>
 <div class="slide"><div class="slide-bg-shape"></div><div class="slide-bg-shape-2"></div><div class="slide-content"><h2 class="slide-title">Buduję publicznie</h2><p class="slide-desc">Nowe projekty — w przygotowaniu. SiroFlow AI działa w pełnej przejrzystości: każdy projekt kończy się dokumentacją, a nowe case studies pojawiają się na bieżąco. Wracaj za kilka tygodni, żeby zobaczyć kolejne realizacje.</p><a href="#use-cases" class="slide-link">Zobacz co planujemy &rarr;</a></div></div>
 <div class="slide"><div class="slide-bg-shape"></div><div class="slide-bg-shape-2"></div><div class="slide-content"><h2 class="slide-title">Twój projekt może być następny</h2><p class="slide-desc">Masz proces w firmie który zajmuje Ci godziny dziennie? Powtarzalne zadanie które można zautomatyzować? Porozmawiajmy. Pierwsza konsultacja jest bezpłatna — bez zobowiązań, konkretne rekomendacje.</p><a href="#" data-contact="1" class="slide-link">Napisz do mnie &rarr;</a></div></div>
 </div>
@@ -113,6 +114,7 @@ footer{padding:64px 0 40px;border-top:1px solid var(--border);margin-top:40px;te
 <button class="carousel-dot active" data-slide="0" aria-label="Slajd 1"></button>
 <button class="carousel-dot" data-slide="1" aria-label="Slajd 2"></button>
 <button class="carousel-dot" data-slide="2" aria-label="Slajd 3"></button>
+<button class="carousel-dot" data-slide="3" aria-label="Slajd 4"></button>
 </div>
 <button class="carousel-arrow" id="next-btn" aria-label="Następny">&rarr;</button>
 </div>
@@ -181,7 +183,7 @@ var container=document.getElementById('carousel');
 var dots=document.querySelectorAll('.carousel-dot');
 var prevBtn=document.getElementById('prev-btn');
 var nextBtn=document.getElementById('next-btn');
-var totalSlides=3,currentSlide=0,autoplayInterval=null,autoplayDelay=5000;
+var totalSlides=4,currentSlide=0,autoplayInterval=null,autoplayDelay=5000;
 function goToSlide(index){
   currentSlide=(index+totalSlides)%totalSlides;
   track.style.transform='translateX(-'+(currentSlide*100)+'%)';
