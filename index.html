@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SiroFlow AI — Automatyzacje AI dla polskich firm</title>
+<meta name="description" content="Automatyzacje AI i aplikacje iOS dla polskich firm. Zbudowane z inżynierską precyzją.">
+<style>
+  :root {
+    --bg:#050714; --navy:#0B1437; --violet:#6366F1; --violet-light:#818CF8;
+    --cyan:#22D3EE; --text:#E2E8F0; --text-dim:#94A3B8; --text-faint:#475569;
+    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;font-size:15px;line-height:1.6}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 1000px 700px at 20% 0%,rgba(99,102,241,0.14) 0%,transparent 55%),radial-gradient(ellipse 900px 500px at 85% 25%,rgba(34,211,238,0.1) 0%,transparent 55%);pointer-events:none;z-index:0}
+  .container{max-width:1080px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+  /* INTRO HERO - pełnoekranowy brand moment */
+  .intro-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:80px 32px;text-align:center}
+  .intro-logo{width:120px;height:120px;margin-bottom:36px;opacity:0;animation:introFadeIn 1.2s ease-out 0.2s forwards}
+  .intro-name{font-family:'Space Grotesk',sans-serif;font-size:clamp(44px,6vw,72px);font-weight:600;color:#fff;letter-spacing:-2px;line-height:1;margin-bottom:24px;opacity:0;animation:introFadeIn 1.2s ease-out 0.5s forwards}
+  .intro-tagline{font-family:Georgia,serif;font-style:italic;font-size:clamp(16px,1.6vw,20px);color:var(--text-dim);max-width:520px;line-height:1.5;opacity:0;animation:introFadeIn 1.2s ease-out 0.8s forwards}
+  .scroll-indicator{position:absolute;bottom:48px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:scrollIndicatorIn 1.2s ease-out 1.3s forwards,scrollBounce 2.4s ease-in-out 2.5s infinite;text-decoration:none}
+  .scroll-indicator-text{font-family:'Space Grotesk',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--text-faint)}
+  .scroll-indicator-arrow{width:1px;height:32px;background:linear-gradient(180deg,var(--text-faint),transparent)}
+  @keyframes introFadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes scrollIndicatorIn{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  @keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+  /* NAV - fixed, ukryty na intro, pojawia się po scroll */
+  nav{position:fixed;top:0;left:0;right:0;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;max-width:100%;z-index:100;opacity:0;transform:translateY(-100%);transition:opacity 0.4s ease,transform 0.4s ease,background 0.3s ease;pointer-events:none}
+  .nav-inner{max-width:1080px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+  body.nav-visible nav{opacity:1;transform:translateY(0);pointer-events:auto;background:rgba(5,7,20,0.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;letter-spacing:-0.2px;text-decoration:none}
+  .ai-accent{background:linear-gradient(135deg,var(--violet) 0%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .nav-logo{width:24px;height:24px}
+  .nav-links{display:flex;gap:32px;align-items:center}
+  .nav-link{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
+  .nav-link:hover{color:var(--text)}
+  /* Kontakt w nav - taki sam jak pozostałe linki */
+
+  /* HERO - krótki, zwięzły */
+  .hero{padding:80px 0 64px;max-width:760px;margin:0 auto;text-align:center}
+  .hero-eyebrow{display:inline-block;font-family:'Space Grotesk',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--violet-light);margin-bottom:24px}
+  .hero-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.4vw,42px);font-weight:600;line-height:1.15;letter-spacing:-0.8px;color:#fff;margin-bottom:22px}
+  .hero-sub{font-size:16px;line-height:1.65;color:var(--text-dim);max-width:580px;margin:0 auto}
+  .cta-row{display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center}
+
+  /* PRZYCISKI - niebieski gradient jak /newsletter */
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;text-decoration:none;transition:all 0.25s ease;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:linear-gradient(135deg,var(--violet) 0%,var(--cyan) 100%);color:#fff;box-shadow:0 6px 20px rgba(99,102,241,0.25)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(99,102,241,0.35)}
+  .btn-secondary{background:transparent;color:var(--text);border-color:var(--border-strong)}
+  .btn-secondary:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.03)}
+
+  /* SECTION base */
+  section{padding:64px 0;position:relative}
+  .section-head{text-align:center;margin-bottom:44px}
+  .section-eyebrow{font-family:'Space Grotesk',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--violet-light);margin-bottom:14px;display:inline-block}
+  h2.section-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,2.6vw,28px);font-weight:600;color:#fff;letter-spacing:-0.5px;line-height:1.25;max-width:640px;margin:0 auto 14px}
+  .section-sub{color:var(--text-dim);font-size:14px;line-height:1.65;max-width:560px;margin:0 auto}
+
+  /* SEKCJA 1: CO OFERUJĘ - 2 karty */
+  .areas{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:880px;margin:0 auto}
+  .area-card{padding:32px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:14px;transition:all 0.25s ease;text-decoration:none;color:inherit;display:block}
+  .area-card:hover{border-color:var(--border-strong);background:rgba(255,255,255,0.04);transform:translateY(-2px)}
+  .area-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--violet),var(--cyan));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:#fff;margin-bottom:20px}
+  .area-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;color:#fff;margin-bottom:10px;letter-spacing:-0.3px}
+  .area-desc{font-size:13px;line-height:1.65;color:var(--text-dim);margin-bottom:18px}
+  .area-link{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--cyan)}
+
+  /* SEKCJA 2: ZASTOSOWANIA - 4 karty */
+  .uses{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:880px;margin:0 auto}
+  .use{padding:28px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:14px;transition:all 0.25s}
+  .use:hover{border-color:var(--border-strong);background:rgba(255,255,255,0.04)}
+  .use-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;color:#fff;margin-bottom:10px;letter-spacing:-0.3px}
+  .use-desc{font-size:13px;line-height:1.65;color:var(--text-dim)}
+  .more-uses{text-align:center;margin-top:40px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--text-dim);line-height:1.6}
+
+  /* SEKCJA 3: ILE OSZCZĘDZA - liczby */
+  .savings{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:880px;margin:0 auto}
+  .stat{padding:36px 24px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:14px;text-align:center;transition:all 0.25s}
+  .stat:hover{border-color:var(--border-strong);background:rgba(255,255,255,0.04)}
+  .stat-label{font-family:'Space Grotesk',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-faint);margin-bottom:16px}
+  .stat-value{font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:600;background:linear-gradient(135deg,var(--violet-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1.5px;line-height:1;margin-bottom:10px}
+  .stat-desc{font-size:12px;line-height:1.5;color:var(--text-dim)}
+
+  /* CTA sekcja przed footerem */
+  .cta-section{max-width:720px;margin:0 auto;padding:56px 40px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:16px;text-align:center}
+  .cta-section h2{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:600;color:#fff;margin-bottom:12px;letter-spacing:-0.5px}
+  .cta-section p{color:var(--text-dim);margin-bottom:28px;font-size:15px;line-height:1.6}
+
+  /* FOOTER - prosty, centralny jak /newsletter */
+  footer{padding:64px 0 40px;border-top:1px solid var(--border);margin-top:40px;text-align:center}
+  .footer-brand{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
+  .footer-logo{width:24px;height:24px;opacity:0.9}
+  .footer-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff}
+  .footer-tagline{font-family:Georgia,serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-bottom:22px}
+  .footer-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);margin:0 auto 22px}
+  .footer-links{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);line-height:2}
+  .footer-links a{color:var(--cyan);text-decoration:none;margin:0 6px}
+  .footer-links a:hover{color:var(--text)}
+  .footer-copyright{margin-top:18px;font-family:'Space Grotesk',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-faint)}
+
+  @media (max-width:720px){
+    nav{padding:20px 20px}
+    .container{padding:0 20px}
+    .hero{padding:56px 0 72px}
+    .nav-links{gap:14px}
+    .nav-link{font-size:12px}
+    .intro-logo{width:88px;height:88px;margin-bottom:28px}
+    .intro-hero{padding:120px 24px 80px}
+    .scroll-indicator{bottom:32px}
+    .areas,.uses{grid-template-columns:1fr}
+    .cta-section{padding:40px 24px}
+    section{padding:48px 0}
+    h2.section-title{font-size:22px}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV - fixed, reveal przy scroll -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <svg class="nav-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="lgnav" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs>
+        <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgnav)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      SiroFlow <span class="ai-accent">AI</span>
+    </a>
+    <div class="nav-links">
+      <a href="/uslugi" class="nav-link">Usługi</a>
+      <a href="/cennik" class="nav-link">Cennik</a>
+      <a href="/o-mnie" class="nav-link">O mnie</a>
+      <a href="/kontakt" class="nav-link">Kontakt</a>
+    </div>
+  </div>
+</nav>
+
+<!-- INTRO HERO - pełnoekranowy brand moment -->
+<section class="intro-hero">
+  <svg class="intro-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="lgintro" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs>
+    <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgintro)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <h1 class="intro-name">SiroFlow <span class="ai-accent">AI</span></h1>
+  <p class="intro-tagline">„Automatyzacje AI, które oddają Ci czas."</p>
+  <a href="#content" class="scroll-indicator">
+    <span class="scroll-indicator-text">Dowiedz się więcej</span>
+    <span class="scroll-indicator-arrow"></span>
+  </a>
+</section>
+
+<div class="container" id="content">
+
+  <!-- HERO -->
+  <header class="hero">
+    <h1 class="hero-title">Automatyzujemy powtarzalne procesy. Twój zespół oszczędza godziny dziennie.</h1>
+    <p class="hero-sub">Automatyzacje AI i aplikacje iOS dla polskich firm — zbudowane z inżynierską precyzją, dostarczone z pełną dokumentacją.</p>
+  </header>
+
+  <!-- SEKCJA 1: CO OFERUJĘ -->
+  <section>
+    <div class="section-head">
+      <div class="section-eyebrow">Co oferuję</div>
+      <h2 class="section-title">Dwa obszary. Jeden standard jakości.</h2>
+    </div>
+    <div class="areas">
+      <a href="/uslugi" class="area-card">
+        <div class="area-icon">⚡</div>
+        <h3 class="area-title">Automatyzacje AI dla firm</h3>
+        <p class="area-desc">Eliminujemy ręczną, powtarzalną pracę. Łączymy narzędzia, które już używasz, z inteligencją AI.</p>
+        <span class="area-link">Zobacz szczegóły →</span>
+      </a>
+      <a href="/uslugi" class="area-card">
+        <div class="area-icon">📱</div>
+        <h3 class="area-title">Aplikacje iOS</h3>
+        <p class="area-desc">Natywne aplikacje dla iPhone i iPada. Wewnętrzne narzędzia dla zespołu, dashboards dla zarządu.</p>
+        <span class="area-link">Zobacz szczegóły →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- SEKCJA 2: ZASTOSOWANIA -->
+  <section id="zastosowania">
+    <div class="section-head">
+      <div class="section-eyebrow">Zastosowania w firmach</div>
+      <h2 class="section-title">Co można zautomatyzować</h2>
+      <p class="section-sub">Konkretne przykłady zastosowań — działających w polskich firmach, dopasowanych do Twojej branży.</p>
+    </div>
+    <div class="uses">
+      <div class="use">
+        <h3 class="use-title">Newsletter wewnętrzny dla zespołu</h3>
+        <p class="use-desc">Codzienny brief z najważniejszymi wiadomościami z Twojej branży. Zespół zaczyna dzień poinformowany, bez ręcznej pracy.</p>
+      </div>
+      <div class="use">
+        <h3 class="use-title">Automatyzacja fakturowania</h3>
+        <p class="use-desc">Zamówienia automatycznie generują faktury, wysyłają je klientom i archiwizują w księgowości. Zespół oszczędza godziny dziennie.</p>
+      </div>
+      <div class="use">
+        <h3 class="use-title">Chatbot obsługi klienta</h3>
+        <p class="use-desc">Inteligentny bot FAQ na Twojej stronie. Odpowiada 24/7, zwalnia zespół z pierwszej linii wsparcia.</p>
+      </div>
+      <div class="use">
+        <h3 class="use-title">Automatyczne raporty dzienne</h3>
+        <p class="use-desc">Codzienny raport z kluczowymi danymi z Twoich systemów trafia na Twój mail. Zero ręcznej pracy.</p>
+      </div>
+    </div>
+    <p class="more-uses">To tylko przykłady. Automatyzować można znacznie więcej.</p>
+  </section>
+
+  <!-- CTA przed footerem -->
+  <section>
+    <div class="cta-section">
+      <h2>Masz pomysł na automatyzację?</h2>
+      <p>Napisz do mnie. Porozmawiamy o Twoim procesie i zobaczymy co da się zautomatyzować.</p>
+      <a href="/cdn-cgi/l/email-protection#bbd3ded7d7d4fbc8d2c9d4ddd7d4ccdad295cbd784c8ced9d1ded8cf86ebc2cfdad5d2de9e898bd49e898bdacecfd4d6dacfc2c1dad8d19ef88f9e82829e898bfaf2" class="btn btn-primary">Napisz do mnie →</a>
+    </div>
+  </section>
+
+  <!-- FOOTER - prosty centralny jak /newsletter -->
+  <footer>
+    <div class="footer-brand">
+      <svg class="footer-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="lgf" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs>
+        <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgf)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="footer-name">SiroFlow <span class="ai-accent">AI</span></span>
+    </div>
+    <div class="footer-tagline">„Automatyzacje AI, które oddają Ci czas."</div>
+    <div class="footer-line"></div>
+    <div class="footer-links">
+      <a href="/uslugi">Usługi</a>·<a href="/cennik">Cennik</a>·<a href="/o-mnie">O mnie</a>·<a href="/kontakt">Kontakt</a>
+      <br>
+      <a href="/cdn-cgi/l/email-protection#3d55585151527d4e544f525b51524a5c54134d51"><span class="__cf_email__" data-cfemail="355d5059595a75465c475a53595a42545c1b4559">[email&#160;protected]</span></a>
+    </div>
+    <div class="footer-copyright">© 2026 SiroFlow AI</div>
+  </footer>
+
+</div>
+
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Reveal nav po wyjściu intro-hero z viewportu
+  const introHero = document.querySelector('.intro-hero');
+  const body = document.body;
+  const observer = 
