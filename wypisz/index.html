@@ -18,9 +18,7 @@
     --mist: #E2E8F0;
     --slate: #475569;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     background: var(--navy-deep);
     color: var(--mist);
@@ -33,7 +31,6 @@
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
-
   body::before {
     content: '';
     position: fixed;
@@ -43,7 +40,6 @@
       radial-gradient(ellipse 30% 40% at 75% 60%, rgba(34, 211, 238, 0.05), transparent);
     pointer-events: none;
   }
-
   .frame {
     position: fixed;
     pointer-events: none;
@@ -55,7 +51,6 @@
   .frame.tr { top: 32px; right: 32px; border-left: none; border-bottom: none; }
   .frame.bl { bottom: 32px; left: 32px; border-right: none; border-top: none; }
   .frame.br { bottom: 32px; right: 32px; border-left: none; border-top: none; }
-
   .top-label {
     position: fixed;
     top: 32px;
@@ -69,8 +64,6 @@
     opacity: 0;
     animation: fadeIn 1.2s ease-out 0.2s forwards;
   }
-
-  /* Card */
   .card {
     position: relative;
     z-index: 2;
@@ -81,23 +74,13 @@
     opacity: 0;
     animation: slideUp 0.9s ease-out 0.3s forwards;
   }
-
   @keyframes slideUp {
     from { opacity: 0; transform: translateY(24px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
-  /* Logo */
-  .logo {
-    width: 56px;
-    height: 56px;
-    margin: 0 auto 32px;
-  }
-
-  /* State: default */
+  .logo { width: 56px; height: 56px; margin: 0 auto 32px; }
   .state { display: none; }
   .state.active { display: block; }
-
   .eyebrow {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
@@ -106,7 +89,6 @@
     color: var(--cyan);
     margin-bottom: 20px;
   }
-
   h1 {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
@@ -116,7 +98,6 @@
     color: #FFFFFF;
     margin-bottom: 14px;
   }
-
   .subtitle {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 15px;
@@ -127,12 +108,7 @@
     margin-left: auto;
     margin-right: auto;
   }
-
-  /* Email field */
-  .field-wrap {
-    margin-bottom: 16px;
-  }
-
+  .field-wrap { margin-bottom: 16px; }
   input[type="email"] {
     width: 100%;
     background: rgba(255,255,255,0.04);
@@ -146,17 +122,11 @@
     transition: border-color 0.25s, background 0.25s;
     -webkit-appearance: none;
   }
-
-  input[type="email"]::placeholder {
-    color: var(--slate);
-  }
-
+  input[type="email"]::placeholder { color: var(--slate); }
   input[type="email"]:focus {
     border-color: rgba(99, 102, 241, 0.6);
     background: rgba(99, 102, 241, 0.05);
   }
-
-  /* Button */
   .btn {
     width: 100%;
     padding: 14px 24px;
@@ -169,37 +139,15 @@
     cursor: pointer;
     transition: opacity 0.2s, transform 0.15s;
   }
-
   .btn:active { transform: scale(0.98); }
-
-  .btn-primary {
-    background: linear-gradient(135deg, #6366F1, #818CF8);
-    color: #fff;
-  }
-
+  .btn-primary { background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; }
   .btn-primary:hover { opacity: 0.88; }
-
-  .btn-ghost {
-    background: transparent;
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    color: rgba(226,232,240,0.6);
-    margin-top: 10px;
-    font-size: 13px;
-  }
-
-  .btn-ghost:hover {
-    border-color: rgba(99, 102, 241, 0.6);
-    color: var(--mist);
-  }
-
-  /* Divider */
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
   .sep {
     height: 1px;
     background: linear-gradient(to right, transparent, rgba(99,102,241,0.2), transparent);
     margin: 36px 0;
   }
-
-  /* Success icon */
   .icon-wrap {
     width: 64px;
     height: 64px;
@@ -211,8 +159,6 @@
     justify-content: center;
     margin: 0 auto 28px;
   }
-
-  /* Back link */
   .back {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -228,8 +174,6 @@
   }
   .back:hover { color: var(--mist); }
   .back::before { content: '←'; }
-
-  /* Error */
   .error-msg {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -239,9 +183,7 @@
     display: none;
   }
   .error-msg.visible { display: block; }
-
   @keyframes fadeIn { to { opacity: 1; } }
-
   @media (max-width: 540px) {
     .card { padding: 48px 28px; }
     h1 { font-size: 26px; }
@@ -263,7 +205,6 @@
 
 <main class="card">
 
-  <!-- Logo -->
   <div class="logo">
     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
       <defs>
@@ -278,21 +219,17 @@
     </svg>
   </div>
 
-  <!-- STATE 1: form -->
+  <!-- STATE 1: formularz -->
   <div class="state active" id="state-form">
     <div class="eyebrow">Newsletter</div>
     <h1>Rezygnacja<br>z subskrypcji</h1>
     <p class="subtitle">Podaj adres e-mail, na który wysyłamy newsletter. Wypisujemy natychmiast.</p>
-
     <div class="field-wrap">
       <input type="email" id="email-input" placeholder="twoj@email.pl" autocomplete="email" />
       <p class="error-msg" id="error-msg">Podaj poprawny adres e-mail.</p>
     </div>
-
-    <button class="btn btn-primary" onclick="handleUnsubscribe()">Wypisz mnie</button>
-
+    <button class="btn btn-primary" id="submit-btn" onclick="handleUnsubscribe()">Wypisz mnie</button>
     <div class="sep"></div>
-
     <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--slate);line-height:1.7;letter-spacing:0.3px;">
       Nie chcesz rezygnować całkowicie?<br>
       Napisz do nas — ustalimy częstotliwość.
@@ -300,7 +237,7 @@
     <a href="mailto:hello@siroflowai.pl" class="back" style="margin-top:14px;text-decoration:none;">hello@siroflowai.pl</a>
   </div>
 
-  <!-- STATE 2: success -->
+  <!-- STATE 2: sukces -->
   <div class="state" id="state-success">
     <div class="icon-wrap">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -320,10 +257,9 @@
 </main>
 
 <script>
-  // Pre-fill email from URL param ?email=xxx
   (function() {
-    const params = new URLSearchParams(window.location.search);
-    const email = params.get('email');
+    var params = new URLSearchParams(window.location.search);
+    var email = params.get('email');
     if (email) {
       document.getElementById('email-input').value = decodeURIComponent(email);
     }
@@ -334,14 +270,17 @@
   }
 
   function showState(id) {
-    document.querySelectorAll('.state').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.state').forEach(function(el) {
+      el.classList.remove('active');
+    });
     document.getElementById(id).classList.add('active');
   }
 
   function handleUnsubscribe() {
-    const input = document.getElementById('email-input');
-    const errMsg = document.getElementById('error-msg');
-    const email = input.value.trim();
+    var input = document.getElementById('email-input');
+    var errMsg = document.getElementById('error-msg');
+    var btn = document.getElementById('submit-btn');
+    var email = input.value.trim();
 
     if (!isValidEmail(email)) {
       errMsg.classList.add('visible');
@@ -350,22 +289,20 @@
     }
 
     errMsg.classList.remove('visible');
+    btn.disabled = true;
+    btn.textContent = 'Wysyłam...';
 
-    // Show success state
     document.getElementById('success-email').textContent =
       'Adres ' + email + ' został usunięty z listy.';
-
     showState('state-success');
 
-fetch('https://hook.eu1.make.com/5gdfp8t18tp2b7xq942j8h8gfuynkgv3', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ email: email, action: 'unsubscribe' })
-});
-    });
+    fetch('https://hook.eu1.make.com/5gdfp8t18tp2b7xq942j8h8gfuynkgv3', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, action: 'unsubscribe' })
+    }).catch(function() {});
   }
 
-  // Allow Enter key on email field
   document.getElementById('email-input').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') handleUnsubscribe();
   });
