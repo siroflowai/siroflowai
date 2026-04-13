@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Newsletter — SiroFlow AI</title>
-<meta name="description" content="Automatyzacja #1: AI, które codziennie tworzy newsletter z newsów. To nie jest zwykły newsletter. To przykład systemu, który automatycznie zbiera, analizuje i wysyła najwaniejsze informacje - bez pracy człowieka.">
+<meta name="description" content="Newsletter AI — system, który automatycznie zbiera, analizuje i wysyła najważniejsze informacje bez pracy człowieka. Case study SiroFlow AI.">
 <style>
   :root {
     --bg: #050714;
@@ -91,12 +91,21 @@
     margin-left: auto;
     margin-right: auto;
   }
-  .hero-title .accent {
-    background: linear-gradient(135deg, #fff 0%, var(--violet-light) 50%, var(--cyan) 100%);
+  .hero-title .ai-animated {
+    background: linear-gradient(90deg, #6366F1 0%, #818CF8 25%, #22D3EE 50%, #818CF8 75%, #6366F1 100%);
+    background-size: 200% 100%;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-style: italic;
-    font-weight: 500;
+    color: transparent;
+    font-weight: 700;
+    display: inline-block;
+    animation: aiGradientShift 4s ease-in-out infinite;
+  }
+  @keyframes aiGradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
   .hero-sub {
     font-family: 'Inter', sans-serif;
@@ -729,8 +738,7 @@
 
   <header class="hero">
     <h1 class="hero-title">
-      Automatyzacja #1: AI, które codziennie tworzy newsletter z newsów.<br>
-      <span class="accent"></span>
+      Newsletter <span class="ai-animated">AI</span>
     </h1>
     <p class="hero-sub">
     To nie jest zwykły newsletter. To przykład systemu który automatycznie zbiera, analizuje i wysyła najważniejsze informacje - bez pracy człowieka. Ten system może być wdrożony w firmach jako: monitoring rynku, raporty dla zarządu i newslettery dla klientów.
@@ -941,4 +949,28 @@
       </div>
       <div class="footer-tagline">„Automatyzacje AI, które oddają Ci czas."</div>
       <div class="footer-line"></div>
-      <div class="f
+      <div class="footer-links">
+        <a href="/uslugi">Usługi</a>·<a href="/cennik">Cennik</a>·<a href="/o-mnie">O mnie</a>·<a href="/kontakt">Kontakt</a>
+        <br>
+        <a href="#" data-contact="1" id="footer-email">kontakt</a>
+      </div>
+      <div class="footer-copyright">© 2026 SiroFlow AI</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var u='hello',d='siroflowai',t='pl';
+  var email=u+String.fromCharCode(64)+d+'.'+t;
+  var mailtoLink='mail'+'to:'+email+'?subject=Pytanie%20o%20Newsletter%20AI';
+  var contacts=document.querySelectorAll('[data-contact="1"]');
+  for(var i=0;i<contacts.length;i++){contacts[i].href=mailtoLink}
+  var fe=document.getElementById('footer-email');
+  if(fe)fe.textContent=email;
+})();
+</script>
+
+</body>
+</html>
