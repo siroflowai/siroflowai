@@ -357,12 +357,12 @@
 
     showState('state-success');
 
-    // Optional: fire a webhook to Make.com to actually remove from your list
-    // fetch('https://hook.eu1.make.com/TWOJ_WEBHOOK', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email: email, action: 'unsubscribe' })
-    // });
+fetch('https://hook.eu1.make.com/5gdfp8t18tp2b7xq942j8h8gfuynkgv3', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email: email, action: 'unsubscribe' })
+});
+    });
   }
 
   // Allow Enter key on email field
