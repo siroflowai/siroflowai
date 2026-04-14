@@ -105,6 +105,19 @@
   .pf-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
   .pf-btn{display:block;width:100%;padding:10px;background:linear-gradient(135deg,#6366F1,#22D3EE);color:#fff;border:none;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;cursor:pointer;margin-top:4px;transition:opacity 0.2s;}
   .pf-btn:hover{opacity:0.9;}
+
+  /* Upload zdjęcia */
+  .pf-upload{
+    display:flex;align-items:center;gap:6px;
+    width:100%;padding:7px 10px;
+    background:#fff;border:1.5px dashed #CCC;border-radius:6px;
+    font-family:'Inter',sans-serif;font-size:11px;color:#888;
+    cursor:pointer;margin-bottom:8px;transition:border-color 0.2s;
+  }
+  .pf-upload:hover{border-color:#6366F1;}
+  .pf-upload.has-file{border-color:#6366F1;border-style:solid;color:#6366F1;}
+  .pf-upload-icon{font-size:13px;line-height:1;}
+  .pf-upload-text{flex:1;}
   .pf-success{display:none;text-align:center;padding:24px 12px;}
   .pf-success.visible{display:block;}
   .pfs-icon{width:40px;height:40px;background:linear-gradient(135deg,#6366F1,#22D3EE);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:16px;}
@@ -307,13 +320,21 @@
           <div class="pf-title">Zgłoś usterkę</div>
           <div class="pf-sub">Formularz automatycznie trafi do administracji</div>
 
-          <form id="uf" action="https://formsubmit.co/hello@siroflowai.pl" method="POST">
-            <input type="hidden" name="_subject" value="[QR Demo] Nowe zgłoszenie usterki — Klatka 3">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_template" value="table">
+          <form id="uf" enctype="multipart/form-data">
             <input type="hidden" name="Lokalizacja" value="Klatka 3, Piętro 2">
             <label class="pf-label">Opis usterki *</label>
             <textarea class="pf-textarea" name="Opis_usterki" placeholder="Opisz problem..." required></textarea>
+            <!-- ZDJĘCIE — Wariant E -->
+            <label class="pf-label" style="margin-top:2px;">Zdjęcie usterki</label>
+            <label class="pf-upload" id="upload-label">
+              <input type="file" name="Zdjecie" id="pf-file" accept="image/*" capture="environment" style="display:none">
+              <span class="pf-upload-icon">📷</span>
+              <span class="pf-upload-text" id="upload-text">Dodaj zdjęcie (opcjonalne)</span>
+            </label>
+            <div id="pf-preview-wrap" style="display:none;margin-bottom:8px;">
+              <img id="pf-img-preview" style="width:100%;border-radius:6px;border:1px solid #DDD;max-height:80px;object-fit:cover;">
+              <button type="button" id="pf-remove-photo" style="font-size:9px;color:#999;background:none;border:none;cursor:pointer;margin-top:2px;">✕ usuń zdjęcie</button>
+            </div>
             <div class="pf-row">
               <div>
                 <label class="pf-label">Email</label>
@@ -324,12 +345,12 @@
                 <input class="pf-input" type="tel" name="Telefon" placeholder="opcjonalnie">
               </div>
             </div>
-            <button type="submit" class="pf-btn">Wyślij zgłoszenie →</button>
+            <button type="submit" class="pf-btn" id="pf-submit">Wyślij zgłoszenie →</button>
           </form>
           <div class="pf-success" id="pfs">
             <div class="pfs-icon">✓</div>
             <div class="pfs-title">Zgłoszenie wysłane!</div>
-            <div class="pfs-desc">Email trafił na hello@siroflowai.pl. W realnym systemie — 8 sekund do admina.</div>
+            <div class="pfs-desc">Trafia do Make → Claude AI → email admina + Airtable.<br>Odpiszemy w ciągu zadeklarowanego terminu.</div>
           </div>
         </div>
       </div>
@@ -444,9 +465,77 @@
 
 </div>
 <script>
+/* === Cloudflare-proof email === */
 (function(){var u='hello',d='siroflowai',t='pl';var e=u+String.fromCharCode(64)+d+'.'+t;var m='mail'+'to:'+e+'?subject=Pytanie%20o%20QR%20Formularz';document.querySelectorAll('[data-contact="1"]').forEach(function(el){el.href=m;});var fe=document.getElementById('fe');if(fe)fe.textContent=e;})();
+
+/* === QR Code === */
 (function(){var url=window.location.href.split('#')[0];if(url.indexOf('file://')===0||url.indexOf('localhost')>-1){url='https://siroflowai.pl/uslugi/qr-formularz/?loc=klatka-3';}if(typeof QRCode!=='undefined'){new QRCode(document.getElementById('qr-fl'),{text:url+'?loc=klatka-3',width:120,height:120,colorDark:'#0B1437',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});}})();
-(function(){var form=document.getElementById('uf');var fs=document.getElementById('pfs');if(!form)return;form.addEventListener('submit',function(e){e.preventDefault();var btn=form.querySelector('button');btn.textContent='Wysyłanie...';btn.disabled=true;var data=new FormData(form);fetch(form.action,{method:'POST',body:data,headers:{'Accept':'application/json'}}).then(function(){form.style.display='none';fs.classList.add('visible');}).catch(function(){form.style.display='none';fs.classList.add('visible');});});})();
+
+/* === Podgląd zdjęcia === */
+(function(){
+  var input = document.getElementById('pf-file');
+  var label = document.getElementById('upload-label');
+  var text  = document.getElementById('upload-text');
+  var wrap  = document.getElementById('pf-preview-wrap');
+  var img   = document.getElementById('pf-img-preview');
+  var removeBtn = document.getElementById('pf-remove-photo');
+  if(!input) return;
+
+  input.addEventListener('change', function(){
+    if(input.files && input.files[0]){
+      var file = input.files[0];
+      text.textContent = file.name;
+      label.classList.add('has-file');
+      var reader = new FileReader();
+      reader.onload = function(e){ img.src = e.target.result; };
+      reader.readAsDataURL(file);
+      wrap.style.display = 'block';
+    }
+  });
+
+  removeBtn.addEventListener('click', function(){
+    input.value = '';
+    text.textContent = 'Dodaj zdjęcie (opcjonalne)';
+    label.classList.remove('has-file');
+    wrap.style.display = 'none';
+    img.src = '';
+  });
+})();
+
+/* === Wysyłanie do Make webhook === */
+(function(){
+  var MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/5mtvhliq9104fc1do86l6t64wuy2k';
+  /* ↑ zastąp tym co Make pokaże po utworzeniu Custom Webhook */
+
+  var form   = document.getElementById('uf');
+  var fs     = document.getElementById('pfs');
+  var submit = document.getElementById('pf-submit');
+  if(!form) return;
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    submit.textContent = 'Wysyłanie...';
+    submit.disabled = true;
+
+    /* FormData automatycznie obsługuje plik (multipart) */
+    var data = new FormData(form);
+
+    fetch(MAKE_WEBHOOK_URL, {
+      method: 'POST',
+      body: data
+      /* NIE ustawiaj Content-Type — przeglądarka sama ustawi multipart/form-data z boundary */
+    })
+    .then(function(res){
+      form.style.display = 'none';
+      fs.classList.add('visible');
+    })
+    .catch(function(err){
+      /* Make webhook zwraca "Accepted" bez CORS headers — traktujemy to jako sukces */
+      form.style.display = 'none';
+      fs.classList.add('visible');
+    });
+  });
+})();
 </script>
 </body>
 </html>
