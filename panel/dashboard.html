@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel zarządcy — SiroFlow AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050714;
+    --navy: #0B1437;
+    --violet: #6366F1;
+    --violet-light: #818CF8;
+    --cyan: #22D3EE;
+    --text: #E5E7EB;
+    --text-dim: #9CA3AF;
+    --text-faint: #6B7280;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.14);
+    --card: rgba(255,255,255,0.03);
+    --card-hover: rgba(255,255,255,0.05);
+
+    --high: #EF4444;
+    --high-bg: rgba(239,68,68,0.12);
+    --med: #F59E0B;
+    --med-bg: rgba(245,158,11,0.12);
+    --low: #10B981;
+    --low-bg: rgba(16,185,129,0.12);
+    --new: #3B82F6;
+    --new-bg: rgba(59,130,246,0.12);
+    --progress: #A78BFA;
+    --progress-bg: rgba(167,139,250,0.12);
+    --closed: #6B7280;
+    --closed-bg: rgba(107,114,128,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* TOP NAV */
+  nav.top {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(5,7,20,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav.top .inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+  .brand-panel {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    color: var(--violet-light);
+    padding: 3px 9px;
+    background: rgba(99,102,241,0.12);
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .user-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .user-name {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .logout {
+    color: var(--text-dim);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .logout:hover { border-color: var(--border-hover); color: var(--text); }
+
+  /* MAIN */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  .refresh {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .refresh:hover { background: rgba(255,255,255,0.07); border-color: var(--border-hover); }
+  .refresh svg { width: 14px; height: 14px; }
+
+  /* STAT CARDS */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    transition: border-color 0.15s;
+  }
+  .stat-card:hover { border-color: var(--border-hover); }
+  .stat-label {
+    color: var(--text-dim);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .stat-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .stat-value.new { color: var(--new); }
+  .stat-value.progress { color: var(--progress); }
+  .stat-value.closed { color: var(--closed); }
+  .stat-value.high { color: var(--high); }
+
+  /* FILTERS */
+  .filters {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filters input, .filters select {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 13px;
+    min-width: 140px;
+  }
+  .filters input:focus, .filters select:focus {
+    outline: none;
+    border-color: var(--violet);
+  }
+  .filters .search { flex: 1; min-width: 200px; }
+  .filters .clear-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 9px 14px;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .filters .clear-btn:hover { color: var(--text); border-color: var(--border-hover); }
+
+  /* TABLE */
+  .table-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead {
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  tbody tr {
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  tbody tr:hover { background: var(--card-hover); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .cell-opis {
+    max-width: 380px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cell-date {
+    color: var(--text-dim);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .cell-loc {
+    color: var(--text);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  /* PILLS */
+  .pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: capitalize;
+    white-space: nowrap;
+  }
+  .pill-prio-wysoki { background: var(--high-bg); color: var(--high); }
+  .pill-prio-sredni { background: var(--med-bg); color: var(--med); }
+  .pill-prio-niski { background: var(--low-bg); color: var(--low); }
+  .pill-status-Nowe { background: var(--new-bg); color: var(--new); }
+  .pill-status-Wtrakcie { background: var(--progress-bg); color: var(--progress); }
+  .pill-status-Zamkniete { background: var(--closed-bg); color: var(--closed); }
+  .pill-typ { background: rgba(255,255,255,0.06); color: var(--text); }
+
+  /* EMPTY STATES */
+  .loading, .empty {
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--text-dim);
+  }
+  .loading-spinner {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border);
+    border-top-color: var(--violet);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* MODAL */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+  }
+  .modal-backdrop.visible { display: flex; }
+  .modal {
+    background: #0A0F24;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    width: 100%;
+    max-width: 720px;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    position: relative;
+  }
+  .modal-header {
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    background: #0A0F24;
+    z-index: 2;
+  }
+  .modal-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .modal-meta {
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  .close-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .close-btn:hover { background: rgba(255,255,255,0.08); }
+  .modal-body { padding: 24px 28px; }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .detail-item-full { grid-column: 1 / -1; }
+  .detail-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .detail-value {
+    color: var(--text);
+    font-size: 14px;
+    word-break: break-word;
+  }
+  .detail-value.desc {
+    line-height: 1.6;
+    white-space: pre-wrap;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin: 24px 0 12px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .section-title:first-of-type {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  .photo-wrap {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .photo-wrap img {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 6px;
+    display: block;
+  }
+  .photo-placeholder {
+    color: var(--text-faint);
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .status-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .status-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .status-btn:hover { background: rgba(255,255,255,0.08); }
+  .status-btn.active {
+    background: var(--violet);
+    border-color: var(--violet);
+    color: #fff;
+  }
+
+  .notes-area {
+    width: 100%;
+    min-height: 120px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: vertical;
+  }
+  .notes-area:focus { outline: none; border-color: var(--violet); }
+
+  .save-btn {
+    background: #fff;
+    color: var(--navy);
+    border: none;
+    padding: 11px 22px;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: opacity 0.15s;
+  }
+  .save-btn:hover { opacity: 0.9; }
+  .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .save-status {
+    display: inline-block;
+    margin-left: 14px;
+    font-size: 13px;
+    color: var(--low);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .save-status.visible { opacity: 1; }
+  .save-status.error { color: var(--high); }
+
+  @media (max-width: 768px) {
+    .detail-grid { grid-template-columns: 1fr; }
+    th, td { padding: 12px 10px; font-size: 13px; }
+    .cell-opis { max-width: 200px; }
+    table th:nth-child(4), table td:nth-child(4) { display: none; }
+    main { padding: 20px 14px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="inner">
+    <div class="brand-wrap">
+      <span class="brand-name">SiroFlow AI</span>
+      <span class="brand-panel">Panel zarządcy</span>
+    </div>
+    <div class="user-wrap">
+      <span class="user-name" id="userName">...</span>
+      <button class="logout" id="logout">Wyloguj</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="header">
+    <div>
+      <h1>Zgłoszenia</h1>
+      <p class="subtitle">Wszystkie usterki zgłoszone przez mieszkańców</p>
+    </div>
+    <button class="refresh" id="refresh">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+      Odśwież
+    </button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="filters">
+    <input type="text" class="search" id="search" placeholder="Szukaj w opisie lub lokalizacji...">
+    <select id="fStatus">
+      <option value="">Wszystkie statusy</option>
+      <option value="Nowe">Nowe</option>
+      <option value="W trakcie">W trakcie</option>
+      <option value="Zamknięte">Zamknięte</option>
+    </select>
+    <select id="fPrio">
+      <option value="">Wszystkie priorytety</option>
+      <option value="wysoki">Wysoki</option>
+      <option value="sredni">Średni</option>
+      <option value="niski">Niski</option>
+    </select>
+    <select id="fTyp">
+      <option value="">Wszystkie typy</option>
+      <option value="konserwacja">Konserwacja</option>
+      <option value="windy">Windy</option>
+      <option value="sprzatanie">Sprzątanie</option>
+      <option value="ochrona">Ochrona</option>
+    </select>
+    <button class="clear-btn" id="clearFilters">Wyczyść</button>
+  </div>
+
+  <div class="table-wrap">
+    <div id="loadingEl" class="loading">
+      <div class="loading-spinner"></div>
+      <div>Ładowanie zgłoszeń...</div>
+    </div>
+    <div id="emptyEl" class="empty" style="display:none">
+      Brak zgłoszeń pasujących do filtrów.
+    </div>
+    <table id="tableEl" style="display:none">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Lokalizacja</th>
+          <th>Opis</th>
+          <th>Typ</th>
+          <th>Priorytet</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</main>
+
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="mTitle">Zgłoszenie</div>
+        <div class="modal-meta" id="mMeta"></div>
+      </div>
+      <button class="close-btn" id="mClose">×</button>
+    </div>
+    <div class="modal-body" id="mBody"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // === AUTH CHECK ===
+  var token = sessionStorage.getItem('sf_auth');
+  if (!token) {
+    window.location.href = '/panel/';
+    return;
+  }
+  var user = JSON.parse(sessionStorage.getItem('sf_user') || '{}');
+  document.getElementById('userName').textContent = user.name || user.email || '';
+
+  document.getElementById('logout').addEventListener('click', function() {
+    sessionStorage.removeItem('sf_auth');
+    sessionStorage.removeItem('sf_user');
+    window.location.href = '/panel/';
+  });
+
+  // === STATE ===
+  var allRecords = [];
+  var filtered = [];
+  var currentRecord = null;
+
+  // === HELPERS ===
+  function formatDate(iso) {
+    if (!iso) return '—';
+    var d = new Date(iso);
+    var today = new Date();
+    var isToday = d.toDateString() === today.toDateString();
+    var timeStr = d.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+    if (isToday) return 'Dzisiaj, ' + timeStr;
+    var yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+    if (d.toDateString() === yesterday.toDateString()) return 'Wczoraj, ' + timeStr;
+    return d.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ', ' + timeStr;
+  }
+  function escapeHtml(s) {
+    if (!s) return '';
+    return s.replace(/[&<>"']/g, function(c) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+  function statusClass(status) {
+    if (!status) return '';
+    return 'pill-status-' + status.replace(/\s/g, '').replace(/ę/g, 'e').replace(/ć/g, 'c');
+  }
+
+  // === FETCH ===
+  function loadRecords() {
+    document.getElementById('loadingEl').style.display = 'block';
+    document.getElementById('tableEl').style.display = 'none';
+    document.getElementById('emptyEl').style.display = 'none';
+
+    fetch('/api/airtable?action=list', {
+      headers: { 'X-Auth-Token': token }
+    })
+    .then(function(res) {
+      if (res.status === 401) {
+        sessionStorage.clear();
+        window.location.href = '/panel/';
+        return null;
+      }
+      return res.json();
+    })
+    .then(function(data) {
+      if (!data) return;
+      if (!data.records) throw new Error('Brak danych');
+      allRecords = data.records.map(function(r) {
+        return {
+          id: r.id,
+          createdTime: r.createdTime,
+          Lokalizacja: r.fields.Lokalizacja || '',
+          Opis_usterki: r.fields.Opis_usterki || '',
+          Typ_AI: r.fields.Typ_AI || '',
+          Priorytet_AI: r.fields.Priorytet_AI || '',
+          Wykonawca_AI: r.fields.Wykonawca_AI || '',
+          Termin_reakcji: r.fields.Termin_reakcji || '',
+          Status: r.fields.Status || 'Nowe',
+          Email_zglaszajacego: r.fields.Email_zglaszajacego || '',
+          Telefon: r.fields.Telefon || '',
+          Data_zgloszenia: r.fields.Data_zgloszenia || r.createdTime,
+          Auto_odpowiedzi_AI: r.fields.Auto_odpowiedzi_AI || '',
+          Notatki: r.fields.Notatki || '',
+          Zdjecie: r.fields.Zdjęcie || r.fields.Zdjecie || []
+        };
+      });
+      // Sort newest first
+      allRecords.sort(function(a, b) {
+        return new Date(b.Data_zgloszenia) - new Date(a.Data_zgloszenia);
+      });
+      renderStats();
+      applyFilters();
+    })
+    .catch(function(err) {
+      document.getElementById('loadingEl').innerHTML = '<div style="color:var(--high)">Błąd ładowania: ' + escapeHtml(err.message) + '</div>';
+    });
+  }
+
+  // === STATS ===
+  function renderStats() {
+    var stats = { nowe: 0, wtrakcie: 0, zamkniete: 0, wysoki: 0 };
+    allRecords.forEach(function(r) {
+      if (r.Status === 'Nowe') stats.nowe++;
+      else if (r.Status === 'W trakcie') stats.wtrakcie++;
+      else if (r.Status === 'Zamknięte') stats.zamkniete++;
+      if (r.Priorytet_AI === 'wysoki' && r.Status !== 'Zamknięte') stats.wysoki++;
+    });
+    var el = document.getElementById('stats');
+    el.innerHTML =
+      '<div class="stat-card"><div class="stat-label">Nowe</div><div class="stat-value new">' + stats.nowe + '</div></div>' +
+      '<div class="stat-card"><div class="stat-label">W trakcie</div><div class="stat-value progress">' + stats.wtrakcie + '</div></div>' +
+      '<div class="stat-card"><div class="stat-label">Zamknięte</div><div class="stat-value closed">' + stats.zamkniete + '</div></div>' +
+      '<div class="stat-card"><div class="stat-label">Pilne (wysoki)</div><div class="stat-value high">' + stats.wysoki + '</div></div>';
+  }
+
+  // === FILTERS ===
+  function applyFilters() {
+    var search = document.getElementById('search').value.trim().toLowerCase();
+    var fStatus = document.getElementById('fStatus').value;
+    var fPrio = document.getElementById('fPrio').value;
+    var fTyp = document.getElementById('fTyp').value;
+
+    filtered = allRecords.filter(function(r) {
+      if (fStatus && r.Status !== fStatus) return false;
+      if (fPrio && r.Priorytet_AI !== fPrio) return false;
+      if (fTyp && r.Typ_AI !== fTyp) return false;
+      if (search) {
+        var hay = (r.Opis_usterki + ' ' + r.Lokalizacja).toLowerCase();
+        if (hay.indexOf(search) === -1) return false;
+      }
+      return true;
+    });
+    renderTable();
+  }
+
+  function renderTable() {
+    var tbody = document.getElementById('tbody');
+    document.getElementById('loadingEl').style.display = 'none';
+
+    if (filtered.length === 0) {
+      document.getElementById('tableEl').style.display = 'none';
+      document.getElementById('emptyEl').style.display = 'block';
+      return;
+    }
+    document.getElementById('emptyEl').style.display = 'none';
+    document.getElementById('tableEl').style.display = 'table';
+
+    tbody.innerHTML = filtered.map(function(r) {
+      return '<tr data-id="' + r.id + '">' +
+        '<td class="cell-date">' + formatDate(r.Data_zgloszenia) + '</td>' +
+        '<td class="cell-loc">' + escapeHtml(r.Lokalizacja) + '</td>' +
+        '<td class="cell-opis" title="' + escapeHtml(r.Opis_usterki) + '">' + escapeHtml(r.Opis_usterki) + '</td>' +
+        '<td>' + (r.Typ_AI ? '<span class="pill pill-typ">' + escapeHtml(r.Typ_AI) + '</span>' : '—') + '</td>' +
+        '<td>' + (r.Priorytet_AI ? '<span class="pill pill-prio-' + r.Priorytet_AI + '">' + escapeHtml(r.Priorytet_AI) + '</span>' : '—') + '</td>' +
+        '<td><span class="pill ' + statusClass(r.Status) + '">' + escapeHtml(r.Status) + '</span></td>' +
+      '</tr>';
+    }).join('');
+
+    tbody.querySelectorAll('tr').forEach(function(tr) {
+      tr.addEventListener('click', function() {
+        var id = tr.getAttribute('data-id');
+        openModal(id);
+      });
+    });
+  }
+
+  // === MODAL ===
+  function openModal(id) {
+    var r = allRecords.find(function(x) { return x.id === id; });
+    if (!r) return;
+    currentRecord = r;
+
+    document.getElementById('mTitle').textContent = r.Lokalizacja || 'Zgłoszenie';
+    document.getElementById('mMeta').textContent = 'Data zgłoszenia: ' + formatDate(r.Data_zgloszenia);
+
+    var photoHtml = '<div class="photo-placeholder">Brak zdjęcia</div>';
+    if (r.Zdjecie && r.Zdjecie.length > 0 && r.Zdjecie[0].url) {
+      photoHtml = '<img src="' + r.Zdjecie[0].url + '" alt="Zdjęcie usterki">';
+    }
+
+    var body = document.getElementById('mBody');
+    body.innerHTML =
+      '<div class="section-title">Zgłoszenie</div>' +
+      '<div class="detail-grid">' +
+        '<div class="detail-item-full">' +
+          '<div class="detail-label">Opis usterki</div>' +
+          '<div class="detail-value desc">' + escapeHtml(r.Opis_usterki) + '</div>' +
+        '</div>' +
+        '<div>' +
+          '<div class="detail-label">Email zgłaszającego</div>' +
+          '<div class="detail-value">' + (r.Email_zglaszajacego ? '<a href="mailto:' + escapeHtml(r.Email_zglaszajacego) + '" style="color:var(--violet-light);text-decoration:none">' + escapeHtml(r.Email_zglaszajacego) + '</a>' : '—') + '</div>' +
+        '</div>' +
+        '<div>' +
+          '<div class="detail-label">Telefon</div>' +
+          '<div class="detail-value">' + (r.Telefon ? '<a href="tel:' + escapeHtml(r.Telefon) + '" style="color:var(--violet-light);text-decoration:none">' + escapeHtml(r.Telefon) + '</a>' : '—') + '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="section-title">Zdjęcie</div>' +
+      '<div class="photo-wrap">' + photoHtml + '</div>' +
+
+      '<div class="section-title">Klasyfikacja AI</div>' +
+      '<div class="detail-grid">' +
+        '<div><div class="detail-label">Typ</div><div class="detail-value">' + (r.Typ_AI ? '<span class="pill pill-typ">' + escapeHtml(r.Typ_AI) + '</span>' : '—') + '</div></div>' +
+        '<div><div class="detail-label">Priorytet</div><div class="detail-value">' + (r.Priorytet_AI ? '<span class="pill pill-prio-' + r.Priorytet_AI + '">' + escapeHtml(r.Priorytet_AI) + '</span>' : '—') + '</div></div>' +
+        '<div><div class="detail-label">Wykonawca</div><div class="detail-value">' + escapeHtml(r.Wykonawca_AI || '—') + '</div></div>' +
+        '<div><div class="detail-label">Termin reakcji</div><div class="detail-value">' + escapeHtml(r.Termin_reakcji || '—') + '</div></div>' +
+        (r.Auto_odpowiedzi_AI ? '<div class="detail-item-full"><div class="detail-label">Auto-odpowiedź wysłana do mieszkańca</div><div class="detail-value desc">' + escapeHtml(r.Auto_odpowiedzi_AI) + '</div></div>' : '') +
+      '</div>' +
+
+      '<div class="section-title">Status</div>' +
+      '<div class="status-row" id="statusRow">' +
+        ['Nowe','W trakcie','Zamknięte'].map(function(s) {
+          return '<button class="status-btn' + (r.Status === s ? ' active' : '') + '" data-status="' + s + '">' + s + '</button>';
+        }).join('') +
+      '</div>' +
+
+      '<div class="section-title">Notatki zarządcy</div>' +
+      '<textarea class="notes-area" id="notesArea" placeholder="Dodaj notatkę widoczną tylko w panelu...">' + escapeHtml(r.Notatki) + '</textarea>' +
+      '<button class="save-btn" id="saveBtn">Zapisz zmiany</button>' +
+      '<span class="save-status" id="saveStatus"></span>';
+
+    // Status buttons
+    body.querySelectorAll('.status-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        body.querySelectorAll('.status-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+      });
+    });
+
+    // Save button
+    document.getElementById('saveBtn').addEventListener('click', saveChanges);
+
+    document.getElementById('modal').classList.add('visible');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('visible');
+    currentRecord = null;
+  }
+
+  document.getElementById('mClose').addEventListener('click', closeModal);
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target.id === 'modal') closeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // === SAVE ===
+  function saveChanges() {
+    if (!currentRecord) return;
+    var btn = document.getElementById('saveBtn');
+    var stat = document.getElementById('saveStatus');
+    var activeStatus = document.querySelector('.status-btn.active');
+    var newStatus = activeStatus ? activeStatus.getAttribute('data-status') : currentRecord.Status;
+    var newNotes = document.getElementById('notesArea').value;
+
+    btn.disabled = true;
+    btn.textContent = 'Zapisywanie...';
+    stat.classList.remove('visible', 'error');
+
+    fetch('/api/airtable?action=update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth-Token': token
+      },
+      body: JSON.stringify({
+        id: currentRecord.id,
+        fields: {
+          Status: newStatus,
+          Notatki: newNotes
+        }
+      })
+    })
+    .then(function(res) {
+      if (res.status === 401) { sessionStorage.clear(); window.location.href = '/panel/'; return null; }
+      return res.json();
+    })
+    .then(function(data) {
+      if (!data) return;
+      if (data.error) throw new Error(data.error);
+      // Update local state
+      currentRecord.Status = newStatus;
+      currentRecord.Notatki = newNotes;
+      var idx = allRecords.findIndex(function(r) { return r.id === currentRecord.id; });
+      if (idx >= 0) {
+        allRecords[idx].Status = newStatus;
+        allRecords[idx].Notatki = newNotes;
+      }
+      renderStats();
+      applyFilters();
+      stat.textContent = 'Zapisano';
+      stat.classList.add('visible');
+      setTimeout(function() { stat.classList.remove('visible'); }, 2500);
+    })
+    .catch(function(err) {
+      stat.textContent = 'Błąd: ' + err.message;
+      stat.classList.add('visible', 'error');
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = 'Zapisz zmiany';
+    });
+  }
+
+  // === EVENTS ===
+  document.getElementById('refresh').addEventListener('click', loadRecords);
+  document.getElementById('search').addEventListener('input', applyFilters);
+  document.getElementById('fStatus').addEventListener('change', applyFilters);
+  document.getElementById('fPrio').addEventListener('change', applyFilters);
+  document.getElementById('fTyp').addEventListener('change', applyFilters);
+  document.getElementById('clearFilters').addEventListener('click', function() {
+    document.getElementById('search').value = '';
+    document.getElementById('fStatus').value = '';
+    document.getElementById('fPrio').value = '';
+    document.getElementById('fTyp').value = '';
+    applyFilters();
+  });
+
+  // === INIT ===
+  loadRecords();
+})();
+</script>
+</body>
+</html>
