@@ -535,7 +535,10 @@
           ctx.drawImage(img, 0, 0, w, h);
           /* Zawsze zapisujemy jako JPEG — mniejsze od PNG */
           var dataUrl = canvas.toDataURL('image/jpeg', 0.82);
-          resolve(dataUrl);
+          /* Zwracamy SAM base64 (bez prefiksu data:image/jpeg;base64,)
+             — prefiks dodamy po stronie Make żeby uniknąć problemów z parsowaniem ; */
+          var base64Only = dataUrl.split(',')[1] || '';
+          resolve(base64Only);
         };
         img.onerror = function(){ reject(new Error('Nie mogę załadować obrazu')); };
         img.src = e.target.result;
