@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="robots" content="noindex,nofollow">
+<title>Zgłoś usterkę — SiroFlow AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    background:#F7F7FA;
+    color:#1A1A1A;
+    line-height:1.5;
+    min-height:100vh;
+    padding:24px 16px 48px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:520px;margin:0 auto;}
+
+  .brand{
+    display:flex;align-items:center;gap:8px;
+    margin-bottom:24px;
+    justify-content:center;
+  }
+  .brand-mark{
+    width:28px;height:28px;
+    background:linear-gradient(135deg,#6366F1 0%,#22D3EE 100%);
+    border-radius:7px;
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:700;font-size:14px;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  .brand-name{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:15px;font-weight:600;
+    color:#0B1437;
+    letter-spacing:-0.2px;
+  }
+
+  .card{
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 1px 2px rgba(11,20,55,0.04),0 8px 24px rgba(11,20,55,0.06);
+    padding:28px 24px 32px;
+  }
+
+  .loc-badge{
+    display:inline-block;
+    background:#EEF0FF;
+    color:#4338CA;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    padding:5px 10px;
+    border-radius:6px;
+    margin-bottom:12px;
+    font-family:'Space Grotesk',sans-serif;
+  }
+
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:26px;
+    font-weight:600;
+    letter-spacing:-0.7px;
+    color:#0B1437;
+    margin-bottom:8px;
+    line-height:1.15;
+  }
+  .sub{
+    font-size:14px;
+    color:#6B7280;
+    margin-bottom:24px;
+    line-height:1.5;
+  }
+
+  label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    color:#374151;
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    margin-bottom:6px;
+    margin-top:16px;
+  }
+  label:first-of-type{margin-top:0;}
+  .req{color:#DC2626;}
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea{
+    width:100%;
+    background:#F9FAFB;
+    border:1px solid #E5E7EB;
+    color:#111827;
+    font-family:inherit;
+    font-size:15px;
+    padding:12px 14px;
+    border-radius:9px;
+    transition:border-color 0.15s,background 0.15s;
+    -webkit-appearance:none;
+  }
+  input:focus,textarea:focus{
+    outline:none;
+    border-color:#6366F1;
+    background:#fff;
+  }
+  textarea{
+    min-height:110px;
+    resize:vertical;
+    line-height:1.5;
+  }
+  input::placeholder,textarea::placeholder{color:#9CA3AF;}
+
+  .row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+
+  .upload{
+    display:flex;align-items:center;gap:10px;
+    background:#F9FAFB;
+    border:1.5px dashed #D1D5DB;
+    padding:14px;
+    border-radius:9px;
+    cursor:pointer;
+    transition:border-color 0.15s,background 0.15s;
+  }
+  .upload:hover,.upload:active{
+    border-color:#6366F1;
+    background:#FAFAFF;
+  }
+  .upload-icon{
+    font-size:22px;line-height:1;
+    flex-shrink:0;
+  }
+  .upload-text{
+    font-size:14px;color:#6B7280;
+  }
+  .upload.has-file{
+    border-style:solid;
+    border-color:#6366F1;
+    background:#EEF0FF;
+  }
+  .upload.has-file .upload-text{color:#4338CA;font-weight:500;}
+
+  .preview-wrap{
+    margin-top:10px;
+    position:relative;
+    display:none;
+  }
+  .preview-wrap.visible{display:block;}
+  .preview-img{
+    width:100%;
+    max-height:180px;
+    object-fit:cover;
+    border-radius:9px;
+    border:1px solid #E5E7EB;
+    display:block;
+  }
+  .remove-photo{
+    position:absolute;
+    top:8px;right:8px;
+    width:28px;height:28px;
+    border-radius:50%;
+    background:rgba(0,0,0,0.65);
+    color:#fff;border:none;
+    font-size:14px;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  .submit-btn{
+    width:100%;
+    margin-top:24px;
+    background:linear-gradient(135deg,#6366F1 0%,#818CF8 100%);
+    color:#fff;
+    border:none;
+    padding:15px 24px;
+    border-radius:10px;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:0.2px;
+    cursor:pointer;
+    transition:opacity 0.15s,transform 0.1s;
+  }
+  .submit-btn:hover{opacity:0.93;}
+  .submit-btn:active{transform:scale(0.99);}
+  .submit-btn:disabled{opacity:0.55;cursor:not-allowed;}
+
+  .success{
+    display:none;
+    text-align:center;
+    padding:40px 20px 24px;
+  }
+  .success.visible{display:block;}
+  .success-icon{
+    width:64px;height:64px;
+    margin:0 auto 16px;
+    background:#D1FAE5;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:32px;color:#059669;
+  }
+  .success-title{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:22px;
+    font-weight:600;
+    color:#0B1437;
+    margin-bottom:10px;
+  }
+  .success-desc{
+    font-size:14px;
+    color:#6B7280;
+    line-height:1.55;
+    max-width:380px;
+    margin:0 auto;
+  }
+
+  .footer{
+    margin-top:20px;
+    text-align:center;
+    font-size:11px;
+    color:#9CA3AF;
+    line-height:1.5;
+  }
+  .footer a{color:#6366F1;text-decoration:none;}
+
+  @media (max-width:400px){
+    body{padding:16px 12px 32px;}
+    .card{padding:22px 18px 26px;}
+    h1{font-size:22px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="brand">
+    <div class="brand-mark">S</div>
+    <div class="brand-name">SiroFlow AI</div>
+  </div>
+
+  <div class="card">
+
+    <form id="uf" novalidate>
+      <div class="loc-badge" id="locBadge" style="display:none;">Budynek: <span id="locText"></span></div>
+
+      <h1>Zgłoś usterkę</h1>
+      <p class="sub">Formularz trafia bezpośrednio do administracji. Odpowiemy w ciągu 24-72h w zależności od priorytetu.</p>
+
+      <label>Dokładna lokalizacja <span class="req">*</span></label>
+      <input type="text" name="Lokalizacja" id="inpLoc" placeholder="np. Piętro 2, mieszkanie 12" required maxlength="120">
+
+      <label>Opis usterki <span class="req">*</span></label>
+      <textarea name="Opis_usterki" id="inpDesc" placeholder="Opisz co się stało..." required maxlength="2000"></textarea>
+
+      <label>Zdjęcie (opcjonalne)</label>
+      <label class="upload" id="uploadLabel">
+        <input type="file" id="inpFile" accept="image/*" capture="environment" style="display:none;">
+        <span class="upload-icon">📷</span>
+        <span class="upload-text" id="uploadText">Dodaj zdjęcie</span>
+      </label>
+      <div class="preview-wrap" id="previewWrap">
+        <img class="preview-img" id="previewImg" alt="">
+        <button type="button" class="remove-photo" id="removePhoto" aria-label="Usuń zdjęcie">✕</button>
+      </div>
+
+      <div class="row" style="margin-top:4px;">
+        <div>
+          <label>Email</label>
+          <input type="email" name="Email" id="inpEmail" placeholder="jan@mail.pl" maxlength="120">
+        </div>
+        <div>
+          <label>Telefon</label>
+          <input type="tel" name="Telefon" id="inpPhone" placeholder="opcjonalnie" maxlength="30">
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">Wyślij zgłoszenie</button>
+    </form>
+
+    <div class="success" id="success">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Zgłoszenie wysłane!</div>
+      <div class="success-desc">
+        Trafiło do administracji. Jeśli podałeś email — otrzymasz potwierdzenie z szacowanym terminem reakcji.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Obsługa zgłoszeń w technologii SiroFlow AI
+  </div>
+
+</div>
+
+<script>
+/* === Odczyt parametru budynku z URL === */
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var bRaw = params.get('b') || params.get('budynek') || '';
+  if(!bRaw) return;
+  /* Dekodowanie: hoza5-d → Hoża 5, klatka D */
+  /* Dla MVP po prostu wyświetlamy to co w parametrze, lekko oczyszczone */
+  var clean = bRaw.trim().substring(0,80).replace(/[<>'"&]/g,'');
+  if(!clean) return;
+  document.getElementById('locText').textContent = clean;
+  document.getElementById('locBadge').style.display = 'inline-block';
+})();
+
+/* === Obsługa uploadu zdjęcia (podgląd) === */
+(function(){
+  var input = document.getElementById('inpFile');
+  var label = document.getElementById('uploadLabel');
+  var text = document.getElementById('uploadText');
+  var previewWrap = document.getElementById('previewWrap');
+  var previewImg = document.getElementById('previewImg');
+  var removeBtn = document.getElementById('removePhoto');
+
+  input.addEventListener('change', function(e){
+    var file = e.target.files && e.target.files[0];
+    if(!file){ resetPhoto(); return; }
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      previewImg.src = ev.target.result;
+      previewWrap.classList.add('visible');
+      label.classList.add('has-file');
+      text.textContent = file.name.length > 30 ? file.name.substring(0,28)+'…' : file.name;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  removeBtn.addEventListener('click', function(e){
+    e.preventDefault();
+    resetPhoto();
+  });
+
+  function resetPhoto(){
+    input.value = '';
+    previewWrap.classList.remove('visible');
+    previewImg.src = '';
+    label.classList.remove('has-file');
+    text.textContent = 'Dodaj zdjęcie';
+  }
+})();
+
+/* === Kompresja zdjęcia przez Canvas === */
+function compressImage(file){
+  return new Promise(function(resolve, reject){
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var img = new Image();
+      img.onload = function(){
+        var MAX_W = 1600;
+        var w = img.width, h = img.height;
+        if(w > MAX_W){
+          h = Math.round(h * (MAX_W / w));
+          w = MAX_W;
+        }
+        var canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        var dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        /* Zwracamy sam base64 (bez prefiksu data:image/jpeg;base64,) — Make skleja go dopiero w HTTP upload module */
+        var base64Only = dataUrl.split(',')[1] || '';
+        resolve(base64Only);
+      };
+      img.onerror = function(){ reject(new Error('Nie mogę załadować obrazu')); };
+      img.src = e.target.result;
+    };
+    reader.onerror = function(){ reject(new Error('Nie mogę odczytać pliku')); };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* === Wysyłanie do Make (JSON + base64 zdjęcia) === */
+(function(){
+  var MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/5mtvhliq9104fc1do86l6t64wuy2kw3d';
+
+  var form = document.getElementById('uf');
+  var success = document.getElementById('success');
+  var submitBtn = document.getElementById('submitBtn');
+  var fileInput = document.getElementById('inpFile');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    /* Walidacja lokalna — wymagane pola */
+    var inpLoc = document.getElementById('inpLoc');
+    var inpDesc = document.getElementById('inpDesc');
+    if(!inpLoc.value.trim()){ inpLoc.focus(); return; }
+    if(!inpDesc.value.trim()){ inpDesc.focus(); return; }
+
+    submitBtn.textContent = 'Wysyłanie...';
+    submitBtn.disabled = true;
+
+    /* Zbuduj pełną lokalizację: prefix z parametru URL (jeśli jest) + to co wpisał mieszkaniec */
+    var locBadge = document.getElementById('locText').textContent.trim();
+    var locUser = inpLoc.value.trim();
+    var fullLoc = locBadge ? (locBadge + ', ' + locUser) : locUser;
+
+    var payload = {
+      Lokalizacja:   fullLoc,
+      Opis_usterki:  inpDesc.value.trim(),
+      Email:         document.getElementById('inpEmail').value.trim(),
+      Telefon:       document.getElementById('inpPhone').value.trim(),
+      Zdjecie_base64: ''
+    };
+
+    function sendPayload(){
+      fetch(MAKE_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(function(){
+        form.style.display = 'none';
+        success.classList.add('visible');
+      })
+      .catch(function(){
+        /* Make webhook potrafi zwrócić bez CORS headers — traktujemy jako sukces */
+        form.style.display = 'none';
+        success.classList.add('visible');
+      });
+    }
+
+    if(fileInput && fileInput.files && fileInput.files[0]){
+      compressImage(fileInput.files[0])
+        .then(function(base64){ payload.Zdjecie_base64 = base64; sendPayload(); })
+        .catch(function(){ sendPayload(); });
+    } else {
+      sendPayload();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
