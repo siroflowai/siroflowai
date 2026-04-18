@@ -314,20 +314,21 @@
             <div class="phone-icon" style="width:20px;background:linear-gradient(90deg,#1A1A1A 60%,#DDD 60%);opacity:1;border-radius:2px 0 0 2px;"></div>
           </div>
         </div>
-        <div class="phone-url">siroflowai.pl/zgloszenie?loc=klatka-3</div>
+        <div class="phone-url">siroflowai.pl/zgloszenie?b=hoza5-d</div>
         <div class="phone-form">
-          <div class="pf-loc">Klatka 3 · Piętro 2</div>
+          <div class="pf-loc">Budynek: Hoża 5, klatka D</div>
           <div class="pf-title">Zgłoś usterkę</div>
           <div class="pf-sub">Formularz automatycznie trafi do administracji</div>
 
-          <form id="uf" enctype="multipart/form-data">
-            <input type="hidden" name="Lokalizacja" value="Klatka 3, Piętro 2">
+          <div>
+            <label class="pf-label">Dokładna lokalizacja *</label>
+            <input class="pf-input" type="text" placeholder="np. Piętro 2, mieszkanie 12" readonly style="pointer-events:none;">
             <label class="pf-label">Opis usterki *</label>
-            <textarea class="pf-textarea" name="Opis_usterki" placeholder="Opisz problem..." required></textarea>
-            <!-- ZDJĘCIE — Wariant E -->
+            <textarea class="pf-textarea" placeholder="Opisz problem..." readonly style="pointer-events:none;"></textarea>
+            <!-- ZDJĘCIE — demo wizualne, upload nadal działa wizualnie dla efektu -->
             <label class="pf-label" style="margin-top:2px;">Zdjęcie usterki</label>
             <label class="pf-upload" id="upload-label">
-              <input type="file" name="Zdjecie" id="pf-file" accept="image/*" capture="environment" style="display:none">
+              <input type="file" id="pf-file" accept="image/*" capture="environment" style="display:none">
               <span class="pf-upload-icon">📷</span>
               <span class="pf-upload-text" id="upload-text">Dodaj zdjęcie (opcjonalne)</span>
             </label>
@@ -338,19 +339,14 @@
             <div class="pf-row">
               <div>
                 <label class="pf-label">Email</label>
-                <input class="pf-input" type="email" name="Email" placeholder="jan@mail.pl">
+                <input class="pf-input" type="email" placeholder="jan@mail.pl" readonly style="pointer-events:none;">
               </div>
               <div>
                 <label class="pf-label">Telefon</label>
-                <input class="pf-input" type="tel" name="Telefon" placeholder="opcjonalnie">
+                <input class="pf-input" type="tel" placeholder="opcjonalnie" readonly style="pointer-events:none;">
               </div>
             </div>
-            <button type="submit" class="pf-btn" id="pf-submit">Wyślij zgłoszenie →</button>
-          </form>
-          <div class="pf-success" id="pfs">
-            <div class="pfs-icon">✓</div>
-            <div class="pfs-title">Zgłoszenie wysłane!</div>
-            <div class="pfs-desc">Trafia do Make → Claude AI → email admina + Airtable.<br>Odpiszemy w ciągu zadeklarowanego terminu.</div>
+            <a href="/zgloszenie/?b=hoza5-d" class="pf-btn" id="pf-submit" style="text-decoration:none;display:block;text-align:center;">Wypełnij formularz →</a>
           </div>
         </div>
       </div>
@@ -368,8 +364,8 @@
       <div id="qr-fl"></div>
       <div class="qfc-divider"></div>
       <div class="qfc-loc">
-        <div class="qfc-loc-l">Lokalizacja</div>
-        <div class="qfc-loc-v">Klatka 3 · P. 2</div>
+        <div class="qfc-loc-l">Budynek</div>
+        <div class="qfc-loc-v">Hoża 5 · klatka D</div>
       </div>
       <div class="qfc-hint"><div class="qfc-dot"></div>Zeskanuj aby zgłosić</div>
     </div>
@@ -469,9 +465,21 @@
 (function(){var u='hello',d='siroflowai',t='pl';var e=u+String.fromCharCode(64)+d+'.'+t;var m='mail'+'to:'+e+'?subject=Pytanie%20o%20QR%20Formularz';document.querySelectorAll('[data-contact="1"]').forEach(function(el){el.href=m;});var fe=document.getElementById('fe');if(fe)fe.textContent=e;})();
 
 /* === QR Code === */
-(function(){var url=window.location.href.split('#')[0];if(url.indexOf('file://')===0||url.indexOf('localhost')>-1){url='https://siroflowai.pl/uslugi/qr-formularz/?loc=klatka-3';}if(typeof QRCode!=='undefined'){new QRCode(document.getElementById('qr-fl'),{text:url+'?loc=klatka-3',width:120,height:120,colorDark:'#0B1437',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});}})();
+(function(){
+  /* QR wskazuje na dedykowaną stronę formularza z parametrem budynku
+     (demo: budynek "hoza5-d" — w produkcji każda klatka ma swój własny QR) */
+  var qrUrl = 'https://siroflowai.pl/zgloszenie/?b=hoza5-d';
+  if(typeof QRCode!=='undefined'){
+    new QRCode(document.getElementById('qr-fl'),{
+      text: qrUrl,
+      width:120,height:120,
+      colorDark:'#0B1437',colorLight:'#ffffff',
+      correctLevel:QRCode.CorrectLevel.M
+    });
+  }
+})();
 
-/* === Podgląd zdjęcia === */
+/* === Podgląd zdjęcia w mockupie (demo only — nic nie wysyła) === */
 (function(){
   var input = document.getElementById('pf-file');
   var label = document.getElementById('upload-label');
@@ -493,107 +501,15 @@
     }
   });
 
-  removeBtn.addEventListener('click', function(){
-    input.value = '';
-    text.textContent = 'Dodaj zdjęcie (opcjonalne)';
-    label.classList.remove('has-file');
-    wrap.style.display = 'none';
-    img.src = '';
-  });
-})();
-
-/* === Wysyłanie do Make webhook (JSON + base64 zdjęcia) === */
-(function(){
-  var MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/5mtvhliq9104fc1do86l6t64wuy2kw3d';
-
-  var form   = document.getElementById('uf');
-  var fs     = document.getElementById('pfs');
-  var submit = document.getElementById('pf-submit');
-  var fileInput = document.getElementById('pf-file');
-  if(!form) return;
-
-  /* Kompresja zdjęcia przez Canvas → zwraca data URL (base64).
-     Max szerokość 1600px, jakość JPEG 0.82 → zwykle 400-900 KB. */
-  function compressImage(file){
-    return new Promise(function(resolve, reject){
-      var reader = new FileReader();
-      reader.onload = function(e){
-        var img = new Image();
-        img.onload = function(){
-          var MAX_W = 1600;
-          var w = img.width, h = img.height;
-          if(w > MAX_W){
-            h = Math.round(h * (MAX_W / w));
-            w = MAX_W;
-          }
-          var canvas = document.createElement('canvas');
-          canvas.width = w;
-          canvas.height = h;
-          var ctx = canvas.getContext('2d');
-          ctx.fillStyle = '#ffffff'; /* tło na wypadek PNG z alpha */
-          ctx.fillRect(0, 0, w, h);
-          ctx.drawImage(img, 0, 0, w, h);
-          /* Zawsze zapisujemy jako JPEG — mniejsze od PNG */
-          var dataUrl = canvas.toDataURL('image/jpeg', 0.82);
-          /* Zwracamy SAM base64 (bez prefiksu data:image/jpeg;base64,)
-             — prefiks dodamy po stronie Make żeby uniknąć problemów z parsowaniem ; */
-          var base64Only = dataUrl.split(',')[1] || '';
-          resolve(base64Only);
-        };
-        img.onerror = function(){ reject(new Error('Nie mogę załadować obrazu')); };
-        img.src = e.target.result;
-      };
-      reader.onerror = function(){ reject(new Error('Nie mogę odczytać pliku')); };
-      reader.readAsDataURL(file);
+  if(removeBtn){
+    removeBtn.addEventListener('click', function(){
+      input.value = '';
+      text.textContent = 'Dodaj zdjęcie (opcjonalne)';
+      label.classList.remove('has-file');
+      wrap.style.display = 'none';
+      img.src = '';
     });
   }
-
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    submit.textContent = 'Wysyłanie...';
-    submit.disabled = true;
-
-    /* Zbierz pola tekstowe ręcznie (nie FormData — wysyłamy JSON) */
-    var payload = {
-      Lokalizacja:   form.querySelector('[name="Lokalizacja"]').value || '',
-      Opis_usterki:  form.querySelector('[name="Opis_usterki"]').value || '',
-      Email:         form.querySelector('[name="Email"]').value || '',
-      Telefon:       form.querySelector('[name="Telefon"]').value || '',
-      Zdjecie_base64: ''
-    };
-
-    function sendPayload(){
-      fetch(MAKE_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(function(){
-        form.style.display = 'none';
-        fs.classList.add('visible');
-      })
-      .catch(function(){
-        /* Make może zwrócić bez CORS headers — traktujemy jako sukces */
-        form.style.display = 'none';
-        fs.classList.add('visible');
-      });
-    }
-
-    /* Jeśli jest zdjęcie — skompresuj i dodaj jako base64 data URL, inaczej wyślij od razu */
-    if(fileInput && fileInput.files && fileInput.files[0]){
-      compressImage(fileInput.files[0])
-        .then(function(dataUrl){
-          payload.Zdjecie_base64 = dataUrl;
-          sendPayload();
-        })
-        .catch(function(){
-          /* Jeśli kompresja się wysypie, wyślij bez zdjęcia */
-          sendPayload();
-        });
-    } else {
-      sendPayload();
-    }
-  });
 })();
 </script>
 </body>
