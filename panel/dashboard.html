@@ -482,6 +482,117 @@
   }
   .notes-area:focus { outline: none; border-color: var(--violet); }
 
+  .edit-select {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .edit-select:focus { outline: none; border-color: var(--violet); }
+  .edit-select option { background: var(--navy); color: var(--text); }
+
+  .edit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .edit-item .detail-label { margin-bottom: 6px; }
+
+  .note-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .note-input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 14px;
+  }
+  .note-input:focus { outline: none; border-color: var(--violet); }
+  .note-add-btn {
+    background: var(--violet);
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .note-add-btn:hover { opacity: 0.9; }
+  .note-add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .history-list {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 0;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+  .history-entry {
+    padding: 10px 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .history-entry:last-child { border-bottom: none; }
+  .history-entry .ts {
+    color: var(--text-faint);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    margin-right: 6px;
+  }
+  .history-empty {
+    padding: 18px;
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 13px;
+  }
+
+  .modal-footer {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .danger-btn {
+    background: transparent;
+    color: #F87171;
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-left: auto;
+  }
+  .danger-btn:hover {
+    background: rgba(248, 113, 113, 0.1);
+    border-color: #F87171;
+  }
+  .danger-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
   .save-btn {
     background: #fff;
     color: var(--navy);
@@ -688,6 +799,7 @@
           Data_zgloszenia: r.fields.Data_zgloszenia || r.createdTime,
           Auto_odpowiedzi_AI: r.fields.Auto_odpowiedzi_AI || '',
           Notatki: r.fields.Notatki || '',
+          Historia_zmian: r.fields.Historia_zmian || '',
           Zdjecie: r.fields.Zdjęcie || r.fields.Zdjecie || []
         };
       });
@@ -772,6 +884,43 @@
   }
 
   // === MODAL ===
+  // Helper — parsuje Historia_zmian na osobne wpisy; obsługuje wielolinijkowe notatki
+  function parseHistory(text) {
+    if (!text) return [];
+    var lines = text.split('\n');
+    var entries = [];
+    var current = null;
+    // Nowy wpis rozpoznajemy po prefiksie "[DD.MM.YYYY HH:MM]"
+    var tsRegex = /^\[\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}\]/;
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      if (tsRegex.test(line)) {
+        if (current) entries.push(current);
+        current = line;
+      } else if (current !== null) {
+        // Kontynuacja poprzedniego wpisu (np. wieloliniowa notatka)
+        current += '\n' + line;
+      }
+    }
+    if (current) entries.push(current);
+    return entries;
+  }
+
+  function renderHistory(historyText) {
+    var entries = parseHistory(historyText);
+    if (entries.length === 0) {
+      return '<div class="history-empty">Brak zapisanych zmian</div>';
+    }
+    return entries.map(function(entry) {
+      // Rozdziel timestamp i resztę, żeby pokolorować timestamp
+      var m = entry.match(/^(\[\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}\])\s*(.*)$/s);
+      if (m) {
+        return '<div class="history-entry"><span class="ts">' + escapeHtml(m[1]) + '</span>' + escapeHtml(m[2]) + '</div>';
+      }
+      return '<div class="history-entry">' + escapeHtml(entry) + '</div>';
+    }).join('');
+  }
+
   function openModal(id) {
     var r = allRecords.find(function(x) { return x.id === id; });
     if (!r) return;
@@ -783,6 +932,27 @@
     var photoHtml = '<div class="photo-placeholder">Brak zdjęcia</div>';
     if (r.Zdjecie && r.Zdjecie.length > 0 && r.Zdjecie[0].url) {
       photoHtml = '<img src="' + r.Zdjecie[0].url + '" alt="Zdjęcie usterki">';
+    }
+
+    // Opcje dropdown (wartości 1:1 ze Single Select w Airtable — bez polskich znaków w Typ/Priorytet)
+    var typOptions = ['hydraulika', 'elektryka', 'windy', 'sprzatanie', 'ochrona', 'konserwacja'];
+    var prioOptions = ['wysoki', 'sredni', 'niski'];
+    var statusOptions = ['Nowe', 'W trakcie', 'Zamknięte'];
+
+    function buildSelect(id, options, currentValue) {
+      var html = '<select class="edit-select" id="' + id + '">';
+      // Jeśli aktualna wartość nie pasuje do listy, dodaj ją jako osobną opcję
+      var hasCurrent = !currentValue || options.indexOf(currentValue) >= 0;
+      if (!hasCurrent) {
+        html += '<option value="' + escapeHtml(currentValue) + '" selected>' + escapeHtml(currentValue) + '</option>';
+      }
+      for (var i = 0; i < options.length; i++) {
+        var opt = options[i];
+        var sel = (opt === currentValue) ? ' selected' : '';
+        html += '<option value="' + escapeHtml(opt) + '"' + sel + '>' + escapeHtml(opt) + '</option>';
+      }
+      html += '</select>';
+      return html;
     }
 
     var body = document.getElementById('mBody');
@@ -806,37 +976,54 @@
       '<div class="section-title">Zdjęcie</div>' +
       '<div class="photo-wrap">' + photoHtml + '</div>' +
 
-      '<div class="section-title">Klasyfikacja AI</div>' +
+      '<div class="section-title">Klasyfikacja AI (oryginalna)</div>' +
       '<div class="detail-grid">' +
-        '<div><div class="detail-label">Typ</div><div class="detail-value">' + (r.Typ_AI ? '<span class="pill pill-typ">' + escapeHtml(r.Typ_AI) + '</span>' : '—') + '</div></div>' +
-        '<div><div class="detail-label">Priorytet</div><div class="detail-value">' + (r.Priorytet_AI ? '<span class="pill pill-prio-' + r.Priorytet_AI + '">' + escapeHtml(r.Priorytet_AI) + '</span>' : '—') + '</div></div>' +
         '<div><div class="detail-label">Wykonawca</div><div class="detail-value">' + escapeHtml(r.Wykonawca_AI || '—') + '</div></div>' +
         '<div><div class="detail-label">Termin reakcji</div><div class="detail-value">' + escapeHtml(r.Termin_reakcji || '—') + '</div></div>' +
         (r.Auto_odpowiedzi_AI ? '<div class="detail-item-full"><div class="detail-label">Auto-odpowiedź wysłana do mieszkańca</div><div class="detail-value desc">' + escapeHtml(r.Auto_odpowiedzi_AI) + '</div></div>' : '') +
       '</div>' +
 
-      '<div class="section-title">Status</div>' +
-      '<div class="status-row" id="statusRow">' +
-        ['Nowe','W trakcie','Zamknięte'].map(function(s) {
-          return '<button class="status-btn' + (r.Status === s ? ' active' : '') + '" data-status="' + s + '">' + s + '</button>';
-        }).join('') +
+      '<div class="section-title">Edycja zgłoszenia</div>' +
+      '<div class="edit-grid">' +
+        '<div class="edit-item">' +
+          '<div class="detail-label">Status</div>' +
+          buildSelect('editStatus', statusOptions, r.Status) +
+        '</div>' +
+        '<div class="edit-item">' +
+          '<div class="detail-label">Typ</div>' +
+          buildSelect('editTyp', typOptions, r.Typ_AI) +
+        '</div>' +
+        '<div class="edit-item">' +
+          '<div class="detail-label">Priorytet</div>' +
+          buildSelect('editPrio', prioOptions, r.Priorytet_AI) +
+        '</div>' +
+      '</div>' +
+      '<button class="save-btn" id="saveBtn">Zapisz zmiany</button>' +
+      '<span class="save-status" id="saveStatus"></span>' +
+
+      '<div class="section-title">Dodaj notatkę</div>' +
+      '<div class="note-input-row">' +
+        '<input type="text" class="note-input" id="noteInput" placeholder="Np. wysłano hydraulika, oczekuję wyceny..." maxlength="500">' +
+        '<button class="note-add-btn" id="noteAddBtn">Dodaj</button>' +
+      '</div>' +
+      '<span class="save-status" id="noteStatus"></span>' +
+
+      '<div class="section-title">Historia zmian</div>' +
+      '<div class="history-list" id="historyList">' +
+        renderHistory(r.Historia_zmian) +
       '</div>' +
 
-      '<div class="section-title">Notatki zarządcy</div>' +
-      '<textarea class="notes-area" id="notesArea" placeholder="Dodaj notatkę widoczną tylko w panelu...">' + escapeHtml(r.Notatki) + '</textarea>' +
-      '<button class="save-btn" id="saveBtn">Zapisz zmiany</button>' +
-      '<span class="save-status" id="saveStatus"></span>';
+      '<div class="modal-footer">' +
+        '<button class="danger-btn" id="deleteBtn">Usuń zgłoszenie</button>' +
+      '</div>';
 
-    // Status buttons
-    body.querySelectorAll('.status-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        body.querySelectorAll('.status-btn').forEach(function(b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-      });
+    // Event handlers
+    document.getElementById('saveBtn').addEventListener('click', saveFieldChanges);
+    document.getElementById('noteAddBtn').addEventListener('click', addNote);
+    document.getElementById('noteInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); addNote(); }
     });
-
-    // Save button
-    document.getElementById('saveBtn').addEventListener('click', saveChanges);
+    document.getElementById('deleteBtn').addEventListener('click', deleteCurrent);
 
     document.getElementById('modal').classList.add('visible');
   }
@@ -854,14 +1041,28 @@
     if (e.key === 'Escape') closeModal();
   });
 
-  // === SAVE ===
-  function saveChanges() {
+  // === SAVE FIELD CHANGES (Status / Typ / Priorytet) ===
+  function saveFieldChanges() {
     if (!currentRecord) return;
     var btn = document.getElementById('saveBtn');
     var stat = document.getElementById('saveStatus');
-    var activeStatus = document.querySelector('.status-btn.active');
-    var newStatus = activeStatus ? activeStatus.getAttribute('data-status') : currentRecord.Status;
-    var newNotes = document.getElementById('notesArea').value;
+
+    var newStatus = document.getElementById('editStatus').value;
+    var newTyp = document.getElementById('editTyp').value;
+    var newPrio = document.getElementById('editPrio').value;
+
+    // Wysyłamy tylko pola, które się zmieniły
+    var fields = {};
+    if (newStatus !== currentRecord.Status) fields.Status = newStatus;
+    if (newTyp !== currentRecord.Typ_AI) fields.Typ_AI = newTyp;
+    if (newPrio !== currentRecord.Priorytet_AI) fields.Priorytet_AI = newPrio;
+
+    if (Object.keys(fields).length === 0) {
+      stat.textContent = 'Brak zmian';
+      stat.classList.add('visible');
+      setTimeout(function() { stat.classList.remove('visible'); }, 2000);
+      return;
+    }
 
     btn.disabled = true;
     btn.textContent = 'Zapisywanie...';
@@ -869,17 +1070,8 @@
 
     fetch('/api/airtable?action=update', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Auth-Token': token
-      },
-      body: JSON.stringify({
-        id: currentRecord.id,
-        fields: {
-          Status: newStatus,
-          Notatki: newNotes
-        }
-      })
+      headers: { 'Content-Type': 'application/json', 'X-Auth-Token': token },
+      body: JSON.stringify({ id: currentRecord.id, fields: fields })
     })
     .then(function(res) {
       if (res.status === 401) { sessionStorage.clear(); window.location.href = '/panel/'; return null; }
@@ -888,14 +1080,22 @@
     .then(function(data) {
       if (!data) return;
       if (data.error) throw new Error(data.error);
-      // Update local state
-      currentRecord.Status = newStatus;
-      currentRecord.Notatki = newNotes;
+      // Zaktualizuj lokalny stan z odpowiedzi serwera (zawiera nową Historia_zmian)
+      var updatedFields = (data.record && data.record.fields) || {};
+      currentRecord.Status = updatedFields.Status || currentRecord.Status;
+      currentRecord.Typ_AI = updatedFields.Typ_AI || currentRecord.Typ_AI;
+      currentRecord.Priorytet_AI = updatedFields.Priorytet_AI || currentRecord.Priorytet_AI;
+      currentRecord.Historia_zmian = updatedFields.Historia_zmian || currentRecord.Historia_zmian;
       var idx = allRecords.findIndex(function(r) { return r.id === currentRecord.id; });
       if (idx >= 0) {
-        allRecords[idx].Status = newStatus;
-        allRecords[idx].Notatki = newNotes;
+        allRecords[idx].Status = currentRecord.Status;
+        allRecords[idx].Typ_AI = currentRecord.Typ_AI;
+        allRecords[idx].Priorytet_AI = currentRecord.Priorytet_AI;
+        allRecords[idx].Historia_zmian = currentRecord.Historia_zmian;
       }
+      // Odśwież widok historii w modalu
+      var hl = document.getElementById('historyList');
+      if (hl) hl.innerHTML = renderHistory(currentRecord.Historia_zmian);
       renderStats();
       applyFilters();
       stat.textContent = 'Zapisano';
@@ -909,6 +1109,93 @@
     .finally(function() {
       btn.disabled = false;
       btn.textContent = 'Zapisz zmiany';
+    });
+  }
+
+  // === ADD NOTE ===
+  function addNote() {
+    if (!currentRecord) return;
+    var input = document.getElementById('noteInput');
+    var btn = document.getElementById('noteAddBtn');
+    var stat = document.getElementById('noteStatus');
+    var text = input.value.trim();
+    if (!text) {
+      stat.textContent = 'Wpisz treść notatki';
+      stat.classList.add('visible', 'error');
+      setTimeout(function() { stat.classList.remove('visible', 'error'); }, 2000);
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Dodawanie...';
+    stat.classList.remove('visible', 'error');
+
+    fetch('/api/airtable?action=update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Auth-Token': token },
+      body: JSON.stringify({ id: currentRecord.id, addNote: text })
+    })
+    .then(function(res) {
+      if (res.status === 401) { sessionStorage.clear(); window.location.href = '/panel/'; return null; }
+      return res.json();
+    })
+    .then(function(data) {
+      if (!data) return;
+      if (data.error) throw new Error(data.error);
+      var updatedFields = (data.record && data.record.fields) || {};
+      currentRecord.Historia_zmian = updatedFields.Historia_zmian || currentRecord.Historia_zmian;
+      var idx = allRecords.findIndex(function(r) { return r.id === currentRecord.id; });
+      if (idx >= 0) allRecords[idx].Historia_zmian = currentRecord.Historia_zmian;
+      var hl = document.getElementById('historyList');
+      if (hl) hl.innerHTML = renderHistory(currentRecord.Historia_zmian);
+      input.value = '';
+      stat.textContent = 'Dodano';
+      stat.classList.add('visible');
+      setTimeout(function() { stat.classList.remove('visible'); }, 2000);
+    })
+    .catch(function(err) {
+      stat.textContent = 'Błąd: ' + err.message;
+      stat.classList.add('visible', 'error');
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = 'Dodaj';
+    });
+  }
+
+  // === DELETE RECORD ===
+  function deleteCurrent() {
+    if (!currentRecord) return;
+    var loc = currentRecord.Lokalizacja || 'to zgłoszenie';
+    var confirmed = window.confirm('Czy na pewno chcesz usunąć zgłoszenie "' + loc + '"?\n\nTej operacji NIE da się cofnąć. Rekord zostanie trwale usunięty z bazy.');
+    if (!confirmed) return;
+
+    var btn = document.getElementById('deleteBtn');
+    btn.disabled = true;
+    btn.textContent = 'Usuwanie...';
+
+    fetch('/api/airtable?action=delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Auth-Token': token },
+      body: JSON.stringify({ id: currentRecord.id })
+    })
+    .then(function(res) {
+      if (res.status === 401) { sessionStorage.clear(); window.location.href = '/panel/'; return null; }
+      return res.json();
+    })
+    .then(function(data) {
+      if (!data) return;
+      if (data.error) throw new Error(data.error);
+      // Usuń z lokalnego stanu
+      allRecords = allRecords.filter(function(r) { return r.id !== currentRecord.id; });
+      closeModal();
+      renderStats();
+      applyFilters();
+    })
+    .catch(function(err) {
+      btn.disabled = false;
+      btn.textContent = 'Usuń zgłoszenie';
+      window.alert('Nie udało się usunąć: ' + err.message);
     });
   }
 
