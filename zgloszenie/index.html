@@ -279,7 +279,15 @@
       <div class="row" style="margin-top:4px;">
         <div>
           <label>Email</label>
-          <input type="email" name="Email" id="inpEmail" placeholder="jan@mail.pl" maxlength="120">
+          <input type="email"
+       name="Email"
+       id="inpEmail"
+       placeholder="jan@mail.pl"
+       maxlength="120"
+       pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}">
+<div id="emailError" style="display:none;color:#DC2626;font-size:12px;margin-top:6px;">
+  Podaj poprawny adres email
+</div>
         </div>
         <div>
           <label>Telefon</label>
