@@ -4,167 +4,572 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Usługi — SiroFlow AI</title>
+<meta name="description" content="Co można zautomatyzować w firmie — konkretne przykłady i zrealizowane projekty. Automatyzacje AI dla polskich firm.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%236366F1'/%3E%3Cstop offset='100%25' stop-color='%23818CF8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72' fill='none' stroke='url(%23g)' stroke-width='13' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="alternate icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#050714;--violet:#6366F1;--violet-light:#818CF8;--cyan:#22D3EE;--text:#E2E8F0;--text-dim:#94A3B8;--text-faint:#475569;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.14)}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;font-size:15px;line-height:1.6;padding-top:68px}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 1000px 700px at 20% 0%,rgba(99,102,241,0.14) 0%,transparent 55%),radial-gradient(ellipse 900px 500px at 85% 25%,rgba(34,211,238,0.1) 0%,transparent 55%);pointer-events:none;z-index:0}
-.container{max-width:1080px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
-nav{position:fixed;top:0;left:0;right:0;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;z-index:100;background:rgba(5,7,20,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.nav-inner{max-width:1080px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
-.nav-brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;letter-spacing:-0.2px;text-decoration:none}
-.ai-accent{background:linear-gradient(135deg,var(--violet) 0%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.nav-logo{width:24px;height:24px}
-.nav-links{display:flex;gap:32px;align-items:center}
-.nav-link{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
-.nav-link:hover,.nav-link.active{color:var(--text)}
-.nav-link.active{color:var(--violet-light)}
-.carousel-hero{padding:56px 0 48px}
-.carousel-eyebrow{text-align:center;font-family:'Space Grotesk',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--violet-light);margin-bottom:20px;display:block}
-.carousel-title{text-align:center;font-family:'Space Grotesk',sans-serif;font-size:clamp(24px,3vw,34px);font-weight:600;letter-spacing:-0.8px;color:#fff;margin-bottom:36px;line-height:1.2}
-.carousel-container{position:relative;max-width:900px;margin:0 auto;overflow:hidden;border-radius:16px}
-.carousel-track{display:flex;transition:transform 0.6s cubic-bezier(0.22,1,0.36,1)}
-.slide{min-width:100%;padding:56px 48px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:16px;position:relative;overflow:hidden;min-height:320px;display:flex;flex-direction:column;justify-content:center}
-.slide::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--violet) 0%,var(--cyan) 100%)}
-.slide-bg-shape{position:absolute;right:-80px;top:-80px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.12) 0%,transparent 70%);pointer-events:none}
-.slide-bg-shape-2{position:absolute;left:-40px;bottom:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,0.1) 0%,transparent 70%);pointer-events:none}
-.slide-content{position:relative;z-index:2;max-width:560px}
-.slide.has-preview{padding:48px 44px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
-.slide.has-preview .slide-content{max-width:none}
-.slide-preview{position:relative;z-index:2;border-radius:10px;overflow:hidden;border:1px solid var(--border-strong);box-shadow:0 20px 60px rgba(0,0,0,0.4);transform:perspective(800px) rotateY(-4deg);transition:transform 0.4s ease}
-.slide-preview:hover{transform:perspective(800px) rotateY(0deg)}
-.slide-preview img{display:block;width:100%;height:auto}
-.slide-tag{display:none}
-.slide-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,2.6vw,28px);font-weight:600;color:#fff;letter-spacing:-0.5px;margin-bottom:14px;line-height:1.25}
-.slide-desc{font-size:14px;line-height:1.7;color:var(--text-dim);margin-bottom:22px}
-.slide-link{display:inline-flex;align-items:center;gap:6px;font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--cyan);text-decoration:none;font-weight:500}
-.slide-link:hover{color:var(--text)}
-.carousel-controls{display:flex;align-items:center;justify-content:center;gap:20px;margin-top:28px}
-.carousel-arrow{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--text-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s;font-size:14px}
-.carousel-arrow:hover{background:rgba(255,255,255,0.08);border-color:var(--border-strong);color:var(--text)}
-.carousel-dots{display:flex;gap:8px}
-.carousel-dot{width:6px;height:6px;border-radius:50%;background:var(--text-faint);border:none;cursor:pointer;transition:all 0.25s;padding:0}
-.carousel-dot.active{width:24px;border-radius:3px;background:linear-gradient(90deg,var(--violet),var(--cyan))}
-section{padding:56px 0;position:relative}
-.section-head{text-align:center;margin-bottom:44px}
-.section-eyebrow{font-family:'Space Grotesk',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--violet-light);margin-bottom:14px;display:inline-block}
-h2.section-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,2.6vw,28px);font-weight:600;color:#fff;letter-spacing:-0.5px;line-height:1.25;max-width:640px;margin:0 auto 14px}
-.section-sub{color:var(--text-dim);font-size:14px;line-height:1.65;max-width:560px;margin:0 auto}
-.use-cases{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:880px;margin:0 auto}
-.use-case{padding:26px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:12px;transition:all 0.25s;position:relative;overflow:hidden}
-.use-case::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet) 0%,var(--cyan) 100%);opacity:0.6;transition:opacity 0.25s}
-.use-case:hover{border-color:var(--border-strong);background:rgba(255,255,255,0.04);transform:translateY(-2px)}
-.use-case:hover::before{opacity:1}
-.use-case-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.use-case-num{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--violet-light);letter-spacing:-0.2px;line-height:1.25;flex-shrink:0}
-.use-case-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;letter-spacing:-0.3px;line-height:1.25}
-.use-case-desc{font-size:13px;line-height:1.65;color:var(--text-dim)}
-.filter-list{max-width:720px;margin:0 auto;padding:36px 40px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:14px}
-.filter-intro{font-family:'Space Grotesk',sans-serif;font-size:15px;color:#fff;margin-bottom:20px;letter-spacing:-0.2px}
-.filter-list ul{list-style:none;padding:0}
-.filter-list li{font-size:14px;line-height:1.7;color:var(--text-dim);padding-left:24px;position:relative;margin-bottom:10px}
-.filter-list li::before{content:'\2192';position:absolute;left:0;color:var(--cyan);font-weight:600}
-.filter-list li strong{color:var(--text);font-weight:500}
-.cta-section{max-width:720px;margin:0 auto;padding:56px 40px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:16px;text-align:center}
-.cta-section h2{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:600;color:#fff;margin-bottom:12px;letter-spacing:-0.5px}
-.cta-section p{color:var(--text-dim);margin-bottom:28px;font-size:15px;line-height:1.6}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;text-decoration:none;transition:all 0.25s ease;border:1px solid transparent;cursor:pointer}
-.btn-primary{background:linear-gradient(135deg,var(--violet) 0%,var(--cyan) 100%);color:#fff;box-shadow:0 6px 20px rgba(99,102,241,0.25)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(99,102,241,0.35)}
-footer{padding:64px 0 40px;border-top:1px solid var(--border);margin-top:40px;text-align:center}
-.footer-brand{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
-.footer-logo{width:24px;height:24px;opacity:0.9}
-.footer-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff}
-.footer-tagline{font-family:Georgia,serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-bottom:22px}
-.footer-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);margin:0 auto 22px}
-.footer-links{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);line-height:2}
-.footer-links a{color:var(--cyan);text-decoration:none;margin:0 6px}
-.footer-copyright{margin-top:18px;font-family:'Space Grotesk',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-faint)}
-@media (max-width:720px){nav{padding:16px 20px}body{padding-top:60px}.container{padding:0 20px}.nav-links{gap:14px}.nav-link{font-size:12px}.carousel-hero{padding:40px 0 32px}.slide{padding:40px 28px;min-height:280px}
-.slide.has-preview{grid-template-columns:1fr;gap:24px;padding:36px 24px}
-.slide-preview{transform:none}.slide-bg-shape{width:220px;height:220px}.slide-bg-shape-2{width:160px;height:160px}.use-cases{grid-template-columns:1fr}.cta-section{padding:40px 24px}.filter-list{padding:28px 24px}section{padding:48px 0}h2.section-title,.slide-title{font-size:22px}}
+  :root{
+    --bg:#050714; --navy:#0B1437; --violet:#6366F1; --violet-light:#818CF8; --violet-dim:#4F46E5;
+    --text:#E2E8F0; --text-dim:#94A3B8; --text-faint:#475569;
+    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;font-size:15px;line-height:1.6;padding-top:68px}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 1000px 700px at 20% 0%,rgba(99,102,241,0.15) 0%,transparent 55%),radial-gradient(ellipse 900px 500px at 85% 25%,rgba(99,102,241,0.08) 0%,transparent 60%);pointer-events:none;z-index:0}
+  .container{max-width:1080px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;z-index:100;background:rgba(5,7,20,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-inner{max-width:1080px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+  .nav-brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;letter-spacing:-0.2px;text-decoration:none}
+  .ai-accent{color:var(--violet-light);font-weight:500;margin-left:2px}
+  .nav-logo{width:24px;height:24px}
+  .nav-links{display:flex;gap:32px;align-items:center}
+  .nav-link{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
+  .nav-link:hover{color:var(--text)}
+  .nav-link.active{color:var(--violet-light)}
+
+  /* CAROUSEL HERO */
+  .carousel-hero{padding:56px 0 48px}
+  .carousel-eyebrow{text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.25em;color:var(--violet-light);margin-bottom:20px;display:block}
+  .carousel-title{text-align:center;font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.4vw,38px);font-weight:600;letter-spacing:-0.8px;color:#fff;margin-bottom:36px;line-height:1.2}
+  .carousel-container{position:relative;max-width:900px;margin:0 auto;overflow:hidden;border-radius:16px}
+  .carousel-track{display:flex;transition:transform 0.6s cubic-bezier(0.22,1,0.36,1)}
+  .slide{min-width:100%;padding:56px 48px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:16px;position:relative;overflow:hidden;min-height:380px;display:flex;flex-direction:column;justify-content:center}
+  .slide::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet) 0%,var(--violet-light) 100%)}
+  .slide-bg-shape{position:absolute;right:-80px;top:-80px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.12) 0%,transparent 70%);pointer-events:none}
+  .slide-bg-shape-2{position:absolute;left:-40px;bottom:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(129,140,248,0.08) 0%,transparent 70%);pointer-events:none}
+  .slide-content{position:relative;z-index:2;max-width:560px}
+  .slide.has-preview{padding:44px 44px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:32px;align-items:center}
+  .slide.has-preview .slide-content{max-width:none}
+  .slide-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,2.6vw,30px);font-weight:600;color:#fff;letter-spacing:-0.5px;margin-bottom:14px;line-height:1.2}
+  .slide-desc{font-size:14px;line-height:1.7;color:var(--text-dim);margin-bottom:22px}
+  .slide-link{display:inline-flex;align-items:center;gap:6px;font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--violet-light);text-decoration:none;font-weight:500;transition:color 0.2s}
+  .slide-link:hover{color:#fff}
+
+  /* SLIDE PREVIEW - inline phone mockup dla QR */
+  .slide-preview{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:320px}
+  .phone-mockup{position:relative;width:180px;height:320px;background:linear-gradient(160deg,#1E2A4A,#0B1437);border-radius:24px;border:1.5px solid rgba(255,255,255,0.12);padding:10px 8px;box-shadow:0 20px 50px rgba(0,0,0,0.5),0 0 0 1px rgba(99,102,241,0.15),inset 0 1px 0 rgba(255,255,255,0.08);transform:rotate(-3deg)}
+  .phone-notch{width:52px;height:10px;background:#000;border-radius:8px;margin:0 auto 8px}
+  .phone-screen{background:#F8FAFC;border-radius:14px;padding:12px 10px;height:calc(100% - 18px);color:#1E293B;font-family:'Inter',sans-serif}
+  .phone-url{background:#fff;border:1px solid #E2E8F0;border-radius:4px;padding:4px 6px;font-family:'JetBrains Mono',monospace;font-size:6.5px;color:#475569;margin-bottom:10px;display:flex;align-items:center;gap:4px}
+  .phone-url::before{content:'🔒';font-size:6px}
+  .phone-badge{display:inline-block;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);color:var(--violet);font-family:'JetBrains Mono',monospace;font-size:5.5px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:3px 6px;border-radius:3px;margin-bottom:8px}
+  .phone-heading{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:10px;color:#0F172A;margin-bottom:3px;line-height:1.2}
+  .phone-sub{font-size:6.5px;color:#64748B;line-height:1.4;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #E2E8F0}
+  .phone-field{margin-bottom:8px}
+  .phone-field-label{font-size:5.5px;color:#475569;font-weight:500;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.05em}
+  .phone-field-input{background:#fff;border:1px solid #CBD5E1;border-radius:3px;padding:4px 5px;font-size:6.5px;color:#94A3B8;min-height:14px}
+  .phone-field-input.textarea{min-height:24px}
+  .phone-button{background:linear-gradient(135deg,#6366F1,#4F46E5);color:#fff;border-radius:4px;padding:6px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:7px;margin-top:6px}
+
+  /* QR sticker */
+  .qr-sticker{position:absolute;right:-14px;top:50%;transform:translateY(-50%) rotate(6deg);width:96px;background:#F8FAFC;border-radius:10px;padding:8px;box-shadow:0 12px 28px rgba(0,0,0,0.4),0 0 0 1px rgba(0,0,0,0.1);z-index:3}
+  .qr-sticker-logo{display:flex;align-items:center;gap:3px;margin-bottom:4px}
+  .qr-sticker-logo svg{width:10px;height:10px}
+  .qr-sticker-logo-text{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:8px;color:#0F172A;letter-spacing:-0.3px}
+  .qr-sticker-logo-text .ai{color:var(--violet);font-weight:500}
+  .qr-code{width:100%;aspect-ratio:1;background:#fff;display:grid;grid-template-columns:repeat(18,1fr);grid-template-rows:repeat(18,1fr);gap:1px;margin-bottom:5px}
+  .qr-pixel{background:#0F172A}
+  .qr-sticker-footer{font-family:'JetBrains Mono',monospace;font-size:5.5px;color:#64748B;text-align:center;letter-spacing:0.05em;line-height:1.25}
+  .qr-sticker-footer strong{display:block;color:#0F172A;font-weight:700;font-size:6px;margin-top:1px;font-family:'Space Grotesk',sans-serif}
+
+  /* CAROUSEL CONTROLS */
+  .carousel-controls{display:flex;align-items:center;justify-content:center;gap:20px;margin-top:28px}
+  .carousel-arrow{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--text-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s;font-size:14px}
+  .carousel-arrow:hover{background:rgba(99,102,241,0.1);border-color:rgba(99,102,241,0.3);color:var(--violet-light)}
+  .carousel-dots{display:flex;gap:8px}
+  .carousel-dot{width:6px;height:6px;border-radius:50%;background:var(--text-faint);border:none;cursor:pointer;transition:all 0.25s;padding:0}
+  .carousel-dot.active{width:24px;border-radius:3px;background:linear-gradient(90deg,var(--violet),var(--violet-light))}
+
+  /* LAPTOP / BROWSER FRAME (Skrzynka e-mail AI) */
+  .laptop{width:100%;max-width:320px;background:#F8FAFC;border-radius:8px 8px 3px 3px;border:1.5px solid rgba(255,255,255,0.18);overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,0.4);transform:rotate(-1deg)}
+  .laptop-chrome{background:#E2E8F0;padding:6px 10px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #CBD5E1}
+  .laptop-chrome-dot{width:6px;height:6px;border-radius:50%;background:#94A3B8}
+  .laptop-url{background:#fff;border-radius:3px;padding:3px 8px;font-family:'JetBrains Mono',monospace;font-size:7px;color:#64748B;flex:1;margin-left:6px}
+  .mbox-layout{display:flex;color:#1E293B;min-height:200px}
+  .mbox-sidebar{background:#F1F5F9;padding:8px 6px;width:68px;flex-shrink:0;font-family:'Space Grotesk',sans-serif;font-size:7px;color:#475569;border-right:1px solid #E2E8F0}
+  .mbox-sidebar-item{padding:4px 6px;margin-bottom:3px;border-radius:4px;display:flex;justify-content:space-between;align-items:center;font-weight:500}
+  .mbox-sidebar-item.active{background:#6366F1;color:#fff}
+  .mbox-sidebar-count{font-family:'JetBrains Mono',monospace;font-size:6.5px;opacity:0.8}
+  .mbox-main{padding:10px 12px;flex:1}
+  .mbox-main-title{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;color:#0F172A;margin-bottom:8px}
+  .mbox-item{padding:6px 0;border-bottom:1px solid #F1F5F9}
+  .mbox-item:last-child{border-bottom:none}
+  .mbox-item-row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:2px}
+  .mbox-from{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:7.5px;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+  .mbox-time{font-family:'JetBrains Mono',monospace;font-size:6px;color:#94A3B8;flex-shrink:0}
+  .mbox-subj{font-size:7px;color:#64748B;line-height:1.3;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+  .mbox-label{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:5.5px;letter-spacing:0.08em;text-transform:uppercase;padding:1.5px 5px;border-radius:2px;font-weight:500}
+  .lbl-red{background:#FEE2E2;color:#991B1B}
+  .lbl-amber{background:#FEF3C7;color:#92400E}
+  .lbl-gray{background:#E2E8F0;color:#64748B}
+  .lbl-violet{background:rgba(99,102,241,0.12);color:#4338CA}
+
+  /* DASHBOARD (Newsletter AI) */
+  .dash{width:100%;max-width:340px;background:#0F172A;border-radius:10px;border:1px solid rgba(255,255,255,0.1);overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,0.4);transform:rotate(-1deg)}
+  .dash-header{background:rgba(255,255,255,0.03);padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center}
+  .dash-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:10px;color:#fff}
+  .dash-live{display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:7px;color:#818CF8;text-transform:uppercase;letter-spacing:0.1em}
+  .dash-live-dot{width:5px;height:5px;border-radius:50%;background:#818CF8;box-shadow:0 0 0 0 rgba(129,140,248,0.7);animation:pulse 2s infinite}
+  .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px 12px}
+  .dash-stat{background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.18);border-radius:6px;padding:7px}
+  .dash-stat-label{font-family:'JetBrains Mono',monospace;font-size:5.5px;letter-spacing:0.1em;color:#94A3B8;text-transform:uppercase;margin-bottom:2px}
+  .dash-stat-value{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#fff;line-height:1}
+  .dash-stat-unit{font-size:8px;color:#818CF8;margin-left:1px;font-weight:500}
+  .dash-news{padding:0 12px 10px}
+  .dash-news-head{font-family:'JetBrains Mono',monospace;font-size:6px;letter-spacing:0.1em;color:#64748B;text-transform:uppercase;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:4px}
+  .dash-news-item{padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+  .dash-news-item:last-child{border-bottom:none}
+  .dash-news-cat{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:5.5px;letter-spacing:0.08em;color:#818CF8;text-transform:uppercase;margin-bottom:2px}
+  .dash-news-title{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:7.5px;color:#E2E8F0;line-height:1.3}
+
+  /* INVOICE CARD (Przypomnienia płatnicze) */
+  .invoice-wrap{width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;transform:rotate(-1deg)}
+  .invoice-card{background:linear-gradient(145deg,rgba(99,102,241,0.12),rgba(99,102,241,0.03));border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:16px 18px;box-shadow:0 16px 40px rgba(0,0,0,0.3)}
+  .invoice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .invoice-num{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:0.08em;color:#818CF8;text-transform:uppercase}
+  .invoice-status{font-family:'JetBrains Mono',monospace;font-size:6.5px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;background:rgba(245,158,11,0.15);color:#F59E0B;font-weight:500}
+  .invoice-amount{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:24px;color:#fff;letter-spacing:-0.8px;line-height:1;margin-bottom:3px}
+  .invoice-meta{font-size:9px;color:#94A3B8;margin-bottom:10px;line-height:1.4}
+  .invoice-divider{height:1px;background:rgba(255,255,255,0.08);margin:10px 0}
+  .invoice-sequence-label{font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:0.1em;color:#64748B;text-transform:uppercase;margin-bottom:14px}
+  .invoice-dots{display:flex;gap:5px;align-items:center;position:relative}
+  .invoice-dot{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,0.08);position:relative}
+  .invoice-dot.done{background:#10B981}
+  .invoice-dot.active{background:linear-gradient(90deg,#6366F1,#818CF8);box-shadow:0 0 8px rgba(129,140,248,0.5);animation:pulse-violet 2s infinite}
+  @keyframes pulse-violet{0%,100%{box-shadow:0 0 8px rgba(129,140,248,0.5)}50%{box-shadow:0 0 14px rgba(129,140,248,0.8)}}
+  .invoice-dot-label{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:6.5px;color:#64748B;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;white-space:nowrap}
+  .invoice-dot.active .invoice-dot-label{color:#818CF8;font-weight:600}
+  .invoice-dot.done .invoice-dot-label{color:#10B981}
+  .invoice-note{background:linear-gradient(135deg,#6366F1,#4F46E5);color:#fff;border-radius:8px;padding:10px 14px;box-shadow:0 8px 24px rgba(99,102,241,0.3)}
+  .invoice-note-label{font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:0.15em;color:rgba(255,255,255,0.75);text-transform:uppercase;margin-bottom:3px}
+  .invoice-note-text{font-family:'Space Grotesk',sans-serif;font-size:10px;line-height:1.35;font-weight:500}
+
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(129,140,248,0.6)}70%{box-shadow:0 0 0 6px rgba(129,140,248,0)}100%{box-shadow:0 0 0 0 rgba(129,140,248,0)}}
+
+  /* SECTION */
+  section{padding:56px 0;position:relative}
+  .section-head{text-align:center;margin-bottom:44px}
+  .section-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:var(--text-dim);margin-bottom:18px;display:inline-block}
+  h2.section-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.4vw,38px);font-weight:600;color:#fff;letter-spacing:-0.6px;line-height:1.2;max-width:760px;margin:0 auto 16px}
+  .section-sub{color:var(--text-dim);font-size:14px;line-height:1.65;max-width:560px;margin:0 auto}
+
+  /* USE CASES GRID */
+  .use-cases{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:880px;margin:0 auto}
+  .use-case{padding:26px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:14px;transition:all 0.25s;position:relative;overflow:hidden}
+  .use-case:hover{border-color:rgba(99,102,241,0.3);background:linear-gradient(145deg,rgba(99,102,241,0.05),rgba(255,255,255,0.015));transform:translateY(-2px)}
+  .use-case-header{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}
+  .use-case-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:var(--violet);letter-spacing:0.12em;flex-shrink:0}
+  .use-case-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;letter-spacing:-0.3px;line-height:1.25}
+  .use-case-desc{font-size:13px;line-height:1.65;color:var(--text-dim)}
+  /* Rozwijane karty - ukryte domyślnie */
+  .use-case.extra{display:none}
+  .use-cases.expanded .use-case.extra{display:block;animation:fadeInCard 0.4s ease-out}
+  @keyframes fadeInCard{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  /* TOGGLE BUTTON */
+  .toggle-wrap{text-align:center;margin-top:28px}
+  .toggle-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;background:transparent;color:var(--text);border:1px solid var(--border-strong);border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:13px;cursor:pointer;transition:all 0.25s}
+  .toggle-btn:hover{border-color:rgba(99,102,241,0.4);background:rgba(99,102,241,0.05);color:var(--violet-light)}
+  .toggle-btn .chevron{transition:transform 0.3s ease}
+  .toggle-btn.expanded .chevron{transform:rotate(180deg)}
+  .toggle-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:0.05em;margin-left:4px}
+
+  /* FILTER LIST */
+  .filter-list{max-width:720px;margin:0 auto;padding:36px 40px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:14px}
+  .filter-intro{font-family:'Space Grotesk',sans-serif;font-size:15px;color:#fff;margin-bottom:20px;letter-spacing:-0.2px;font-weight:500}
+  .filter-list ul{list-style:none;padding:0}
+  .filter-list li{font-size:14px;line-height:1.7;color:var(--text-dim);padding-left:24px;position:relative;margin-bottom:10px}
+  .filter-list li::before{content:'→';position:absolute;left:0;color:var(--violet-light);font-weight:600}
+  .filter-list li strong{color:var(--text);font-weight:500}
+
+  /* CTA */
+  .cta-section{max-width:720px;margin:0 auto;padding:56px 40px;background:linear-gradient(145deg,rgba(99,102,241,0.06),rgba(255,255,255,0.01));border:1px solid rgba(99,102,241,0.18);border-radius:16px;text-align:center}
+  .cta-section h2{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:600;color:#fff;margin-bottom:12px;letter-spacing:-0.5px}
+  .cta-section p{color:var(--text-dim);margin-bottom:28px;font-size:15px;line-height:1.6}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;text-decoration:none;transition:all 0.25s ease;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:linear-gradient(135deg,var(--violet) 0%,var(--violet-dim) 100%);color:#fff;box-shadow:0 6px 20px rgba(99,102,241,0.25)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(99,102,241,0.35)}
+
+  /* FOOTER */
+  footer{padding:64px 0 40px;border-top:1px solid var(--border);margin-top:40px;text-align:center}
+  .footer-brand{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
+  .footer-logo{width:24px;height:24px;opacity:0.9}
+  .footer-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff}
+  .footer-tagline{font-family:Georgia,serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-bottom:22px}
+  .footer-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);margin:0 auto 22px}
+  .footer-links{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);line-height:2}
+  .footer-links a{color:var(--violet-light);text-decoration:none;margin:0 6px;transition:color 0.2s}
+  .footer-links a:hover{color:#fff}
+  .footer-copyright{margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-faint)}
+
+  @media (max-width:720px){
+    nav{padding:16px 20px}
+    body{padding-top:60px}
+    .container{padding:0 20px}
+    .nav-links{gap:14px}
+    .nav-link{font-size:12px}
+    .carousel-hero{padding:40px 0 32px}
+    .slide{padding:36px 24px;min-height:auto}
+    .slide.has-preview{grid-template-columns:1fr;gap:28px;padding:32px 24px}
+    .slide-preview{min-height:280px}
+    .phone-mockup{transform:none}
+    .slide-bg-shape{width:220px;height:220px}
+    .slide-bg-shape-2{width:160px;height:160px}
+    .use-cases{grid-template-columns:1fr}
+    .cta-section{padding:40px 24px}
+    .filter-list{padding:28px 24px}
+    section{padding:48px 0}
+    h2.section-title,.slide-title{font-size:22px}
+  }
 </style>
 </head>
 <body>
 
 <nav>
 <div class="nav-inner">
-<a href="/" class="nav-brand"><svg class="nav-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lgnav" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs><path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgnav)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg>SiroFlow <span class="ai-accent">AI</span></a>
-<div class="nav-links"><a href="/uslugi" class="nav-link active">Usługi</a><a href="/cennik" class="nav-link">Cennik</a><a href="/o-mnie" class="nav-link">O mnie</a><a href="/kontakt" class="nav-link">Kontakt</a></div>
+  <a href="/" class="nav-brand">
+    <svg class="nav-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lgnav" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#6366F1"><animate attributeName="stop-color" values="#6366F1;#818CF8;#6366F1" dur="4s" repeatCount="indefinite"/></stop>
+          <stop offset="100%" stop-color="#818CF8"><animate attributeName="stop-color" values="#818CF8;#6366F1;#818CF8" dur="4s" repeatCount="indefinite"/></stop>
+        </linearGradient>
+      </defs>
+      <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgnav)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    SiroFlow <span class="ai-accent">AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="/uslugi" class="nav-link active">Usługi</a>
+    <a href="/cennik" class="nav-link">Cennik</a>
+    <a href="/o-mnie" class="nav-link">O nas</a>
+    <a href="/kontakt" class="nav-link">Kontakt</a>
+  </div>
 </div>
 </nav>
 
 <div class="container">
 
+<!-- CAROUSEL HERO -->
 <header class="carousel-hero">
-<span class="carousel-eyebrow">Pomysły</span>
+<span class="carousel-eyebrow">Pomysły · zrealizowane projekty</span>
 <h1 class="carousel-title">Co można zbudować?</h1>
 <div class="carousel-container" id="carousel">
 <div class="carousel-track" id="carousel-track">
-<div class="slide has-preview"><div class="slide-bg-shape"></div><div class="slide-bg-shape-2"></div><div class="slide-content"><h2 class="slide-title">Newsletter AI</h2><p class="slide-desc">Codzienny brief z 15 najważniejszymi historiami z polskich mediów. W pełni zautomatyzowany system: pobiera newsy, wybiera najlepsze, streszcza i wysyła — bez udziału człowieka.</p><a href="/uslugi/newsletter" class="slide-link">Zobacz pełne case study &rarr;</a></div><div class="slide-preview"><img src="newsletter-preview.png" alt="Przykład newslettera"></div></div>
-<div class="slide has-preview"><div class="slide-bg-shape"></div><div class="slide-bg-shape-2"></div><div class="slide-content"><h2 class="slide-title">Skrzynka e-mail AI</h2><p class="slide-desc">AI klasyfikuje przychodzące maile, przypisuje priorytet i kieruje do odpowiednich folderów. Reklamacje dostają natychmiastową odpowiedź, zgłoszenia trafiają do uporządkowanego rejestru. Zespół oszczędza godziny dziennie na sortowaniu.</p><a href="/uslugi/skrzynka-email-ai" class="slide-link">Zobacz pełne case study &rarr;</a></div><div class="slide-preview"><img src="skrzynka-preview.png" alt="Przykład klasyfikacji w Google Sheets"></div></div>
-<div class="slide has-preview"><div class="slide-bg-shape"></div><div class="slide-bg-shape-2"></div><div class="slide-content"><h2 class="slide-title">QR kod → Formularz → AI</h2><p class="slide-desc">Naklejka QR w klatce schodowej, hotelu lub biurze. Mieszkaniec skanuje, opisuje usterkę — AI klasyfikuje typ i priorytet, email leci do właściwej osoby, rejestr uzupełnia się sam. Zero telefonów. Zero papieru.</p><a href="/uslugi/qr-formularz" class="slide-link">Zobacz pełne case study &rarr;</a></div><div class="slide-preview"><img src="qr-formularz-preview.png" alt="QR kod i formularz zgłoszenia usterki"></div></div>
-<div class="slide"><div class="slide-bg-shape"></div><div class="slide-bg-shape-2"></div><div class="slide-content"><h2 class="slide-title">Buduję publicznie</h2><p class="slide-desc">Nowe projekty — w przygotowaniu. SiroFlow AI działa w pełnej przejrzystości: każdy projekt kończy się dokumentacją, a nowe case studies pojawiają się na bieżąco. Wracaj za kilka tygodni, żeby zobaczyć kolejne realizacje.</p><a href="#use-cases" class="slide-link">Zobacz co planujemy &rarr;</a></div></div>
-<div class="slide"><div class="slide-bg-shape"></div><div class="slide-bg-shape-2"></div><div class="slide-content"><h2 class="slide-title">Twój projekt może być następny</h2><p class="slide-desc">Masz proces w firmie który zajmuje Ci godziny dziennie? Powtarzalne zadanie które można zautomatyzować? Porozmawiajmy. Pierwsza konsultacja jest bezpłatna — bez zobowiązań, konkretne rekomendacje.</p><a href="#" data-contact="1" class="slide-link">Napisz do mnie &rarr;</a></div></div>
+
+<!-- Slide 1: QR → Formularz → AI -->
+<div class="slide has-preview">
+  <div class="slide-bg-shape"></div>
+  <div class="slide-bg-shape-2"></div>
+  <div class="slide-content">
+    <h2 class="slide-title">Kody QR AI</h2>
+    <p class="slide-desc">Naklejka QR w klatce schodowej, hotelu lub biurze. Mieszkaniec skanuje, opisuje usterkę — AI klasyfikuje typ i priorytet, email leci do właściwej osoby, rejestr uzupełnia się sam. Zero telefonów. Zero papieru.</p>
+    <a href="/uslugi/qr-formularz" class="slide-link">Zobacz cały projekt →</a>
+  </div>
+  <div class="slide-preview">
+    <div class="phone-mockup">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="phone-url">siroflowai.pl/zgloszenie?b=hoza5-d</div>
+        <span class="phone-badge">Budynek · Hoża 5, klatka D</span>
+        <div class="phone-heading">Zgłoś usterkę</div>
+        <div class="phone-sub">Formularz trafi do administracji.</div>
+        <div class="phone-field">
+          <div class="phone-field-label">Lokalizacja</div>
+          <div class="phone-field-input">np. Piętro 2, mieszk. 12</div>
+        </div>
+        <div class="phone-field">
+          <div class="phone-field-label">Opis usterki</div>
+          <div class="phone-field-input textarea">Opisz problem…</div>
+        </div>
+        <div class="phone-button">Wyślij zgłoszenie →</div>
+      </div>
+    </div>
+    <div class="qr-sticker">
+      <div class="qr-sticker-logo">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="#6366F1" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="qr-sticker-logo-text">SiroFlow <span class="ai">AI</span></span>
+      </div>
+      <div class="qr-code" id="qr-code"></div>
+      <div class="qr-sticker-footer">Budynek<strong>Hoża 5 · klatka D</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 2: Przypomnienia płatnicze -->
+<div class="slide has-preview">
+  <div class="slide-bg-shape"></div>
+  <div class="slide-bg-shape-2"></div>
+  <div class="slide-content">
+    <h2 class="slide-title">Przypomnienia płatnicze</h2>
+    <p class="slide-desc">Sekwencja 6 automatycznych wiadomości, która pilnuje faktur za Ciebie. Od uprzejmego przypomnienia 3 dni przed terminem, przez monity, po podziękowanie po wpłacie. Zatrzymuje się sama po zaksięgowaniu.</p>
+    <a href="/uslugi/przypomnienia-platnicze" class="slide-link">Zobacz cały projekt →</a>
+  </div>
+  <div class="slide-preview">
+    <div class="invoice-wrap">
+      <div class="invoice-card">
+        <div class="invoice-header">
+          <span class="invoice-num">Faktura 2026/04/082</span>
+          <span class="invoice-status">3 dni opóźnienia</span>
+        </div>
+        <div class="invoice-amount">4 200 zł</div>
+        <div class="invoice-meta">Termin: 19 kwietnia 2026 · Jan Kowalski</div>
+        <div class="invoice-divider"></div>
+        <div class="invoice-sequence-label">Sekwencja przypomnień</div>
+        <div class="invoice-dots">
+          <div class="invoice-dot done"><span class="invoice-dot-label">-3d</span></div>
+          <div class="invoice-dot done"><span class="invoice-dot-label">-1d</span></div>
+          <div class="invoice-dot active"><span class="invoice-dot-label">+1d · teraz</span></div>
+          <div class="invoice-dot"><span class="invoice-dot-label">+7d</span></div>
+          <div class="invoice-dot"><span class="invoice-dot-label">ok</span></div>
+        </div>
+      </div>
+      <div class="invoice-note">
+        <div class="invoice-note-label">Automatycznie</div>
+        <div class="invoice-note-text">System sam pilnuje terminów. Zatrzymuje się po zaksięgowaniu wpłaty.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 3: Newsletter AI (dashboard) -->
+<div class="slide has-preview">
+  <div class="slide-bg-shape"></div>
+  <div class="slide-bg-shape-2"></div>
+  <div class="slide-content">
+    <h2 class="slide-title">Newsletter AI</h2>
+    <p class="slide-desc">Codzienny brief z najważniejszymi historiami z polskich mediów. W pełni zautomatyzowany system: pobiera newsy, wybiera najlepsze, streszcza i wysyła — bez udziału człowieka.</p>
+    <a href="/uslugi/newsletter" class="slide-link">Zobacz cały projekt →</a>
+  </div>
+  <div class="slide-preview">
+    <div class="dash">
+      <div class="dash-header">
+        <div class="dash-title">Newsletter · 19.04.2026</div>
+        <div class="dash-live"><span class="dash-live-dot"></span>6:00</div>
+      </div>
+      <div class="dash-stats">
+        <div class="dash-stat"><div class="dash-stat-label">Newsy</div><div class="dash-stat-value">15</div></div>
+        <div class="dash-stat"><div class="dash-stat-label">Open</div><div class="dash-stat-value">68<span class="dash-stat-unit">%</span></div></div>
+        <div class="dash-stat"><div class="dash-stat-label">Dni</div><div class="dash-stat-value">47</div></div>
+      </div>
+      <div class="dash-news">
+        <div class="dash-news-head">Wybrane przez AI · dzisiejsze wydanie</div>
+        <div class="dash-news-item">
+          <span class="dash-news-cat">Gospodarka</span>
+          <div class="dash-news-title">GUS: inflacja spadła do 2,7% w marcu</div>
+        </div>
+        <div class="dash-news-item">
+          <span class="dash-news-cat">Technologia</span>
+          <div class="dash-news-title">Polski startup AI pozyskuje 40 mln €</div>
+        </div>
+        <div class="dash-news-item">
+          <span class="dash-news-cat">Biznes</span>
+          <div class="dash-news-title">Rynek pracy stabilny — bezrobocie 5,1%</div>
+        </div>
+        <div class="dash-news-item">
+          <span class="dash-news-cat">Energetyka</span>
+          <div class="dash-news-title">PGE kontraktuje morską farmę wiatrową</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: Skrzynka e-mail AI (laptop/browser) -->
+<div class="slide has-preview">
+  <div class="slide-bg-shape"></div>
+  <div class="slide-bg-shape-2"></div>
+  <div class="slide-content">
+    <h2 class="slide-title">Skrzynka e-mail AI</h2>
+    <p class="slide-desc">AI klasyfikuje przychodzące maile, przypisuje priorytet i kieruje do odpowiednich folderów. Reklamacje dostają natychmiastową odpowiedź, zgłoszenia trafiają do uporządkowanego rejestru.</p>
+    <a href="/uslugi/skrzynka-email-ai" class="slide-link">Zobacz cały projekt →</a>
+  </div>
+  <div class="slide-preview">
+    <div class="laptop">
+      <div class="laptop-chrome">
+        <span class="laptop-chrome-dot"></span><span class="laptop-chrome-dot"></span><span class="laptop-chrome-dot"></span>
+        <span class="laptop-url">mail.twoja-firma.pl</span>
+      </div>
+      <div class="mbox-layout">
+        <div class="mbox-sidebar">
+          <div class="mbox-sidebar-item active"><span>Inbox</span><span class="mbox-sidebar-count">12</span></div>
+          <div class="mbox-sidebar-item"><span>Reklam.</span><span class="mbox-sidebar-count">3</span></div>
+          <div class="mbox-sidebar-item"><span>Pilne</span><span class="mbox-sidebar-count">1</span></div>
+          <div class="mbox-sidebar-item"><span>Sprzedaż</span><span class="mbox-sidebar-count">5</span></div>
+          <div class="mbox-sidebar-item"><span>Archiwum</span><span class="mbox-sidebar-count">87</span></div>
+        </div>
+        <div class="mbox-main">
+          <div class="mbox-main-title">Inbox · 12 nowych</div>
+          <div class="mbox-item">
+            <div class="mbox-item-row">
+              <div class="mbox-from">Anna Kowalska</div>
+              <div class="mbox-time">09:42</div>
+            </div>
+            <div class="mbox-subj">Zamówienie #4921 — paczka nie dotarła</div>
+            <span class="mbox-label lbl-red">Reklamacja</span>
+          </div>
+          <div class="mbox-item">
+            <div class="mbox-item-row">
+              <div class="mbox-from">Piotr Nowak</div>
+              <div class="mbox-time">09:28</div>
+            </div>
+            <div class="mbox-subj">Problem z logowaniem do panelu</div>
+            <span class="mbox-label lbl-amber">Pilne</span>
+          </div>
+          <div class="mbox-item">
+            <div class="mbox-item-row">
+              <div class="mbox-from">Marta Sobczak</div>
+              <div class="mbox-time">08:55</div>
+            </div>
+            <div class="mbox-subj">Pytanie o nowe funkcje w premium</div>
+            <span class="mbox-label lbl-violet">Sprzedaż</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 5: Twój projekt -->
+<div class="slide">
+  <div class="slide-bg-shape"></div>
+  <div class="slide-bg-shape-2"></div>
+  <div class="slide-content">
+    <h2 class="slide-title">Twój projekt może być następny</h2>
+    <p class="slide-desc">Masz proces w firmie, który zajmuje Ci godziny dziennie? Powtarzalne zadanie, które można zautomatyzować? Porozmawiajmy. Pierwsza konsultacja jest bezpłatna — bez zobowiązań, konkretne rekomendacje.</p>
+    <a href="#" data-contact="1" class="slide-link">Napisz do nas →</a>
+  </div>
+</div>
+
 </div>
 </div>
+
 <div class="carousel-controls">
-<button class="carousel-arrow" id="prev-btn" aria-label="Poprzedni">&larr;</button>
-<div class="carousel-dots" id="carousel-dots">
-<button class="carousel-dot active" data-slide="0" aria-label="Slajd 1"></button>
-<button class="carousel-dot" data-slide="1" aria-label="Slajd 2"></button>
-<button class="carousel-dot" data-slide="2" aria-label="Slajd 3"></button>
-<button class="carousel-dot" data-slide="3" aria-label="Slajd 4"></button>
-<button class="carousel-dot" data-slide="4" aria-label="Slajd 5"></button>
-</div>
-<button class="carousel-arrow" id="next-btn" aria-label="Następny">&rarr;</button>
+  <button class="carousel-arrow" id="prev-btn" aria-label="Poprzedni">←</button>
+  <div class="carousel-dots" id="carousel-dots">
+    <button class="carousel-dot active" data-slide="0" aria-label="Slajd 1"></button>
+    <button class="carousel-dot" data-slide="1" aria-label="Slajd 2"></button>
+    <button class="carousel-dot" data-slide="2" aria-label="Slajd 3"></button>
+    <button class="carousel-dot" data-slide="3" aria-label="Slajd 4"></button>
+    <button class="carousel-dot" data-slide="4" aria-label="Slajd 5"></button>
+  </div>
+  <button class="carousel-arrow" id="next-btn" aria-label="Następny">→</button>
 </div>
 </header>
 
+<!-- USE CASES -->
 <section id="use-cases">
-<div class="section-head"><div class="section-eyebrow">Zastosowania</div><h2 class="section-title">Co można zautomatyzować w firmie</h2><p class="section-sub">Dziesięć konkretnych przykładów — uniwersalnych, dopasowanych do różnych branż i wielkości firm.</p></div>
-<div class="use-cases">
-<div class="use-case"><div class="use-case-header"><div class="use-case-num">01</div><div class="use-case-title">Automatyzacja fakturowania</div></div><div class="use-case-desc">Zamówienia z Twojego sklepu automatycznie generują faktury, wysyłają je klientom i archiwizują w księgowości.</div></div>
-<div class="use-case"><div class="use-case-header"><div class="use-case-num">02</div><div class="use-case-title">Newsletter wewnętrzny dla zespołu</div></div><div class="use-case-desc">Codzienny brief z najważniejszymi wiadomościami z Twojej branży. Zespół zaczyna dzień poinformowany.</div></div>
-<div class="use-case"><div class="use-case-header"><div class="use-case-num">03</div><div class="use-case-title">Newsletter brand'owy dla klientów</div></div><div class="use-case-desc">Newsletter w Twoich kolorach, z treścią z Twojej branży. Buduje relację i pozycjonuje markę jako ekspert.</div></div>
-<div class="use-case"><div class="use-case-header"><div class="use-case-num">04</div><div class="use-case-title">Chatbot obsługi klienta</div></div><div class="use-case-desc">Inteligentny bot FAQ na Twojej stronie. Odpowiada 24/7, zwalnia zespół z pierwszej linii wsparcia.</div></div>
-<div class="use-case"><div class="use-case-header"><div class="use-case-num">05</div><div class="use-case-title">Automatyczne raporty dzienne</div></div><div class="use-case-desc">Codzienny raport z kluczowymi danymi z Twoich systemów (CRM, sprzedaż, metryki) trafia na Twój mail.</div></div>
-<div class="use-case"><div class="use-case-header"><div class="use-case-num">06</div><div class="use-case-title">Klasyfikacja zgłoszeń</div></div><div class="use-case-desc">Każdy mail lub formularz od klienta jest automatycznie otagowany, priorytezowany i skierowany.</div></div>
-<div class="use-case"><div class="use-case-header"><div class="use-case-num">07</div><div class="use-case-title">Generowanie ofert z briefa</div></div><div class="use-case-desc">Klient wypełnia formularz, AI tworzy gotowy dokument ofertowy w Twoim brand'zie.</div></div>
-<div class="use-case"><div class="use-case-header"><div class="use-case-num">08</div><div class="use-case-title">Automatyczne przypomnienia</div></div><div class="use-case-desc">Wizyty, terminy płatności, odnowienia — klient dostaje przypomnienie w odpowiednim momencie.</div></div>
-<div class="use-case"><div class="use-case-header"><div class="use-case-num">09</div><div class="use-case-title">Dashboards mobile dla zarządu</div></div><div class="use-case-desc">Natywna aplikacja iOS z kluczowymi metrykami firmy. Szef widzi stan biznesu w jednym ekranie.</div></div>
-<div class="use-case"><div class="use-case-header"><div class="use-case-num">10</div><div class="use-case-title">Formularz terenowy dla pracowników</div></div><div class="use-case-desc">Aplikacja iOS dla zespołu w terenie: raportowanie, checklisty, dokumentacja — offline-first.</div></div>
+<div class="section-head">
+  <div class="section-eyebrow">Zastosowania w firmach</div>
+  <h2 class="section-title">Co można zautomatyzować</h2>
+  <p class="section-sub">Konkretne przykłady — uniwersalnych, dopasowanych do różnych branż i wielkości firm.</p>
+</div>
+<div class="use-cases" id="use-cases-grid">
+  <div class="use-case">
+    <div class="use-case-header"><div class="use-case-num">01</div><div class="use-case-title">Automatyzacja fakturowania</div></div>
+    <div class="use-case-desc">Zamówienia z Twojego sklepu automatycznie generują faktury, wysyłają je klientom i archiwizują w księgowości.</div>
+  </div>
+  <div class="use-case">
+    <div class="use-case-header"><div class="use-case-num">02</div><div class="use-case-title">Newsletter wewnętrzny dla zespołu</div></div>
+    <div class="use-case-desc">Codzienny brief z najważniejszymi wiadomościami z Twojej branży. Zespół zaczyna dzień poinformowany.</div>
+  </div>
+  <div class="use-case">
+    <div class="use-case-header"><div class="use-case-num">03</div><div class="use-case-title">Newsletter brand'owy dla klientów</div></div>
+    <div class="use-case-desc">Newsletter w Twoich kolorach, z treścią z Twojej branży. Buduje relację i pozycjonuje markę jako ekspert.</div>
+  </div>
+  <div class="use-case">
+    <div class="use-case-header"><div class="use-case-num">04</div><div class="use-case-title">Chatbot obsługi klienta</div></div>
+    <div class="use-case-desc">Inteligentny bot FAQ na Twojej stronie. Odpowiada 24/7, zwalnia zespół z pierwszej linii wsparcia.</div>
+  </div>
+  <div class="use-case extra">
+    <div class="use-case-header"><div class="use-case-num">05</div><div class="use-case-title">Automatyczne raporty dzienne</div></div>
+    <div class="use-case-desc">Codzienny raport z kluczowymi danymi z Twoich systemów (CRM, sprzedaż, metryki) trafia na Twój mail.</div>
+  </div>
+  <div class="use-case extra">
+    <div class="use-case-header"><div class="use-case-num">06</div><div class="use-case-title">Klasyfikacja zgłoszeń</div></div>
+    <div class="use-case-desc">Każdy mail lub formularz od klienta jest automatycznie otagowany, priorytezowany i skierowany.</div>
+  </div>
+  <div class="use-case extra">
+    <div class="use-case-header"><div class="use-case-num">07</div><div class="use-case-title">Generowanie ofert z briefa</div></div>
+    <div class="use-case-desc">Klient wypełnia formularz, AI tworzy gotowy dokument ofertowy w Twoim brand'zie.</div>
+  </div>
+  <div class="use-case extra">
+    <div class="use-case-header"><div class="use-case-num">08</div><div class="use-case-title">Automatyczne przypomnienia</div></div>
+    <div class="use-case-desc">Wizyty, terminy płatności, odnowienia — klient dostaje przypomnienie w odpowiednim momencie.</div>
+  </div>
+  <div class="use-case extra">
+    <div class="use-case-header"><div class="use-case-num">09</div><div class="use-case-title">Dashboards mobile dla zarządu</div></div>
+    <div class="use-case-desc">Natywna aplikacja z kluczowymi metrykami firmy. Szef widzi stan biznesu w jednym ekranie.</div>
+  </div>
+  <div class="use-case extra">
+    <div class="use-case-header"><div class="use-case-num">10</div><div class="use-case-title">Formularz terenowy dla pracowników</div></div>
+    <div class="use-case-desc">Aplikacja dla zespołu w terenie: raportowanie, checklisty, dokumentacja — offline-first.</div>
+  </div>
+</div>
+<div class="toggle-wrap">
+  <button class="toggle-btn" id="toggle-uses" aria-expanded="false">
+    <span id="toggle-label">Więcej pomysłów</span>
+    <span class="toggle-count" id="toggle-count">(6)</span>
+    <svg class="chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
 </div>
 </section>
 
+<!-- DLA KOGO -->
 <section>
-<div class="section-head"><div class="section-eyebrow">Dla kogo</div><h2 class="section-title">Czy to rozwiązanie dla Ciebie?</h2></div>
+<div class="section-head">
+  <div class="section-eyebrow">Dla kogo</div>
+  <h2 class="section-title">Czy to rozwiązanie dla Ciebie?</h2>
+</div>
 <div class="filter-list">
-<p class="filter-intro">SiroFlow AI to dobre dopasowanie jeśli:</p>
-<ul>
-<li>Prowadzisz <strong>mikro lub małą firmę</strong> (1-50 osób) i szukasz konkretnych rozwiązań dopasowanych do Twojej skali</li>
-<li>Twój zespół <strong>traci godziny dziennie</strong> na powtarzalną pracę: faktury, maile, raporty, klasyfikowanie</li>
-<li>Słyszałeś że AI "zmieni wszystko", ale <strong>nie wiesz od czego zacząć</strong> — i chcesz konkretnego przewodnika</li>
-<li>Cenisz <strong>przejrzystość procesu</strong>: dokumentację, jasne etapy, brak "czarnych skrzynek"</li>
-<li>Wolisz pracować z <strong>polskim freelancerem</strong> niż zagraniczną agencją — rozumiesz wartość bezpośredniego kontaktu</li>
-</ul>
+  <p class="filter-intro">SiroFlow AI to dobre dopasowanie jeśli:</p>
+  <ul>
+    <li>Prowadzisz <strong>mikro lub małą firmę</strong> (1–50 osób) i szukasz konkretnych rozwiązań dopasowanych do Twojej skali</li>
+    <li>Twój zespół <strong>traci godziny dziennie</strong> na powtarzalną pracę: faktury, maile, raporty, klasyfikowanie</li>
+    <li>Słyszałeś że AI „zmieni wszystko", ale <strong>nie wiesz od czego zacząć</strong> — i chcesz konkretnego przewodnika</li>
+    <li>Cenisz <strong>przejrzystość procesu</strong>: dokumentację, jasne etapy, brak „czarnych skrzynek"</li>
+    <li>Wolisz pracować z <strong>polskim zespołem</strong> niż zagraniczną agencją — rozumiesz wartość bezpośredniego kontaktu</li>
+  </ul>
 </div>
 </section>
 
+<!-- CTA -->
 <section>
 <div class="cta-section">
-<h2>Masz pomysł na automatyzację?</h2>
-<p>Napisz do mnie. Porozmawiamy o Twoim procesie i zobaczymy co da się zautomatyzować.</p>
-<a href="#" class="btn btn-primary" data-contact="1">Napisz do mnie &rarr;</a>
+  <h2>Masz pomysł na automatyzację?</h2>
+  <p>Napisz do nas. Porozmawiamy o Twoim procesie — bez zobowiązań, bez presji sprzedażowej.</p>
+  <a href="#" class="btn btn-primary" data-contact="1">Napisz do nas →</a>
 </div>
 </section>
 
 <footer>
-<div class="footer-brand"><svg class="footer-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lgf" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs><path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgf)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="footer-name">SiroFlow <span class="ai-accent">AI</span></span></div>
+<div class="footer-brand">
+  <svg class="footer-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="lgfooter" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#6366F1"><animate attributeName="stop-color" values="#6366F1;#818CF8;#6366F1" dur="4s" repeatCount="indefinite"/></stop>
+        <stop offset="100%" stop-color="#818CF8"><animate attributeName="stop-color" values="#818CF8;#6366F1;#818CF8" dur="4s" repeatCount="indefinite"/></stop>
+      </linearGradient>
+    </defs>
+    <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgfooter)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <span class="footer-name">SiroFlow <span class="ai-accent">AI</span></span>
+</div>
 <div class="footer-tagline">„Automatyzacje AI, które oddają Ci czas."</div>
 <div class="footer-line"></div>
-<div class="footer-links"><a href="/uslugi">Usługi</a>·<a href="/cennik">Cennik</a>·<a href="/o-mnie">O mnie</a>·<a href="/kontakt">Kontakt</a><br><a href="#" data-contact="1" id="footer-email">kontakt</a></div>
+<div class="footer-links">
+  <a href="/uslugi">Usługi</a>·<a href="/cennik">Cennik</a>·<a href="/o-mnie">O nas</a>·<a href="/kontakt">Kontakt</a>
+  <br>
+  <a href="#" data-contact="1" id="footer-email">kontakt</a>
+</div>
 <div class="footer-copyright">© 2026 SiroFlow AI</div>
 </footer>
 
@@ -172,43 +577,95 @@ footer{padding:64px 0 40px;border-top:1px solid var(--border);margin-top:40px;te
 
 <script>
 (function(){
-var u='hello',d='siroflowai',t='pl';
-var email=u+String.fromCharCode(64)+d+'.'+t;
-var mailtoLink='mail'+'to:'+email+'?subject=Pytanie%20o%20automatyzacj%C4%99%20AI';
-var contacts=document.querySelectorAll('[data-contact="1"]');
-for(var i=0;i<contacts.length;i++){contacts[i].href=mailtoLink}
-var fe=document.getElementById('footer-email');
-if(fe)fe.textContent=email;
+  // Email obfuscation
+  var u='hello',d='siroflowai',t='pl';
+  var email=u+String.fromCharCode(64)+d+'.'+t;
+  var mailtoLink='mail'+'to:'+email+'?subject=Pytanie%20o%20automatyzacj%C4%99%20AI';
+  var contacts=document.querySelectorAll('[data-contact="1"]');
+  for(var i=0;i<contacts.length;i++){contacts[i].href=mailtoLink}
+  var fe=document.getElementById('footer-email');
+  if(fe)fe.textContent=email;
 
-var track=document.getElementById('carousel-track');
-var container=document.getElementById('carousel');
-var dots=document.querySelectorAll('.carousel-dot');
-var prevBtn=document.getElementById('prev-btn');
-var nextBtn=document.getElementById('next-btn');
-var totalSlides=5,currentSlide=0,autoplayInterval=null,autoplayDelay=5000;
-function goToSlide(index){
-  currentSlide=(index+totalSlides)%totalSlides;
-  track.style.transform='translateX(-'+(currentSlide*100)+'%)';
-  for(var i=0;i<dots.length;i++){
-    if(i===currentSlide)dots[i].classList.add('active');
-    else dots[i].classList.remove('active');
+  // QR code pixel pattern (18x18 realistic-looking QR)
+  var qr=document.getElementById('qr-code');
+  if(qr){
+    var pattern=[
+      1,1,1,1,1,1,1,0,1,0,1,1,0,1,1,1,1,1,
+      1,0,0,0,0,0,1,0,0,1,0,1,1,0,1,0,0,0,
+      1,0,1,1,1,0,1,0,1,0,1,0,0,1,1,0,1,1,
+      1,0,1,1,1,0,1,1,1,0,0,1,1,0,1,0,1,1,
+      1,0,1,1,1,0,1,0,0,1,1,0,1,1,1,0,1,1,
+      1,0,0,0,0,0,1,1,0,0,1,0,0,1,0,0,0,0,
+      1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,
+      0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,
+      1,1,0,1,0,1,1,1,0,0,1,1,0,1,1,0,1,1,
+      0,1,1,0,1,1,0,1,1,0,0,0,1,1,0,1,0,1,
+      1,0,1,1,1,0,1,0,1,1,0,1,0,1,1,1,1,0,
+      0,1,0,0,0,1,1,1,0,1,1,0,1,1,0,0,0,1,
+      1,1,1,1,1,0,0,0,1,0,0,1,1,0,1,1,1,0,
+      0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,0,0,1,
+      1,1,1,1,1,1,1,0,0,0,1,1,0,1,1,1,0,1,
+      1,0,0,0,0,0,1,0,1,1,0,1,1,0,0,1,0,0,
+      1,0,1,1,1,0,1,0,0,0,1,0,1,1,1,0,1,1,
+      1,0,1,1,1,0,1,0,1,1,1,1,0,1,0,1,0,1
+    ];
+    for(var p=0;p<pattern.length;p++){
+      var div=document.createElement('div');
+      if(pattern[p])div.className='qr-pixel';
+      qr.appendChild(div);
+    }
   }
-}
-function nextSlide(){goToSlide(currentSlide+1)}
-function prevSlide(){goToSlide(currentSlide-1)}
-function startAutoplay(){stopAutoplay();autoplayInterval=setInterval(nextSlide,autoplayDelay)}
-function stopAutoplay(){if(autoplayInterval){clearInterval(autoplayInterval);autoplayInterval=null}}
-nextBtn.addEventListener('click',function(){nextSlide();startAutoplay()});
-prevBtn.addEventListener('click',function(){prevSlide();startAutoplay()});
-for(var j=0;j<dots.length;j++){
-  dots[j].addEventListener('click',function(e){
-    var idx=parseInt(e.target.getAttribute('data-slide'),10);
-    goToSlide(idx);startAutoplay();
+
+  // Carousel
+  var track=document.getElementById('carousel-track');
+  var container=document.getElementById('carousel');
+  var dots=document.querySelectorAll('.carousel-dot');
+  var prevBtn=document.getElementById('prev-btn');
+  var nextBtn=document.getElementById('next-btn');
+  var totalSlides=5,currentSlide=0,autoplayInterval=null,autoplayDelay=5000;
+  function goToSlide(index){
+    currentSlide=(index+totalSlides)%totalSlides;
+    track.style.transform='translateX(-'+(currentSlide*100)+'%)';
+    for(var i=0;i<dots.length;i++){
+      if(i===currentSlide)dots[i].classList.add('active');
+      else dots[i].classList.remove('active');
+    }
+  }
+  function nextSlide(){goToSlide(currentSlide+1)}
+  function prevSlide(){goToSlide(currentSlide-1)}
+  function startAutoplay(){stopAutoplay();autoplayInterval=setInterval(nextSlide,autoplayDelay)}
+  function stopAutoplay(){if(autoplayInterval){clearInterval(autoplayInterval);autoplayInterval=null}}
+  nextBtn.addEventListener('click',function(){nextSlide();startAutoplay()});
+  prevBtn.addEventListener('click',function(){prevSlide();startAutoplay()});
+  for(var j=0;j<dots.length;j++){
+    dots[j].addEventListener('click',function(e){
+      var idx=parseInt(e.target.getAttribute('data-slide'),10);
+      goToSlide(idx);startAutoplay();
+    });
+  }
+  container.addEventListener('mouseenter',stopAutoplay);
+  container.addEventListener('mouseleave',startAutoplay);
+  startAutoplay();
+
+  // Toggle "Więcej pomysłów"
+  var toggleBtn=document.getElementById('toggle-uses');
+  var toggleLabel=document.getElementById('toggle-label');
+  var toggleCount=document.getElementById('toggle-count');
+  var grid=document.getElementById('use-cases-grid');
+  toggleBtn.addEventListener('click',function(){
+    var expanded=grid.classList.toggle('expanded');
+    toggleBtn.classList.toggle('expanded',expanded);
+    toggleBtn.setAttribute('aria-expanded',expanded?'true':'false');
+    if(expanded){
+      toggleLabel.textContent='Zwiń pomysły';
+      toggleCount.textContent='';
+    }else{
+      toggleLabel.textContent='Więcej pomysłów';
+      toggleCount.textContent='(6)';
+      // Scroll do sekcji use-cases po zwinięciu
+      document.getElementById('use-cases').scrollIntoView({behavior:'smooth',block:'start'});
+    }
   });
-}
-container.addEventListener('mouseenter',stopAutoplay);
-container.addEventListener('mouseleave',startAutoplay);
-startAutoplay();
 })();
 </script>
 
