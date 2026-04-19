@@ -3,726 +3,161 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Newsletter — SiroFlow AI</title>
-<meta name="description" content="Newsletter AI — system, który automatycznie zbiera, analizuje i wysyła najważniejsze informacje bez pracy człowieka. Case study SiroFlow AI.">
+<title>Newsletter AI — SiroFlow AI</title>
+<meta name="description" content="Newsletter AI — system, który automatycznie zbiera, analizuje i wysyła najważniejsze informacje bez udziału człowieka.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%236366F1'/%3E%3Cstop offset='100%25' stop-color='%23818CF8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72' fill='none' stroke='url(%23g)' stroke-width='13' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="alternate icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #050714;
-    --bg-deep: #020310;
-    --navy: #0B1437;
-    --violet: #6366F1;
-    --violet-light: #818CF8;
-    --cyan: #22D3EE;
-    --cyan-light: #67E8F9;
-    --text: #E2E8F0;
-    --text-dim: #94A3B8;
-    --text-faint: #475569;
-    --border: rgba(255,255,255,0.08);
-    --border-strong: rgba(255,255,255,0.16);
+  :root{
+    --bg:#050714; --navy:#0B1437; --violet:#6366F1; --violet-light:#818CF8; --violet-dim:#4F46E5;
+    --text:#E2E8F0; --text-dim:#94A3B8; --text-faint:#475569;
+    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body{
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', -apple-system, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-    position: relative;
-  ;padding-top:68px}
-  /* Cosmos background — multiple gradient orbs */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 1200px 800px at 20% 0%, rgba(99, 102, 241, 0.18) 0%, transparent 50%),
-      radial-gradient(ellipse 1000px 600px at 80% 30%, rgba(34, 211, 238, 0.12) 0%, transparent 50%),
-      radial-gradient(ellipse 1400px 700px at 50% 100%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 0;
-  }
-  /* Subtle grid overlay */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 32px;
-    position: relative;
-    z-index: 1;
-  }
-  /* === NAV === */
-    /* NAV - spójny ze stroną główną i /uslugi */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-top:68px;font-size:15px;line-height:1.6}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 1200px 800px at 50% 30%,rgba(99,102,241,0.15) 0%,transparent 55%),radial-gradient(ellipse 800px 600px at 20% 80%,rgba(99,102,241,0.08) 0%,transparent 60%);pointer-events:none;z-index:0}
+  .container{max-width:1100px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+  /* NAV */
   nav{position:fixed;top:0;left:0;right:0;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;z-index:100;background:rgba(5,7,20,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
   .nav-inner{max-width:1080px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
   .nav-brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;letter-spacing:-0.2px;text-decoration:none}
-  .ai-accent{background:linear-gradient(135deg,var(--violet) 0%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .ai-accent{color:var(--violet-light);font-weight:500;margin-left:2px}
   .nav-logo{width:24px;height:24px}
   .nav-links{display:flex;gap:32px;align-items:center}
   .nav-link{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
-  .nav-link:hover,.nav-link.active{color:var(--text)}
+  .nav-link:hover{color:var(--text)}
   .nav-link.active{color:var(--violet-light)}
 
-  /* === HERO === */
-  .hero {
-    padding: 96px 0 120px;
-    text-align: center;
-    position: relative;
-  }
-  .hero-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(28px, 4.5vw, 48px);
-    font-weight: 600;
-    line-height: 1.1;
-    letter-spacing: -1.2px;
-    color: #fff;
-    margin-bottom: 8px;
-    max-width: 820px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .hero-title .ai-animated {
-    background: linear-gradient(90deg, #6366F1 0%, #818CF8 25%, #22D3EE 50%, #818CF8 75%, #6366F1 100%);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    font-weight: 700;
-    display: inline-block;
-    animation: aiGradientShift 4s ease-in-out infinite;
-  }
-  @keyframes aiGradientShift {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  .hero-sub {
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(14px, 1.3vw, 16px);
-    line-height: 1.65;
-    color: var(--text-dim);
-    max-width: 580px;
-    margin: 28px auto 48px;
-  }
-  .hero-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 28px;
-    border-radius: 100px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    text-decoration: none;
-    transition: all 0.25s ease;
-    border: 1px solid transparent;
-    cursor: pointer;
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--violet) 0%, var(--cyan) 100%);
-    color: #fff;
-    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5), 0 8px 24px rgba(99, 102, 241, 0.25);
-  }
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15), 0 12px 32px rgba(99, 102, 241, 0.4);
-  }
-  .btn-secondary {
-    background: transparent;
-    color: var(--text);
-    border-color: var(--border-strong);
-  }
-  .btn-secondary:hover {
-    background: rgba(255,255,255,0.05);
-    border-color: rgba(255,255,255,0.3);
-  }
-  /* === SECTION === */
-  section {
-    padding: 40px 0;
-    position: relative;
-  }
-  .section-eyebrow {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 10px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--violet-light);
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    justify-content: center;
-  }
-  .section-eyebrow::before, .section-eyebrow::after {
-    content: '';
-    width: 30px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--violet));
-  }
-  .section-eyebrow::after {
-    background: linear-gradient(90deg, var(--violet), transparent);
-  }
-  .section-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(22px, 3vw, 32px);
-    font-weight: 600;
-    text-align: center;
-    color: #fff;
-    letter-spacing: -0.6px;
-    line-height: 1.2;
-    max-width: 680px;
-    margin: 0 auto 20px;
-  }
-  .section-sub {
-    text-align: center;
-    color: var(--text-dim);
-    font-size: 15px;
-    line-height: 1.65;
-    max-width: 580px;
-    margin: 0 auto 56px;
-  }
-  /* === PREVIEW (Section 2) === */
-  .preview-frame {
-    max-width: 680px;
-    margin: 0 auto;
-    background: rgba(255,255,255,0.03);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
-  }
-  .preview-bar {
-    padding: 14px 20px;
-    background: rgba(255,255,255,0.04);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .preview-bar .dot {
-    width: 11px; height: 11px;
-    border-radius: 50%;
-  }
-  .preview-bar .dot.r { background: #ff5f57; }
-  .preview-bar .dot.y { background: #febc2e; }
-  .preview-bar .dot.g { background: #28c840; }
-  .preview-bar .url {
-    flex: 1;
-    text-align: center;
-    font-family: 'Space Grotesk', monospace;
-    font-size: 11px;
-    color: var(--text-faint);
-    letter-spacing: 0.3px;
-  }
-  /* Inner email preview — mini wariant 19 */
-  .preview-content {
-    background: #FBF9F2;
-    padding: 32px 36px;
-    color: #2C2A26;
-    font-family: Georgia, serif;
-  }
-  .preview-content .date {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    color: #6B6155;
-    text-align: center;
-    margin-bottom: 14px;
-  }
-  .preview-content h1 {
-    font-size: 22px;
-    font-weight: 700;
-    text-align: center;
-    color: #1A1A1A;
-    margin-bottom: 16px;
-    letter-spacing: -0.5px;
-    line-height: 1.15;
-  }
-  .preview-content .intro {
-    font-size: 12px;
-    text-align: center;
-    font-style: italic;
-    color: #4A4640;
-    line-height: 1.5;
-    margin-bottom: 24px;
-  }
-  .preview-content .h2 {
-    font-family: Georgia, serif;
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--violet);
-    text-align: center;
-    margin: 20px 0 14px;
-    font-weight: 700;
-  }
-  .preview-content .h3 {
-    font-size: 14px;
-    font-weight: 700;
-    color: #1A1A1A;
-    line-height: 1.3;
-    margin-bottom: 6px;
-    letter-spacing: -0.2px;
-  }
-  .preview-content .p {
-    font-size: 11px;
-    line-height: 1.6;
-    color: #2C2A26;
-    margin-bottom: 8px;
-  }
-  .preview-content .source {
-    font-family: 'Inter', sans-serif;
-    font-size: 9px;
-    color: var(--violet);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 18px;
-  }
-  .preview-caption {
-    text-align: center;
-    color: var(--text-dim);
-    font-size: 13px;
-    margin-top: 24px;
-    line-height: 1.6;
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  /* === HOW IT WORKS (Section 3) === */
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
-    max-width: 820px;
-    margin: 0 auto 56px;
-  }
-  .step {
-    padding: 26px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    transition: all 0.3s ease;
-  }
-  .step:hover {
-    border-color: var(--border-strong);
-    transform: translateY(-2px);
-  }
-  .step-num {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px; height: 30px;
-    background: linear-gradient(135deg, var(--violet), var(--cyan));
-    border-radius: 8px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    color: #fff;
-    margin-bottom: 16px;
-  }
-  .step-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    color: #fff;
-    margin-bottom: 8px;
-    letter-spacing: -0.3px;
-  }
-  .step-desc {
-    font-size: 13px;
-    line-height: 1.65;
-    color: var(--text-dim);
-  }
-  /* Quote o wartości produktu */
-  .quote {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 32px 36px;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(34, 211, 238, 0.05));
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    border-radius: 16px;
-    text-align: center;
-  }
-  .quote-text {
-    font-family: 'Space Grotesk', sans-serif;
-    font-style: italic;
-    font-size: 18px;
-    line-height: 1.5;
-    font-weight: 400;
-    color: var(--text);
-    letter-spacing: -0.3px;
-  }
-  /* === USE CASES (Section 4) === */
-  .use-cases {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
-    max-width: 820px;
-    margin: 0 auto;
-  }
-  .use-case {
-    padding: 28px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-  .use-case::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--violet), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .use-case:hover {
-    border-color: var(--border-strong);
-    transform: translateY(-2px);
-  }
-  .use-case:hover::before {
-    opacity: 1;
-  }
-  .use-case-icon {
-    width: 36px;
-    height: 36px;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(34,211,238,0.1));
-    border: 1px solid rgba(99, 102, 241, 0.25);
-    border-radius: 10px;
-    color: var(--cyan);
-  }
-  .use-case-icon svg {
-    width: 18px;
-    height: 18px;
-  }
-  .use-case-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 15px;
-    color: #fff;
-    margin-bottom: 8px;
-    letter-spacing: -0.2px;
-    line-height: 1.3;
-  }
-  .use-case-desc {
-    font-size: 13px;
-    line-height: 1.65;
-    color: var(--text-dim);
-  }
-  /* === STATS (Section 5) === */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    max-width: 720px;
-    margin: 0 auto;
-  }
-  .stat {
-    padding: 36px 24px;
-    text-align: center;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    background: rgba(255,255,255,0.02);
-  }
-  .stat-value {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 32px;
-    font-weight: 600;
-    background: linear-gradient(135deg, #fff, var(--cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 10px;
-    letter-spacing: -1px;
-    line-height: 1.1;
-  }
-  .stat-label {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 11px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-  }
-  /* === SAVINGS (Section 6 — comparison bar + escalation) === */
-  .savings-bars {
-    max-width: 720px;
-    margin: 0 auto 56px;
-    padding: 32px 36px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-  .bar-row {
-    display: grid;
-    grid-template-columns: 130px 1fr 70px;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 18px;
-  }
-  .bar-row:last-child { margin-bottom: 0; }
-  .bar-label {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-dim);
-    font-weight: 500;
-  }
-  .bar-track {
-    height: 14px;
-    background: rgba(255,255,255,0.04);
-    border-radius: 100px;
-    overflow: hidden;
-    position: relative;
-  }
-  .bar-fill {
-    height: 100%;
-    border-radius: 100px;
-    position: relative;
-    transform-origin: left center;
-  }
-  .bar-fill.manual {
-    width: 100%;
-    background: linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.25));
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .bar-fill.ai {
-    width: 4.2%; /* 5/120 = ~4% */
-    background: linear-gradient(135deg, var(--violet), var(--cyan));
-    box-shadow: 0 0 16px rgba(99, 102, 241, 0.5), 0 0 32px rgba(34, 211, 238, 0.3);
-  }
-  .bar-value {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-    text-align: right;
-    letter-spacing: -0.2px;
-  }
-  .bar-value .unit {
-    color: var(--text-dim);
-    font-weight: 400;
-    margin-left: 2px;
-  }
-  /* Eskalacja 3 liczb */
-  .savings-escalation {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    max-width: 820px;
-    margin: 0 auto;
-    position: relative;
-  }
-  .savings-stat {
-    padding: 32px 24px;
-    text-align: center;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    background: rgba(255,255,255,0.02);
-    position: relative;
-    transition: all 0.3s ease;
-  }
-  .savings-stat:hover {
-    border-color: var(--border-strong);
-    transform: translateY(-2px);
-  }
-  .savings-stat-period {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.8px;
-    color: var(--text-faint);
-    margin-bottom: 14px;
-  }
-  .savings-stat-value {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 36px;
-    font-weight: 600;
-    background: linear-gradient(135deg, #fff, var(--cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    line-height: 1;
-    letter-spacing: -1.2px;
-    margin-bottom: 8px;
-  }
-  .savings-stat-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    color: var(--text-dim);
-    line-height: 1.45;
-  }
-  /* Arrow chain between stats */
-  .savings-escalation::before {
-    content: '→';
-    position: absolute;
-    top: 50%;
-    left: calc(33.33% - 5px);
-    transform: translate(-50%, -50%);
-    color: var(--violet-light);
-    font-size: 16px;
-    font-weight: 300;
-    z-index: 2;
-    pointer-events: none;
-  }
-  .savings-escalation::after {
-    content: '→';
-    position: absolute;
-    top: 50%;
-    left: calc(66.66% - 5px);
-    transform: translate(-50%, -50%);
-    color: var(--violet-light);
-    font-size: 16px;
-    font-weight: 300;
-    z-index: 2;
-    pointer-events: none;
-  }
-  /* === CTA CLIENT (Section 6) === */
-  .cta-client {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 56px 48px;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(34, 211, 238, 0.04));
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    border-radius: 24px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .cta-client::before {
-    content: '';
-    position: absolute;
-    top: -50%; right: -20%;
-    width: 60%; height: 200%;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .cta-client > * { position: relative; }
-  .cta-client h2 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(20px, 2.6vw, 26px);
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 12px;
-    letter-spacing: -0.5px;
-  }
-  .cta-client p {
-    color: var(--text-dim);
-    margin-bottom: 28px;
-    font-size: 14px;
-  }
-  /* === FOOTER === */
-  footer {
-    padding: 60px 0 40px;
-    border-top: 1px solid var(--border);
-    margin-top: 40px;
-    position: relative;
-  }
-  .footer-inner {
-    text-align: center;
-  }
-  .footer-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .footer-logo { width: 24px; height: 24px; opacity: 0.85; }
-  .footer-name {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    color: #fff;
-    letter-spacing: -0.2px;
-  }
-  .footer-tagline {
-    font-family: Georgia, serif;
-    font-style: italic;
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-bottom: 24px;
-  }
-  .footer-line {
-    width: 40px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--violet), transparent);
-    margin: 0 auto 24px;
-  }
-  .footer-links {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 12px;
-    color: var(--text-faint);
-    line-height: 2;
-  }
-  .footer-links a {
-    color: var(--cyan);
-    text-decoration: none;
-  }
-  .footer-copyright {
-    margin-top: 20px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-faint);
-  }
-  /* Responsive */
-  @media (max-width: 720px) {
-    .container { padding: 0 24px; }
-    .hero { padding: 56px 0 80px; }
-    .hero-cta { flex-direction: column; }
-    .steps { grid-template-columns: 1fr; }
-    .use-cases { grid-template-columns: 1fr; }
-    .stats { grid-template-columns: 1fr; }
-    .cta-client { padding: 40px 28px; }
-    section { padding: 28px 0; }
-    /* Savings responsive */
-    .savings-bars { padding: 24px 20px; }
-    .bar-row { grid-template-columns: 100px 1fr 60px; gap: 12px; }
-    .bar-label { font-size: 10px; }
-    .savings-escalation { grid-template-columns: 1fr; gap: 12px; }
-    .savings-escalation::before, .savings-escalation::after { display: none; }
-    .savings-stat-value { font-size: 32px; }
+  /* HERO */
+  .hero{padding:48px 0 40px;max-width:780px;margin:0 auto;text-align:center}
+  .hero-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(32px,4vw,48px);font-weight:600;line-height:1.1;letter-spacing:-1px;color:#fff;margin-bottom:22px}
+  .hero-title .grad{background:linear-gradient(135deg,var(--violet) 0%,var(--violet-light) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .hero-sub{font-size:16px;line-height:1.7;color:var(--text-dim);max-width:640px;margin:0 auto}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;text-decoration:none;transition:all 0.25s ease;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:linear-gradient(135deg,var(--violet) 0%,var(--violet-dim) 100%);color:#fff;box-shadow:0 6px 20px rgba(99,102,241,0.25)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(99,102,241,0.35)}
+
+  /* PREVIEW - laptop/browser frame z mailem w stylu reader mode */
+  .preview-scene{max-width:680px;margin:40px auto 0;position:relative}
+  .preview-scene::before{content:'';position:absolute;inset:-40px -20px;background:radial-gradient(ellipse at center,rgba(99,102,241,0.08) 0%,transparent 60%);z-index:-1;pointer-events:none}
+  .preview-frame{background:#F8FAFC;border-radius:12px;border:1.5px solid rgba(255,255,255,0.18);overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,0.5);transform:rotate(-0.5deg)}
+  .preview-bar{background:#E2E8F0;padding:10px 14px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #CBD5E1}
+  .preview-dot{width:10px;height:10px;border-radius:50%;background:#94A3B8}
+  .preview-url{background:#fff;border-radius:4px;padding:5px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#64748B;flex:1;margin-left:8px;display:flex;align-items:center;gap:6px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .preview-url::before{content:'📰';font-size:10px}
+  .preview-content{padding:32px 40px;color:#1E293B;max-height:420px;overflow:hidden;position:relative}
+  .preview-content::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(180deg,transparent,#F8FAFC);pointer-events:none}
+  .pc-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:#64748B;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px}
+  .pc-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:24px;color:#0F172A;letter-spacing:-0.6px;line-height:1.2;margin-bottom:14px}
+  .pc-intro{font-size:13px;line-height:1.65;color:#475569;margin-bottom:22px;font-style:italic;padding-left:12px;border-left:2px solid var(--violet)}
+  .pc-section{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:11px;color:var(--violet);letter-spacing:0.12em;text-transform:uppercase;margin:18px 0 10px;padding:6px 0;border-top:1px solid #E2E8F0;border-bottom:1px solid #E2E8F0;text-align:center}
+  .pc-article{margin-bottom:16px}
+  .pc-headline{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#0F172A;line-height:1.3;margin-bottom:5px;letter-spacing:-0.2px}
+  .pc-summary{font-size:12.5px;line-height:1.6;color:#475569;margin-bottom:4px}
+  .pc-source{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--violet);letter-spacing:0.03em}
+  .preview-caption{text-align:center;color:var(--text-dim);font-size:13px;margin:20px auto 0;max-width:560px;line-height:1.6}
+  /* SECTIONS */
+  section{padding:72px 0;position:relative}
+  .section-head{text-align:center;margin-bottom:48px}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:var(--text-dim);margin-bottom:18px;display:inline-block}
+  h2.sec-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.4vw,38px);font-weight:600;color:#fff;letter-spacing:-0.6px;line-height:1.2;max-width:760px;margin:0 auto 16px}
+  .sec-sub{color:var(--text-dim);font-size:14px;line-height:1.65;max-width:620px;margin:0 auto}
+
+  /* STEPS */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:960px;margin:0 auto}
+  .step{padding:24px 22px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:12px;transition:all 0.25s}
+  .step:hover{border-color:rgba(99,102,241,0.3);background:linear-gradient(145deg,rgba(99,102,241,0.06),rgba(255,255,255,0.015))}
+  .snum{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:linear-gradient(135deg,rgba(99,102,241,0.25),rgba(99,102,241,0.08));border:1px solid rgba(99,102,241,0.3);border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:500;font-size:13px;color:var(--violet-light);margin-bottom:14px;letter-spacing:-0.3px}
+  .stitle{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff;margin-bottom:8px;letter-spacing:-0.2px;line-height:1.25}
+  .sdesc{font-size:12.5px;line-height:1.55;color:var(--text-dim)}
+
+  /* SAVINGS BARS */
+  .savings-bars{max-width:680px;margin:0 auto 36px;padding:28px 32px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:14px}
+  .bar-row{display:grid;grid-template-columns:120px 1fr 80px;gap:18px;align-items:center;margin-bottom:14px}
+  .bar-row:last-child{margin-bottom:0}
+  .bar-label{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--text);font-weight:500}
+  .bar-track{height:20px;background:rgba(255,255,255,0.04);border-radius:10px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;border-radius:10px;position:relative}
+  .bar-fill.manual{width:100%;background:linear-gradient(90deg,#EF4444,#F87171)}
+  .bar-fill.ai{width:4%;background:linear-gradient(90deg,var(--violet),var(--violet-light));box-shadow:0 0 12px rgba(129,140,248,0.4)}
+  .bar-value{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:var(--text);text-align:right}
+  .bar-value .unit{color:var(--text-dim);font-weight:400;font-size:11px;margin-left:2px;font-family:'JetBrains Mono',monospace}
+
+  /* SAVINGS ESCALATION */
+  .savings-escalation{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:760px;margin:0 auto}
+  .savings-stat{padding:28px 20px;background:linear-gradient(145deg,rgba(99,102,241,0.08),rgba(255,255,255,0.01));border:1px solid rgba(99,102,241,0.2);border-radius:14px;text-align:center;position:relative;overflow:hidden}
+  .savings-stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet) 0%,var(--violet-light) 100%)}
+  .savings-stat-period{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px}
+  .savings-stat-value{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:32px;color:#fff;letter-spacing:-1px;line-height:1;margin-bottom:8px}
+  .savings-stat-label{font-size:11.5px;line-height:1.5;color:var(--text-dim)}
+
+  /* USE CASES */
+  .use-cases{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;margin:0 auto}
+  .uc{padding:26px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:14px;transition:all 0.25s;display:flex;gap:18px;align-items:flex-start}
+  .uc:hover{border-color:rgba(99,102,241,0.3);background:linear-gradient(145deg,rgba(99,102,241,0.05),rgba(255,255,255,0.015))}
+  .uc-icon{flex-shrink:0;width:44px;height:44px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(99,102,241,0.05));border:1px solid rgba(99,102,241,0.22);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--violet-light)}
+  .uc-icon svg{width:22px;height:22px}
+  .uc-body{flex:1;min-width:0}
+  .uc-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;margin-bottom:8px;letter-spacing:-0.3px;line-height:1.25}
+  .uc-desc{font-size:13px;line-height:1.6;color:var(--text-dim)}
+
+  /* CTA */
+  .cta-box{max-width:720px;margin:0 auto;padding:56px 40px;background:linear-gradient(145deg,rgba(99,102,241,0.08),rgba(255,255,255,0.01));border:1px solid rgba(99,102,241,0.2);border-radius:16px;text-align:center}
+  .cta-box h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,2.6vw,28px);font-weight:600;color:#fff;margin-bottom:14px;letter-spacing:-0.5px}
+  .cta-box p{color:var(--text-dim);margin-bottom:28px;font-size:15px;line-height:1.6;max-width:520px;margin-left:auto;margin-right:auto}
+
+  /* FOOTER */
+  footer{padding:64px 0 40px;border-top:1px solid var(--border);margin-top:40px;text-align:center}
+  .fi{max-width:720px;margin:0 auto}
+  .fb{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
+  .fl{width:24px;height:24px;opacity:0.9}
+  .fn{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff}
+  .ft{font-family:Georgia,serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-bottom:22px}
+  .fline{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);margin:0 auto 22px}
+  .flinks{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);line-height:2}
+  .flinks a{color:var(--violet-light);text-decoration:none;margin:0 6px;transition:color 0.2s}
+  .flinks a:hover{color:#fff}
+  .fcopy{margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-faint)}
+
+  @media (max-width:820px){
+    nav{padding:16px 20px}
+    body{padding-top:60px}
+    .container{padding:0 20px}
+    .nav-links{gap:14px}
+    .nav-link{font-size:12px}
+    .preview-content{padding:24px 24px;max-height:360px}
+    .pc-title{font-size:20px}
+    .steps{grid-template-columns:1fr 1fr}
+    .savings-bars{padding:22px 20px}
+    .bar-row{grid-template-columns:90px 1fr 60px;gap:12px}
+    .bar-label{font-size:11px}
+    .bar-value{font-size:12px}
+    .savings-escalation{grid-template-columns:1fr;gap:12px}
+    .savings-stat{padding:22px 20px}
+    .savings-stat-value{font-size:26px}
+    .use-cases{grid-template-columns:1fr}
+    .cta-box{padding:40px 24px}
+    section{padding:56px 0}
   }
 </style>
 </head>
 <body>
 
-<div class="container">
-
-  <nav>
+<nav>
   <div class="nav-inner">
     <a href="/" class="nav-brand">
       <svg class="nav-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="lgnav" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs>
+        <defs>
+          <linearGradient id="lgnav" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6366F1"><animate attributeName="stop-color" values="#6366F1;#818CF8;#6366F1" dur="4s" repeatCount="indefinite"/></stop>
+            <stop offset="100%" stop-color="#818CF8"><animate attributeName="stop-color" values="#818CF8;#6366F1;#818CF8" dur="4s" repeatCount="indefinite"/></stop>
+          </linearGradient>
+        </defs>
         <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgnav)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       SiroFlow <span class="ai-accent">AI</span>
@@ -730,245 +165,236 @@
     <div class="nav-links">
       <a href="/uslugi" class="nav-link active">Usługi</a>
       <a href="/cennik" class="nav-link">Cennik</a>
-      <a href="/o-mnie" class="nav-link">O mnie</a>
+      <a href="/o-mnie" class="nav-link">O nas</a>
       <a href="/kontakt" class="nav-link">Kontakt</a>
     </div>
   </div>
 </nav>
 
-  <header class="hero">
-    <h1 class="hero-title">
-      Newsletter <span class="ai-animated">AI</span>
-    </h1>
-    <p class="hero-sub">
-    To nie jest zwykły newsletter. To przykład systemu który automatycznie zbiera, analizuje i wysyła najważniejsze informacje - bez pracy człowieka. Ten system może być wdrożony w firmach jako: monitoring rynku, raporty dla zarządu i newslettery dla klientów.
-    </p>
-    <div class="hero-cta">
-      <a href="#" data-contact="1" class="btn btn-primary">
-        Zobacz jak to działa →
-      </a>
-      <a href="#preview" class="btn btn-secondary">Zobacz przykład ↓</a>
-    </div>
-  </header>
+<div class="container">
 
-  <section id="preview">
-    <div class="section-eyebrow">Przykład</div>
-    <h2 class="section-title">Tak wygląda newsletter w&nbsp;Twojej skrzynce</h2>
+<!-- HERO -->
+<header class="hero">
+  <h1 class="hero-title">Newsletter AI<br><span class="grad">Najważniejsze informacje. Bez pracy człowieka.</span></h1>
+  <p class="hero-sub">System, który codziennie rano zbiera, analizuje i wysyła najważniejsze informacje — automatycznie. Monitoring rynku, raporty dla zarządu, newslettery dla klientów: ten sam silnik pod różne zastosowania.</p>
+</header>
 
+<!-- PREVIEW - mail newslettera -->
+<section id="preview">
+  <div class="section-head">
+    <div class="eyebrow">Przykład</div>
+    <h2 class="sec-title">Tak wygląda newsletter w skrzynce</h2>
+    <p class="sec-sub">Format reader-mode: bez reklam, bez clickbaitów, bez banerów. Tylko treść, którą warto przeczytać.</p>
+  </div>
+  <div class="preview-scene">
     <div class="preview-frame">
       <div class="preview-bar">
-        <span class="dot r"></span>
-        <span class="dot y"></span>
-        <span class="dot g"></span>
-        <span class="url">📰 Skrót najważniejszych informacji – 11.04.2026</span>
+        <span class="preview-dot"></span>
+        <span class="preview-dot"></span>
+        <span class="preview-dot"></span>
+        <span class="preview-url">Skrót najważniejszych informacji · 19.04.2026</span>
       </div>
       <div class="preview-content">
-        <div class="date">Sobota, 11 kwietnia 2026</div>
-        <h1>Najważniejsze<br>z dzisiejszego dnia</h1>
-        <p class="intro">Świat przygotowuje się do kluczowych rozmów pokojowych USA–Iran w Pakistanie. W Polsce skupiamy się na decyzjach politycznych i zmianach cen paliw.</p>
-        <div class="h2">— Polityka i Świat —</div>
-        <div class="h3">Wiceprezydent USA już w Pakistanie. Ruszają rozmowy o przyszłości regionu</div>
-        <p class="p">Przedstawiciele amerykańskiej i irańskiej delegacji rozpoczynają rozmowy pokojowe. Wiceprezydent J.D. Vance dotarł do Pakistanu.</p>
-        <p class="source">TVN24 · Czytaj dalej →</p>
-        <div class="h3">Kreml już przygotowuje się na porażkę Orbana</div>
-        <p class="p">Rosyjskie władze przewidują porażkę partii Fidesza w wyborach. Planują obciążyć winą Unię Europejską.</p>
-        <p class="source">Onet · Czytaj dalej →</p>
-      </div>
-    </div>
-
-    <p class="preview-caption">
-      Format Reader Mode — bez reklam, bez clickbaitów, bez banerów. Tylko treść, którą warto przeczytać.
-    </p>
-  </section>
-
-  <section>
-    <div class="section-eyebrow">Jak to działa</div>
-    <h2 class="section-title">Cztery kroki, każdego ranka</h2>
-    <p class="section-sub">Od pobrania surowych newsów do gotowej wiadomości w Twojej skrzynce — wszystko zautomatyzowane.</p>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h3 class="step-title">System zbiera dane</h3>
-        <p class="step-desc">Codziennie skanujemy polskie media i dziesiątki źródeł. Setki artykułów z całego dnia w jednym miejscu.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h3 class="step-title">AI analizuje</h3>
-        <p class="step-desc">Sztuczna inteligencja klasy enterprise czyta wszystkie artykuły, wybiera, analizuje i filtruje najwaźniejsze informacje.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h3 class="step-title">AI tworzy podsumowanie</h3>
-        <p class="step-desc">Każdy news dostaje krótkie podsumowanie 2–3 zdania. Gotowe, krótkie i konkretne.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <h3 class="step-title">System wysyła gotowy briefing</h3>
-        <p class="step-desc">Gotowy newsletter trafia do Twojej skrzynki rano. Automatycznie, bez udziału człowieka.</p>
-      </div>
-    </div>
-  </section>
-
-
-  <section>
-    <div class="section-eyebrow">Format</div>
-    <h2 class="section-title">Krótko. Konkretnie. Codziennie.</h2>
-
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-value">Codziennie</div>
-        <div class="stat-label">Świeży brief</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value">15</div>
-        <div class="stat-label">Newsów dnia</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value">3 min</div>
-        <div class="stat-label">Czas czytania</div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="section-eyebrow">Ile to oszczędza</div>
-    <h2 class="section-title">2 godziny dziennie. Albo&nbsp;5&nbsp;minut.</h2>
-    <p class="section-sub">Tyle czasu zajmuje przygotowanie codziennego briefu ręcznie. Zautomatyzowany workflow skraca to do minimum — bez utraty jakości.</p>
-
-    <div class="savings-bars">
-      <div class="bar-row">
-        <div class="bar-label">Ręcznie</div>
-        <div class="bar-track"><div class="bar-fill manual"></div></div>
-        <div class="bar-value">120<span class="unit">min</span></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label">Z newsletterem</div>
-        <div class="bar-track"><div class="bar-fill ai"></div></div>
-        <div class="bar-value">5<span class="unit">min</span></div>
-      </div>
-    </div>
-
-    <div class="savings-escalation">
-      <div class="savings-stat">
-        <div class="savings-stat-period">Dziennie</div>
-        <div class="savings-stat-value">~2h</div>
-        <div class="savings-stat-label">oszczędności na osobę</div>
-      </div>
-      <div class="savings-stat">
-        <div class="savings-stat-period">Miesięcznie</div>
-        <div class="savings-stat-value">~58h</div>
-        <div class="savings-stat-label">jedna pełna pensja juniora</div>
-      </div>
-      <div class="savings-stat">
-        <div class="savings-stat-period">Rocznie</div>
-        <div class="savings-stat-value">~29 dni</div>
-        <div class="savings-stat-label">pełnych dni roboczych</div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="section-eyebrow">Zastosowania w firmach</div>
-    <h2 class="section-title">Newsletter to nie tylko media</h2>
-    <p class="section-sub">Ten sam mechanizm może działać w Twojej firmie — zautomatyzowany przegląd informacji, dopasowany do Twojej branży i potrzeb.</p>
-
-    <div class="use-cases">
-      <div class="use-case">
-        <div class="use-case-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
+        <div class="pc-date">Piątek, 19 kwietnia 2026</div>
+        <h1 class="pc-title">Najważniejsze z dzisiejszego dnia</h1>
+        <p class="pc-intro">Fed utrzymuje stopy bez zmian, polski startup AI pozyskuje 40 mln euro, GUS ogłasza dane o inflacji. W kraju dyskusja o regulacjach rynku pracy.</p>
+        <div class="pc-section">— Gospodarka —</div>
+        <div class="pc-article">
+          <div class="pc-headline">GUS: inflacja w marcu spadła do 2,7%</div>
+          <p class="pc-summary">Spadek poniżej prognoz ekonomistów. NBP może skorygować stopy już w maju — sygnały z rady polityki pieniężnej.</p>
+          <p class="pc-source">Rzeczpospolita · Czytaj dalej →</p>
         </div>
-        <h3 class="use-case-title">Newsletter wewnętrzny dla pracowników</h3>
-        <p class="use-case-desc">Poranny brief firmowy z kluczowymi wiadomościami z branży. Twój zespół zaczyna dzień z pełną wiedzą o tym co dzieje się w sektorze.</p>
-      </div>
-
-      <div class="use-case">
-        <div class="use-case-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
+        <div class="pc-article">
+          <div class="pc-headline">Fed utrzymuje stopy bez zmian, sygnalizuje ostrożność</div>
+          <p class="pc-summary">Powell odsuwa decyzję o obniżce do drugiej połowy roku. Inwestorzy reagują spokojnie — dolar stabilny.</p>
+          <p class="pc-source">Parkiet · Czytaj dalej →</p>
         </div>
-        <h3 class="use-case-title">Newsletter brand'owy dla klientów</h3>
-        <p class="use-case-desc">Newsletter dla Twoich klientów z wiadomościami z ich branży. Buduje relację i pozycjonuje markę jako ekspert. Dostarczany w Twoich kolorach.</p>
-      </div>
-
-      <div class="use-case">
-        <div class="use-case-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="20" x2="12" y2="10"/>
-            <line x1="18" y1="20" x2="18" y2="4"/>
-            <line x1="6" y1="20" x2="6" y2="16"/>
-          </svg>
+        <div class="pc-section">— Technologia —</div>
+        <div class="pc-article">
+          <div class="pc-headline">Polski startup AI pozyskuje 40 mln euro</div>
+          <p class="pc-summary">Runda serii B od niemieckiego funduszu. Rozwój modelu dla sektora medycznego — przełom w diagnostyce obrazowej.</p>
+          <p class="pc-source">Puls Biznesu · Czytaj dalej →</p>
         </div>
-        <h3 class="use-case-title">Newsletter inwestorski</h3>
-        <p class="use-case-desc">Codzienny brief dla funduszy inwestycyjnych z wiadomościami o spółkach z portfela. Wszystko czego potrzebujesz do porannego briefingu z zespołem.</p>
-      </div>
-
-      <div class="use-case">
-        <div class="use-case-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <path d="M9 12l2 2 4-4"/>
-          </svg>
-        </div>
-        <h3 class="use-case-title">Newsletter compliance / regulacyjny</h3>
-        <p class="use-case-desc">Codzienny brief dla działów prawnych z nowymi przepisami, interpretacjami i orzeczeniami. Nigdy nie przegapisz ważnej zmiany regulacyjnej.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section>
-    <div class="cta-client">
-      <h2>Chcesz coś podobnego dla swojej firmy?</h2>
-      <p>Masz pomysł na automatyzację z AI? Pogadajmy.</p>
-      <a href="#" data-contact="1" class="btn btn-primary">
-        Napisz do mnie →
-      </a>
+<!-- JAK TO DZIAŁA -->
+<section id="jak-to-dziala">
+  <div class="section-head">
+    <div class="eyebrow">Jak to działa</div>
+    <h2 class="sec-title">Cztery kroki, każdego ranka</h2>
+    <p class="sec-sub">Od pobrania surowych newsów do gotowej wiadomości w Twojej skrzynce — wszystko zautomatyzowane.</p>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="snum">01</div>
+      <h3 class="stitle">System zbiera dane</h3>
+      <p class="sdesc">Codziennie skanujemy polskie media i dziesiątki źródeł. Setki artykułów z całego dnia w jednym miejscu.</p>
     </div>
-  </section>
+    <div class="step">
+      <div class="snum">02</div>
+      <h3 class="stitle">AI analizuje</h3>
+      <p class="sdesc">Sztuczna inteligencja czyta wszystkie artykuły, wybiera i filtruje najważniejsze informacje.</p>
+    </div>
+    <div class="step">
+      <div class="snum">03</div>
+      <h3 class="stitle">AI tworzy podsumowanie</h3>
+      <p class="sdesc">Każdy news dostaje krótkie podsumowanie 2–3 zdania. Gotowe, krótkie i konkretne.</p>
+    </div>
+    <div class="step">
+      <div class="snum">04</div>
+      <h3 class="stitle">System wysyła brief</h3>
+      <p class="sdesc">Gotowy newsletter trafia do Twojej skrzynki rano. Automatycznie, bez udziału człowieka.</p>
+    </div>
+  </div>
+</section>
 
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-brand">
-        <svg class="footer-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="lgf1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#6366F1"/>
-              <stop offset="100%" stop-color="#22D3EE"/>
-            </linearGradient>
-          </defs>
-          <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72"
-                fill="none" stroke="url(#lgf1)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- OSZCZĘDNOŚĆ CZASU -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Ile to oszczędza</div>
+    <h2 class="sec-title">2 godziny dziennie. Albo 5 minut.</h2>
+    <p class="sec-sub">Tyle czasu zajmuje przygotowanie codziennego briefu ręcznie. Zautomatyzowany workflow skraca to do minimum — bez utraty jakości.</p>
+  </div>
+  <div class="savings-bars">
+    <div class="bar-row">
+      <div class="bar-label">Ręcznie</div>
+      <div class="bar-track"><div class="bar-fill manual"></div></div>
+      <div class="bar-value">120<span class="unit">min</span></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Z newsletterem</div>
+      <div class="bar-track"><div class="bar-fill ai"></div></div>
+      <div class="bar-value">5<span class="unit">min</span></div>
+    </div>
+  </div>
+  <div class="savings-escalation">
+    <div class="savings-stat">
+      <div class="savings-stat-period">Dziennie</div>
+      <div class="savings-stat-value">~2h</div>
+      <div class="savings-stat-label">oszczędności na osobę</div>
+    </div>
+    <div class="savings-stat">
+      <div class="savings-stat-period">Miesięcznie</div>
+      <div class="savings-stat-value">~58h</div>
+      <div class="savings-stat-label">jedna pełna pensja juniora</div>
+    </div>
+    <div class="savings-stat">
+      <div class="savings-stat-period">Rocznie</div>
+      <div class="savings-stat-value">~29 dni</div>
+      <div class="savings-stat-label">pełnych dni roboczych</div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Zastosowania w firmach</div>
+    <h2 class="sec-title">Newsletter to nie tylko media</h2>
+    <p class="sec-sub">Ten sam mechanizm może działać w Twojej firmie — zautomatyzowany przegląd informacji, dopasowany do Twojej branży i potrzeb.</p>
+  </div>
+  <div class="use-cases">
+    <div class="uc">
+      <div class="uc-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
         </svg>
-        <span class="footer-name">SiroFlow AI</span>
       </div>
-      <div class="footer-tagline">„Automatyzacje AI, które oddają Ci czas."</div>
-      <div class="footer-line"></div>
-      <div class="footer-links">
-        <a href="/uslugi">Usługi</a>·<a href="/cennik">Cennik</a>·<a href="/o-mnie">O mnie</a>·<a href="/kontakt">Kontakt</a>
-        <br>
-        <a href="#" data-contact="1" id="footer-email">kontakt</a>
+      <div class="uc-body">
+        <h3 class="uc-title">Newsletter wewnętrzny dla pracowników</h3>
+        <p class="uc-desc">Poranny brief firmowy z kluczowymi wiadomościami z branży. Twój zespół zaczyna dzień z pełną wiedzą o tym, co dzieje się w sektorze.</p>
       </div>
-      <div class="footer-copyright">© 2026 SiroFlow AI</div>
     </div>
-  </footer>
+    <div class="uc">
+      <div class="uc-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <div class="uc-body">
+        <h3 class="uc-title">Newsletter brand'owy dla klientów</h3>
+        <p class="uc-desc">Newsletter dla Twoich klientów z wiadomościami z ich branży. Buduje relację i pozycjonuje markę jako ekspert. Dostarczany w Twoich kolorach.</p>
+      </div>
+    </div>
+    <div class="uc">
+      <div class="uc-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="20" x2="12" y2="10"/>
+          <line x1="18" y1="20" x2="18" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="16"/>
+        </svg>
+      </div>
+      <div class="uc-body">
+        <h3 class="uc-title">Newsletter inwestorski</h3>
+        <p class="uc-desc">Codzienny brief dla funduszy z wiadomościami o spółkach z portfela. Wszystko, czego potrzebujesz do porannego briefingu z zespołem.</p>
+      </div>
+    </div>
+    <div class="uc">
+      <div class="uc-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <div class="uc-body">
+        <h3 class="uc-title">Newsletter compliance / regulacyjny</h3>
+        <p class="uc-desc">Codzienny brief dla działów prawnych z nowymi przepisami, interpretacjami i orzeczeniami. Nigdy nie przegapisz ważnej zmiany regulacyjnej.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section>
+  <div class="cta-box">
+    <h2>Chcesz taki system u siebie?</h2>
+    <p>Powiedz nam, jaki newsletter sprawdziłby się w Twojej firmie — wewnętrzny, dla klientów, czy branżowy. Pokażemy, jak to zautomatyzować.</p>
+    <a href="#" data-contact="1" class="btn btn-primary">Napisz do nas →</a>
+  </div>
+</section>
+
+<footer>
+<div class="fi">
+  <div class="fb">
+    <svg class="fl" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lgfooter" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#6366F1"><animate attributeName="stop-color" values="#6366F1;#818CF8;#6366F1" dur="4s" repeatCount="indefinite"/></stop>
+          <stop offset="100%" stop-color="#818CF8"><animate attributeName="stop-color" values="#818CF8;#6366F1;#818CF8" dur="4s" repeatCount="indefinite"/></stop>
+        </linearGradient>
+      </defs>
+      <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgfooter)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="fn">SiroFlow <span class="ai-accent">AI</span></span>
+  </div>
+  <div class="ft">„Automatyzacje AI, które oddają Ci czas."</div>
+  <div class="fline"></div>
+  <div class="flinks">
+    <a href="/uslugi">Usługi</a>·<a href="/cennik">Cennik</a>·<a href="/o-mnie">O nas</a>·<a href="/kontakt">Kontakt</a>
+    <br>
+    <a href="#" data-contact="1" id="fe">kontakt</a>
+  </div>
+  <div class="fcopy">© 2026 SiroFlow AI</div>
+</div>
+</footer>
 
 </div>
 
 <script>
+/* Email obfuscation */
 (function(){
   var u='hello',d='siroflowai',t='pl';
-  var email=u+String.fromCharCode(64)+d+'.'+t;
-  var mailtoLink='mail'+'to:'+email+'?subject=Pytanie%20o%20Newsletter%20AI';
-  var contacts=document.querySelectorAll('[data-contact="1"]');
-  for(var i=0;i<contacts.length;i++){contacts[i].href=mailtoLink}
-  var fe=document.getElementById('footer-email');
-  if(fe)fe.textContent=email;
+  var e=u+String.fromCharCode(64)+d+'.'+t;
+  var m='mail'+'to:'+e+'?subject=Pytanie%20o%20Newsletter%20AI';
+  document.querySelectorAll('[data-contact="1"]').forEach(function(el){el.href=m});
+  var fe=document.getElementById('fe');
+  if(fe)fe.textContent=e;
 })();
 </script>
 
