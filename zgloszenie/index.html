@@ -253,7 +253,9 @@
 
   <div class="card">
 
-    <form id="uf" novalidate>
+    <div style="position:absolute;left:-9999px;">
+  <input type="text" id="company" name="company" autocomplete="off">
+</div>
       <div class="loc-badge" id="locBadge" style="display:none;">Budynek: <span id="locText"></span></div>
 
       <h1>Zgłoś usterkę</h1>
@@ -412,8 +414,27 @@ function compressImage(file){
     /* Walidacja lokalna — wymagane pola */
     var inpLoc = document.getElementById('inpLoc');
     var inpDesc = document.getElementById('inpDesc');
-    if(!inpLoc.value.trim()){ inpLoc.focus(); return; }
-    if(!inpDesc.value.trim()){ inpDesc.focus(); return; }
+    var email = document.getElementById('inpEmail');
+var emailError = document.getElementById('emailError');
+
+/* honeypot */
+if (document.getElementById('company').value) {
+  return;
+}
+
+if(!inpLoc.value.trim()){ inpLoc.focus(); return; }
+if(!inpDesc.value.trim()){ inpDesc.focus(); return; }
+
+/* email */
+if (email.value && !email.checkValidity()) {
+  emailError.style.display = 'block';
+  email.focus();
+  submitBtn.textContent = 'Wyślij zgłoszenie';
+  submitBtn.disabled = false;
+  return;
+} else {
+  emailError.style.display = 'none';
+}
 
     submitBtn.textContent = 'Wysyłanie...';
     submitBtn.disabled = true;
@@ -457,6 +478,12 @@ function compressImage(file){
     }
   });
 })();
+document.getElementById('inpEmail').addEventListener('input', function(){
+  var err = document.getElementById('emailError');
+  if (this.checkValidity() || !this.value) {
+    err.style.display = 'none';
+  }
+});
 </script>
 
 </body>
