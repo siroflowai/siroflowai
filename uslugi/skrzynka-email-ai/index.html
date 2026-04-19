@@ -4,157 +4,201 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Skrzynka e-mail AI — SiroFlow AI</title>
-<meta name="description" content="Case study Skrzynki e-mail AI. AI klasyfikuje maile, przypisuje priorytet, kieruje do folderów. Oszczędność 20-40h miesięcznie.">
+<meta name="description" content="System, który przejmuje klasyfikację maili w polskich firmach — reklamacje, prośby, pytania. Zespół odzyskuje godziny dziennie.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%236366F1'/%3E%3Cstop offset='100%25' stop-color='%23818CF8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72' fill='none' stroke='url(%23g)' stroke-width='13' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="alternate icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#050714;--violet:#6366F1;--violet-light:#818CF8;--cyan:#22D3EE;--text:#E2E8F0;--text-dim:#94A3B8;--text-faint:#475569;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.14)}
+  :root{
+    --bg:#050714; --navy:#0B1437; --violet:#6366F1; --violet-light:#818CF8; --violet-dim:#4F46E5;
+    --text:#E2E8F0; --text-dim:#94A3B8; --text-faint:#475569;
+    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
+  }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;font-size:15px;line-height:1.7;padding-top:68px}
-  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 1000px 700px at 20% 0%,rgba(99,102,241,0.14) 0%,transparent 55%),radial-gradient(ellipse 900px 500px at 85% 25%,rgba(34,211,238,0.1) 0%,transparent 55%);pointer-events:none;z-index:0}
-  .container{max-width:900px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-top:68px;font-size:15px;line-height:1.6}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 1200px 800px at 50% 30%,rgba(99,102,241,0.15) 0%,transparent 55%),radial-gradient(ellipse 800px 600px at 20% 80%,rgba(99,102,241,0.08) 0%,transparent 60%);pointer-events:none;z-index:0}
+  .container{max-width:1100px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
 
   /* NAV */
   nav{position:fixed;top:0;left:0;right:0;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;z-index:100;background:rgba(5,7,20,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
   .nav-inner{max-width:1080px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
   .nav-brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;letter-spacing:-0.2px;text-decoration:none}
-  .ai-accent{background:linear-gradient(135deg,var(--violet) 0%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .ai-accent{color:var(--violet-light);font-weight:500;margin-left:2px}
   .nav-logo{width:24px;height:24px}
   .nav-links{display:flex;gap:32px;align-items:center}
   .nav-link{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
-  .nav-link:hover,.nav-link.active{color:var(--text)}
+  .nav-link:hover{color:var(--text)}
   .nav-link.active{color:var(--violet-light)}
 
   /* HERO */
-  .case-hero{padding:72px 0 48px;text-align:center}
-  .case-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(32px,4.2vw,48px);font-weight:600;line-height:1.1;letter-spacing:-1px;color:#fff;margin-bottom:22px}
-  .case-title .accent{background:linear-gradient(135deg,var(--violet),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .case-sub{font-size:17px;line-height:1.6;color:var(--text-dim);max-width:640px;margin:0 auto 32px}
-
-  /* PREVIEW IMAGE */
-  .preview-wrap{margin:16px 0 56px;padding:24px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:16px}
-  .preview-wrap img{width:100%;height:auto;display:block;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
-
-  /* SECTION base */
-  section{padding:48px 0;position:relative}
-  .section-eyebrow{font-family:'Space Grotesk',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--violet-light);margin-bottom:12px;display:inline-block}
-  h2.section-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(24px,3vw,32px);font-weight:600;color:#fff;letter-spacing:-0.6px;line-height:1.2;margin-bottom:20px}
-  section p{font-size:16px;line-height:1.8;color:var(--text-dim);margin-bottom:16px}
-  section p strong{color:var(--text);font-weight:500}
-  section p em{font-style:normal;color:var(--cyan)}
-
-  /* NUMBERS GRID */
-  .numbers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:32px 0}
-  .number-card{padding:32px 24px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:14px;text-align:center;position:relative;overflow:hidden;transition:all 0.25s}
-  .number-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet),var(--cyan));opacity:0.6}
-  .number-card:hover{border-color:var(--border-strong);background:rgba(255,255,255,0.04);transform:translateY(-2px)}
-  .number-big{font-family:'Space Grotesk',sans-serif;font-size:clamp(36px,5vw,52px);font-weight:700;letter-spacing:-1.5px;background:linear-gradient(135deg,var(--violet),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:8px}
-  .number-label{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px}
-  .number-sub{font-size:12px;color:var(--text-dim);line-height:1.5}
-
-  /* INFO BOX - szacunki */
-  .info-box{padding:24px 28px;background:rgba(34,211,238,0.05);border:1px solid rgba(34,211,238,0.2);border-radius:12px;margin:24px 0}
-  .info-box-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--cyan);margin-bottom:8px}
-  .info-box p{font-size:14px;color:var(--text-dim);margin:0;line-height:1.65}
-
-  /* WYKRES CZŁOWIEK VS SYSTEM */
-  .chart-wrap{margin:32px 0 8px;padding:36px 32px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:16px;position:relative;overflow:hidden}
-  .chart-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet),var(--cyan));opacity:0.6}
-  .chart-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:36px}
-  .chart-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;color:#fff;letter-spacing:-0.3px}
-  .chart-legend{display:flex;gap:20px;flex-wrap:wrap}
-  .legend-item{display:flex;align-items:center;gap:8px;font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-dim)}
-  .legend-dot{width:10px;height:10px;border-radius:2px;display:inline-block}
-  .legend-dot.legend-human{background:#64748B}
-  .legend-dot.legend-system{background:linear-gradient(135deg,var(--violet),var(--cyan))}
-  .chart{display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;min-height:240px;align-items:end;padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:16px}
-  .chart-group{display:flex;flex-direction:column;align-items:center;height:100%}
-  .bars{display:flex;gap:10px;align-items:end;justify-content:center;flex:1;width:100%;max-width:140px;height:220px;position:relative}
-  .bar{width:44px;position:relative;border-radius:6px 6px 0 0;min-height:12px;transition:all 0.3s}
-  .bar-human{background:linear-gradient(180deg,rgba(100,116,139,0.9) 0%,rgba(100,116,139,0.5) 100%);border:1px solid rgba(100,116,139,0.3)}
-  .bar-system{background:linear-gradient(180deg,var(--violet) 0%,var(--cyan) 100%);box-shadow:0 0 20px rgba(99,102,241,0.3)}
-  .bar-value{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:#fff;white-space:nowrap}
-  .bar-system .bar-value{color:var(--cyan)}
-  .bar-label{margin-top:18px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;color:var(--text);text-align:center;line-height:1.4}
-  .bar-label span{display:block;font-size:11px;color:var(--text-faint);font-weight:400;margin-top:2px}
-  .chart-note{font-family:'Space Grotesk',sans-serif;font-size:11px;color:var(--text-faint);text-align:center;font-style:italic}
-
-  /* FLOW STEPS */
-  .flow{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
-  .flow-step{padding:26px 24px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:12px;transition:all 0.25s}
-  .flow-step:hover{border-color:var(--border-strong);background:rgba(255,255,255,0.04)}
-  .flow-num{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:var(--violet-light);letter-spacing:1px;margin-bottom:10px}
-  .flow-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;color:#fff;margin-bottom:8px;letter-spacing:-0.3px}
-  .flow-desc{font-size:14px;color:var(--text-dim);line-height:1.65}
-
-  /* CATEGORIES */
-  .cats{display:flex;flex-direction:column;gap:12px;margin-top:28px}
-  .cat{padding:20px 24px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:10px;display:flex;align-items:flex-start;gap:18px;transition:all 0.25s}
-  .cat:hover{border-color:var(--border-strong);background:rgba(255,255,255,0.04)}
-  .cat-tag{flex-shrink:0;padding:4px 10px;border-radius:6px;font-family:'Space Grotesk',monospace;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px}
-  .cat-tag.complaint{background:rgba(239,68,68,0.15);color:#fca5a5}
-  .cat-tag.request{background:rgba(99,102,241,0.15);color:#a5b4fc}
-  .cat-tag.question{background:rgba(234,179,8,0.15);color:#fde047}
-  .cat-tag.information{background:rgba(34,197,94,0.15);color:#86efac}
-  .cat-tag.other{background:rgba(148,163,184,0.15);color:#cbd5e1}
-  .cat-body{flex:1}
-  .cat-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;margin-bottom:4px}
-  .cat-desc{font-size:13px;color:var(--text-dim);line-height:1.6}
-
-  /* FOR WHOM */
-  .target{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:24px}
-  .target-item{padding:18px 22px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);line-height:1.55}
-  .target-item::before{content:'→';color:var(--cyan);margin-right:10px;font-weight:600}
-
-  /* CTA */
-  .cta-section{max-width:720px;margin:40px auto 0;padding:52px 40px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:16px;text-align:center;position:relative;overflow:hidden}
-  .cta-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--violet),var(--cyan))}
-  .cta-section h2{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:600;color:#fff;margin-bottom:12px;letter-spacing:-0.5px}
-  .cta-section p{color:var(--text-dim);margin-bottom:28px;font-size:15px;line-height:1.6}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;text-decoration:none;transition:all 0.25s ease;border:1px solid transparent;cursor:pointer}
-  .btn-primary{background:linear-gradient(135deg,var(--violet) 0%,var(--cyan) 100%);color:#fff;box-shadow:0 6px 20px rgba(99,102,241,0.25)}
+  .hero{padding:48px 0 40px;max-width:780px;margin:0 auto;text-align:center}
+  .hero-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(32px,4vw,48px);font-weight:600;line-height:1.1;letter-spacing:-1px;color:#fff;margin-bottom:22px}
+  .hero-title .grad{background:linear-gradient(135deg,var(--violet) 0%,var(--violet-light) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .hero-sub{font-size:16px;line-height:1.7;color:var(--text-dim);max-width:640px;margin:0 auto}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;text-decoration:none;transition:all 0.25s ease;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:linear-gradient(135deg,var(--violet) 0%,var(--violet-dim) 100%);color:#fff;box-shadow:0 6px 20px rgba(99,102,241,0.25)}
   .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(99,102,241,0.35)}
 
-  /* FOOTER */
-  footer{padding:64px 0 40px;border-top:1px solid var(--border);margin-top:56px;text-align:center}
-  .footer-brand{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
-  .footer-logo{width:24px;height:24px;opacity:0.9}
-  .footer-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff}
-  .footer-tagline{font-family:Georgia,serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-bottom:22px}
-  .footer-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);margin:0 auto 22px}
-  .footer-links{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);line-height:2}
-  .footer-links a{color:var(--cyan);text-decoration:none;margin:0 6px}
-  .footer-copyright{margin-top:18px;font-family:'Space Grotesk',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-faint)}
+  /* LAPTOP MOCKUP SKRZYNKI */
+  .preview-scene{max-width:780px;margin:40px auto 0;position:relative}
+  .preview-scene::before{content:'';position:absolute;inset:-40px -20px;background:radial-gradient(ellipse at center,rgba(99,102,241,0.08) 0%,transparent 60%);z-index:-1;pointer-events:none}
+  .laptop{width:100%;background:#F8FAFC;border-radius:12px;border:1.5px solid rgba(255,255,255,0.18);overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,0.5);transform:rotate(-0.5deg)}
+  .laptop-chrome{background:#E2E8F0;padding:10px 14px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #CBD5E1}
+  .laptop-dot{width:10px;height:10px;border-radius:50%;background:#94A3B8}
+  .laptop-url{background:#fff;border-radius:4px;padding:5px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#64748B;flex:1;margin-left:8px}
+  .mbox-layout{display:grid;grid-template-columns:180px 1fr;min-height:380px;color:#1E293B}
+  .mbox-sidebar{background:#F1F5F9;padding:16px 12px;border-right:1px solid #E2E8F0;font-family:'Space Grotesk',sans-serif;font-size:12px;color:#475569}
+  .mbox-sidebar-title{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.15em;color:#64748B;text-transform:uppercase;margin-bottom:10px}
+  .mbox-sidebar-item{padding:7px 10px;margin-bottom:3px;border-radius:5px;display:flex;justify-content:space-between;align-items:center;font-weight:500;cursor:default}
+  .mbox-sidebar-item.active{background:#6366F1;color:#fff}
+  .mbox-sidebar-count{font-family:'JetBrains Mono',monospace;font-size:10px;opacity:0.8}
+  .mbox-sidebar-divider{height:1px;background:#E2E8F0;margin:10px 2px}
+  .mbox-sidebar-section{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:0.15em;color:#94A3B8;text-transform:uppercase;padding:4px 10px;margin-bottom:4px}
+  .mbox-main{padding:16px 22px;background:#fff}
+  .mbox-main-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#0F172A;margin-bottom:3px;letter-spacing:-0.3px}
+  .mbox-main-sub{font-size:11px;color:#64748B;margin-bottom:16px}
+  .mbox-item{padding:12px 0;border-bottom:1px solid #F1F5F9;display:flex;gap:10px;align-items:flex-start}
+  .mbox-item:last-child{border-bottom:none}
+  .mbox-avatar{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:10px;color:#fff;margin-top:1px}
+  .mbox-body{flex:1;min-width:0}
+  .mbox-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:3px}
+  .mbox-from{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+  .mbox-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:#94A3B8;flex-shrink:0}
+  .mbox-subj{font-size:11px;color:#475569;line-height:1.4;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+  .mbox-label{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.05em;text-transform:uppercase;padding:2px 7px;border-radius:3px;font-weight:500}
+  .lbl-red{background:#FEE2E2;color:#991B1B}
+  .lbl-amber{background:#FEF3C7;color:#92400E}
+  .lbl-violet{background:rgba(99,102,241,0.12);color:#4338CA}
+  .lbl-blue{background:#DBEAFE;color:#1E40AF}
+  .lbl-gray{background:#E2E8F0;color:#64748B}
 
-  @media (max-width:720px){
-    nav{padding:16px 20px}body{padding-top:60px}.container{padding:0 20px}
-    .nav-links{gap:14px}.nav-link{font-size:12px}
-    .case-hero{padding:48px 0 32px}
-    .numbers,.flow,.target{grid-template-columns:1fr;gap:12px}
-    .cta-section{padding:36px 24px}
-    section{padding:36px 0}
-    h2.section-title{font-size:22px}
-    .cat{flex-direction:column;gap:10px}
-    .cat-tag{align-self:flex-start}
-    .chart-wrap{padding:28px 20px}
-    .chart{gap:14px;min-height:200px}
-    .bars{height:180px;gap:6px;max-width:100%}
-    .bar{width:32px}
-    .bar-value{font-size:10px;top:-20px}
-    .bar-label{font-size:11px}
-    .bar-label span{font-size:10px}
-    .chart-head{flex-direction:column;align-items:flex-start;gap:12px;margin-bottom:28px}
-    .chart-legend{gap:14px}
+  /* SECTIONS */
+  section{padding:72px 0;position:relative}
+  .section-head{text-align:center;margin-bottom:40px}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:var(--text-dim);margin-bottom:18px;display:inline-block}
+  h2.sec-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.4vw,38px);font-weight:600;color:#fff;letter-spacing:-0.6px;line-height:1.2;max-width:760px;margin:0 auto 16px}
+  .sec-text{max-width:720px;margin:0 auto;text-align:left;color:var(--text-dim);font-size:15px;line-height:1.75}
+  .sec-text p{margin-bottom:16px}
+  .sec-text p:last-child{margin-bottom:0}
+  .sec-text strong{color:var(--text);font-weight:500}
+  .sec-text em{color:var(--violet-light);font-style:normal;font-weight:500}
+
+  /* NUMBERS */
+  .numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;margin:0 auto 28px}
+  .number-card{padding:32px 24px;background:linear-gradient(145deg,rgba(99,102,241,0.08),rgba(255,255,255,0.01));border:1px solid rgba(99,102,241,0.2);border-radius:14px;text-align:center;position:relative;overflow:hidden}
+  .number-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet) 0%,var(--violet-light) 100%)}
+  .number-big{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:36px;color:#fff;letter-spacing:-1.2px;line-height:1;margin-bottom:8px}
+  .number-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--violet-light);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px}
+  .number-sub{font-size:12.5px;line-height:1.55;color:var(--text-dim)}
+
+  /* INFO BOX */
+  .info-box{max-width:720px;margin:0 auto 40px;padding:20px 24px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:10px}
+  .info-box-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.15em;color:#F59E0B;text-transform:uppercase;margin-bottom:8px;font-weight:500}
+  .info-box p{font-size:13px;line-height:1.65;color:var(--text-dim);margin:0}
+
+  /* CHART */
+  .chart-wrap{max-width:780px;margin:0 auto;padding:28px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:14px}
+  .chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:14px}
+  .chart-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;letter-spacing:-0.2px}
+  .chart-legend{display:flex;gap:18px;flex-wrap:wrap}
+  .legend-item{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.05em}
+  .legend-dot{width:10px;height:10px;border-radius:2px}
+  .legend-human{background:#EF4444}
+  .legend-system{background:linear-gradient(135deg,var(--violet),var(--violet-light))}
+  .chart{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:end;height:180px;margin-bottom:18px}
+  .chart-group{display:flex;flex-direction:column;align-items:center}
+  .bars{display:flex;gap:8px;align-items:end;height:140px;width:100%;justify-content:center}
+  .bar{width:30px;min-height:20px;border-radius:5px 5px 0 0;position:relative;display:flex;align-items:flex-start;justify-content:center;transition:transform 0.3s}
+  .bar:hover{transform:translateY(-4px)}
+  .bar-human{background:linear-gradient(180deg,#EF4444,#DC2626)}
+  .bar-system{background:linear-gradient(180deg,var(--violet-light),var(--violet));box-shadow:0 0 12px rgba(129,140,248,0.3)}
+  .bar-value{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text);white-space:nowrap;font-weight:500}
+  .chart-group > .bar-label{margin-top:12px;font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text);text-align:center;font-weight:500;line-height:1.4}
+  .chart-group > .bar-label span{display:block;font-size:10px;color:var(--text-dim);font-weight:400;margin-top:2px;font-family:'JetBrains Mono',monospace;letter-spacing:0.05em}
+  .chart-note{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-faint);text-align:center;letter-spacing:0.05em;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+
+  /* FLOW / STEPS */
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:960px;margin:0 auto}
+  .flow-step{padding:24px 22px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:12px;transition:all 0.25s}
+  .flow-step:hover{border-color:rgba(99,102,241,0.3);background:linear-gradient(145deg,rgba(99,102,241,0.06),rgba(255,255,255,0.015))}
+  .flow-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--violet);letter-spacing:0.12em;margin-bottom:12px;display:inline-block;padding:4px 10px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.22);border-radius:100px}
+  .flow-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;margin-bottom:8px;letter-spacing:-0.2px;line-height:1.25}
+  .flow-desc{font-size:12.5px;line-height:1.6;color:var(--text-dim)}
+
+  /* KATEGORIE */
+  .cats{display:grid;grid-template-columns:1fr;gap:12px;max-width:820px;margin:0 auto}
+  .cat{display:grid;grid-template-columns:140px 1fr;gap:20px;align-items:center;padding:20px 24px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:12px;transition:all 0.25s}
+  .cat:hover{border-color:rgba(99,102,241,0.3);background:linear-gradient(145deg,rgba(99,102,241,0.05),rgba(255,255,255,0.015))}
+  .cat-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;padding:6px 12px;border-radius:4px;text-align:center;width:fit-content;justify-self:start}
+  .cat-tag.complaint{background:rgba(239,68,68,0.15);color:#EF4444;border:1px solid rgba(239,68,68,0.3)}
+  .cat-tag.request{background:rgba(245,158,11,0.15);color:#F59E0B;border:1px solid rgba(245,158,11,0.3)}
+  .cat-tag.question{background:rgba(96,165,250,0.15);color:#60A5FA;border:1px solid rgba(96,165,250,0.3)}
+  .cat-tag.information{background:rgba(129,140,248,0.15);color:var(--violet-light);border:1px solid rgba(129,140,248,0.3)}
+  .cat-tag.other{background:rgba(100,116,139,0.2);color:#94A3B8;border:1px solid rgba(100,116,139,0.3)}
+  .cat-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff;margin-bottom:5px;letter-spacing:-0.2px}
+  .cat-desc{font-size:12.5px;line-height:1.6;color:var(--text-dim)}
+
+  /* DLA KOGO */
+  .target{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:820px;margin:0 auto}
+  .target-item{padding:18px 22px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:10px;font-size:13.5px;line-height:1.5;color:var(--text);position:relative;padding-left:46px;transition:all 0.25s}
+  .target-item:hover{border-color:rgba(99,102,241,0.3);background:linear-gradient(145deg,rgba(99,102,241,0.05),rgba(255,255,255,0.015))}
+  .target-item::before{content:'→';position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--violet-light);font-weight:600;font-size:14px}
+
+  /* CTA */
+  .cta-box{max-width:720px;margin:0 auto;padding:56px 40px;background:linear-gradient(145deg,rgba(99,102,241,0.08),rgba(255,255,255,0.01));border:1px solid rgba(99,102,241,0.2);border-radius:16px;text-align:center}
+  .cta-box h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,2.6vw,28px);font-weight:600;color:#fff;margin-bottom:14px;letter-spacing:-0.5px}
+  .cta-box p{color:var(--text-dim);margin-bottom:28px;font-size:15px;line-height:1.6;max-width:560px;margin-left:auto;margin-right:auto}
+
+  /* FOOTER */
+  footer{padding:64px 0 40px;border-top:1px solid var(--border);margin-top:40px;text-align:center}
+  .fi{max-width:720px;margin:0 auto}
+  .fb{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
+  .fl{width:24px;height:24px;opacity:0.9}
+  .fn{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff}
+  .ft{font-family:Georgia,serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-bottom:22px}
+  .fline{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);margin:0 auto 22px}
+  .flinks{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);line-height:2}
+  .flinks a{color:var(--violet-light);text-decoration:none;margin:0 6px;transition:color 0.2s}
+  .flinks a:hover{color:#fff}
+  .fcopy{margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-faint)}
+
+  @media (max-width:820px){
+    nav{padding:16px 20px}
+    body{padding-top:60px}
+    .container{padding:0 20px}
+    .nav-links{gap:14px}
+    .nav-link{font-size:12px}
+    .mbox-layout{grid-template-columns:110px 1fr;min-height:auto}
+    .mbox-sidebar{padding:12px 8px;font-size:10px}
+    .mbox-main{padding:12px 14px}
+    .mbox-from{max-width:130px;font-size:11px}
+    .numbers{grid-template-columns:1fr;gap:12px}
+    .number-big{font-size:28px}
+    .chart{gap:12px}
+    .flow{grid-template-columns:1fr 1fr}
+    .cat{grid-template-columns:1fr;gap:8px}
+    .target{grid-template-columns:1fr}
+    .cta-box{padding:40px 24px}
+    section{padding:56px 0}
+    .laptop{transform:none}
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <a href="/" class="nav-brand">
       <svg class="nav-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="lgnav" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs>
+        <defs>
+          <linearGradient id="lgnav" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6366F1"><animate attributeName="stop-color" values="#6366F1;#818CF8;#6366F1" dur="4s" repeatCount="indefinite"/></stop>
+            <stop offset="100%" stop-color="#818CF8"><animate attributeName="stop-color" values="#818CF8;#6366F1;#818CF8" dur="4s" repeatCount="indefinite"/></stop>
+          </linearGradient>
+        </defs>
         <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgnav)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       SiroFlow <span class="ai-accent">AI</span>
@@ -162,7 +206,7 @@
     <div class="nav-links">
       <a href="/uslugi" class="nav-link active">Usługi</a>
       <a href="/cennik" class="nav-link">Cennik</a>
-      <a href="/o-mnie" class="nav-link">O mnie</a>
+      <a href="/o-mnie" class="nav-link">O nas</a>
       <a href="/kontakt" class="nav-link">Kontakt</a>
     </div>
   </div>
@@ -170,235 +214,320 @@
 
 <div class="container">
 
-  <!-- HERO -->
-  <header class="case-hero">
-    <h1 class="case-title">Skrzynka <span class="accent">e-mail AI</span></h1>
-    <p class="case-sub">System, który przejmuje klasyfikację maili w polskich firmach. Reklamacje dostają natychmiastową odpowiedź, zgłoszenia trafiają do uporządkowanego rejestru, a zespół odzyskuje godziny dziennie.</p>
-  </header>
+<!-- HERO -->
+<header class="hero">
+  <h1 class="hero-title">Skrzynka e-mail AI<br><span class="grad">Maile klasyfikują się same.</span></h1>
+  <p class="hero-sub">System, który przejmuje klasyfikację maili w polskich firmach. Reklamacje dostają natychmiastową odpowiedź, zgłoszenia trafiają do uporządkowanego rejestru, a zespół odzyskuje godziny dziennie.</p>
+</header>
 
-  <!-- PREVIEW -->
-  <div class="preview-wrap">
-    <img src="../skrzynka-preview.png" alt="Widok arkusza z klasyfikacją maili">
+<!-- LAPTOP MOCKUP - skrzynka -->
+<div class="preview-scene">
+  <div class="laptop">
+    <div class="laptop-chrome">
+      <span class="laptop-dot"></span>
+      <span class="laptop-dot"></span>
+      <span class="laptop-dot"></span>
+      <span class="laptop-url">mail.twoja-firma.pl</span>
+    </div>
+    <div class="mbox-layout">
+      <div class="mbox-sidebar">
+        <div class="mbox-sidebar-title">Foldery</div>
+        <div class="mbox-sidebar-item active"><span>Inbox</span><span class="mbox-sidebar-count">12</span></div>
+        <div class="mbox-sidebar-divider"></div>
+        <div class="mbox-sidebar-section">Kategorie AI</div>
+        <div class="mbox-sidebar-item"><span>Reklamacje</span><span class="mbox-sidebar-count">3</span></div>
+        <div class="mbox-sidebar-item"><span>Prośby</span><span class="mbox-sidebar-count">5</span></div>
+        <div class="mbox-sidebar-item"><span>Pytania</span><span class="mbox-sidebar-count">7</span></div>
+        <div class="mbox-sidebar-item"><span>Informacje</span><span class="mbox-sidebar-count">23</span></div>
+        <div class="mbox-sidebar-divider"></div>
+        <div class="mbox-sidebar-item"><span>Archiwum</span><span class="mbox-sidebar-count">87</span></div>
+      </div>
+      <div class="mbox-main">
+        <div class="mbox-main-title">Inbox · 12 nowych</div>
+        <div class="mbox-main-sub">Automatycznie sklasyfikowane przez AI · ostatnia aktualizacja 09:42</div>
+
+        <div class="mbox-item">
+          <div class="mbox-avatar" style="background:#DC2626">AK</div>
+          <div class="mbox-body">
+            <div class="mbox-row">
+              <div class="mbox-from">Anna Kowalska</div>
+              <div class="mbox-time">09:42</div>
+            </div>
+            <div class="mbox-subj">Zamówienie #4921 — paczka nie dotarła, bardzo proszę o pomoc</div>
+            <span class="mbox-label lbl-red">Reklamacja</span>
+          </div>
+        </div>
+        <div class="mbox-item">
+          <div class="mbox-avatar" style="background:#F59E0B">PN</div>
+          <div class="mbox-body">
+            <div class="mbox-row">
+              <div class="mbox-from">Piotr Nowak · Acme Sp. z o.o.</div>
+              <div class="mbox-time">09:28</div>
+            </div>
+            <div class="mbox-subj">Prośba o ofertę na współpracę B2B — pakiet premium</div>
+            <span class="mbox-label lbl-amber">Prośba</span>
+          </div>
+        </div>
+        <div class="mbox-item">
+          <div class="mbox-avatar" style="background:#60A5FA">MS</div>
+          <div class="mbox-body">
+            <div class="mbox-row">
+              <div class="mbox-from">Marta Sobczak</div>
+              <div class="mbox-time">08:55</div>
+            </div>
+            <div class="mbox-subj">Czy macie Państwo dostępną wersję demonstracyjną?</div>
+            <span class="mbox-label lbl-blue">Pytanie</span>
+          </div>
+        </div>
+        <div class="mbox-item">
+          <div class="mbox-avatar" style="background:#818CF8">KT</div>
+          <div class="mbox-body">
+            <div class="mbox-row">
+              <div class="mbox-from">Kancelaria Tax24</div>
+              <div class="mbox-time">08:12</div>
+            </div>
+            <div class="mbox-subj">Raport miesięczny — styczeń 2026 · potwierdzenie otrzymania</div>
+            <span class="mbox-label lbl-violet">Informacja</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Problem</div>
+    <h2 class="sec-title">Godziny dziennie na sortowanie maili</h2>
+  </div>
+  <div class="sec-text">
+    <p>Polskie firmy z sektora MŚP otrzymują codziennie dziesiątki, a niekiedy setki wiadomości e-mail. Każda z nich wymaga tej samej decyzji: czy to reklamacja wymagająca natychmiastowej reakcji, zwykła prośba, która może poczekać, pytanie, na które warto odpowiedzieć w ciągu dnia — czy może informacja, którą wystarczy zarchiwizować.</p>
+    <p>Ten proces klasyfikacji pochłania realne godziny pracy. Osoba odpowiedzialna za pierwszą linię kontaktu musi otworzyć każdą wiadomość, ocenić ją i przekazać dalej. Przy typowym wolumenie 50–80 maili dziennie to łącznie <strong>1–2 godziny dziennie spędzone wyłącznie na przeklikiwaniu skrzynki</strong>, zanim ktokolwiek zacznie na cokolwiek odpowiadać.</p>
+  </div>
+</section>
+
+<!-- ROZWIĄZANIE -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Rozwiązanie</div>
+    <h2 class="sec-title">AI, które rozumie polskie maile</h2>
+  </div>
+  <div class="sec-text">
+    <p>Skrzynka e-mail AI to system, który automatycznie analizuje każdą przychodzącą wiadomość. Model AI czyta temat i treść, przypisuje jedną z pięciu kategorii, nadaje priorytet i tworzy krótkie podsumowanie po polsku.</p>
+    <p>Na podstawie kategorii system uruchamia odpowiednią akcję: wysyła automatyczną odpowiedź, zapisuje zgłoszenie do rejestru, przenosi informację do archiwum albo oznacza niejednoznaczny mail do ręcznej weryfikacji. <em>Zero ręcznego sortowania. Zero pominiętych wiadomości.</em></p>
+  </div>
+</section>
+
+<!-- LICZBY -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Ile to oszczędza</div>
+    <h2 class="sec-title">Konkretne liczby</h2>
+    <p class="sec-sub" style="color:var(--text-dim);font-size:14px;line-height:1.65;max-width:620px;margin:0 auto">Poniższe szacunki opierają się na modelowej kalkulacji dla typowej polskiej firmy MŚP otrzymującej około 50 maili dziennie.</p>
   </div>
 
-  <!-- PROBLEM -->
-  <section>
-    <div class="section-eyebrow">Problem</div>
-    <h2 class="section-title">Godziny dziennie na sortowanie maili</h2>
-    <p>Polskie firmy z sektora MŚP otrzymują codziennie dziesiątki, a niekiedy setki wiadomości e-mail. Każda z nich wymaga od zespołu tej samej decyzji: czy to reklamacja wymagająca natychmiastowej reakcji, zwykła prośba, która może poczekać, pytanie, na które warto odpowiedzieć w ciągu dnia — czy może informacja, którą wystarczy zarchiwizować.</p>
-    <p>Ten proces klasyfikacji pochłania realne godziny pracy. Osoba odpowiedzialna za pierwszą linię kontaktu musi otworzyć każdą wiadomość, ocenić ją i przekazać dalej. Przy typowym wolumenie 50–80 maili dziennie to łącznie <strong>1–2 godziny dziennie spędzone wyłącznie na przeklikiwaniu skrzynki</strong>, zanim ktokolwiek zacznie na cokolwiek odpowiadać.</p>
-  </section>
+  <div class="numbers">
+    <div class="number-card">
+      <div class="number-big">1–2h</div>
+      <div class="number-label">dziennie</div>
+      <div class="number-sub">Czas odzyskany z sortowania skrzynki</div>
+    </div>
+    <div class="number-card">
+      <div class="number-big">20–40h</div>
+      <div class="number-label">miesięcznie</div>
+      <div class="number-sub">To praktycznie cały tydzień pracy jednej osoby</div>
+    </div>
+    <div class="number-card">
+      <div class="number-big">&lt;1 min</div>
+      <div class="number-label">reakcja na reklamację</div>
+      <div class="number-sub">Automatyczna odpowiedź od momentu wpłynięcia maila</div>
+    </div>
+  </div>
 
-  <!-- ROZWIĄZANIE -->
-  <section>
-    <div class="section-eyebrow">Rozwiązanie</div>
-    <h2 class="section-title">AI, które rozumie polskie maile</h2>
-    <p>Skrzynka e-mail AI to system, który automatycznie analizuje każdą przychodzącą wiadomość. Model sztucznej inteligencji czyta temat i treść, przypisuje jedną z pięciu kategorii, nadaje priorytet i tworzy krótkie podsumowanie po polsku.</p>
-    <p>Na podstawie kategorii system uruchamia odpowiednią akcję: wysyła automatyczną odpowiedź, zapisuje zgłoszenie do rejestru, przenosi informację do archiwum albo oznacza niejednoznaczny mail do ręcznej weryfikacji. <em>Zero ręcznego sortowania. Zero pominiętych wiadomości.</em></p>
-  </section>
+  <div class="info-box">
+    <div class="info-box-label">Ważne zastrzeżenie</div>
+    <p>Powyższe liczby to szacunki oparte na modelowej kalkulacji — realna oszczędność zależy od wolumenu maili, struktury zespołu i specyfiki firmy. Dokładną wycenę oszczędności dla Twojego przypadku przedstawiamy po pierwszej rozmowie, gdy zrozumiemy skalę i charakter Twojego procesu.</p>
+  </div>
 
-  <!-- LICZBY OSZCZĘDNOŚCI -->
-  <section>
-    <div class="section-eyebrow">Ile to oszczędza</div>
-    <h2 class="section-title">Konkretne liczby</h2>
-    <p>Poniższe szacunki opierają się na modelowej kalkulacji dla typowej polskiej firmy MŚP otrzymującej około 50 maili dziennie, z zespołem obsługującym pierwszą linię kontaktu.</p>
-
-    <div class="numbers">
-      <div class="number-card">
-        <div class="number-big">1–2h</div>
-        <div class="number-label">dziennie</div>
-        <div class="number-sub">Czas odzyskany na pracy nad sortowaniem skrzynki</div>
-      </div>
-      <div class="number-card">
-        <div class="number-big">20–40h</div>
-        <div class="number-label">miesięcznie</div>
-        <div class="number-sub">To praktycznie cały tydzień pracy jednej osoby</div>
-      </div>
-      <div class="number-card">
-        <div class="number-big">&lt;1 min</div>
-        <div class="number-label">reakcja na reklamację</div>
-        <div class="number-sub">Automatyczna odpowiedź od momentu otrzymania wiadomości</div>
+  <!-- WYKRES -->
+  <div class="chart-wrap">
+    <div class="chart-head">
+      <div class="chart-title">Człowiek vs system</div>
+      <div class="chart-legend">
+        <span class="legend-item"><span class="legend-dot legend-human"></span>Ręcznie</span>
+        <span class="legend-item"><span class="legend-dot legend-system"></span>Skrzynka e-mail AI</span>
       </div>
     </div>
-
-    <div class="info-box">
-      <div class="info-box-label">Ważne zastrzeżenie</div>
-      <p>Powyższe liczby to szacunki oparte na modelowej kalkulacji — realna oszczędność zależy od wolumenu maili, struktury zespołu i specyfiki firmy. Dokładną wycenę oszczędności dla Twojego przypadku przedstawiam po pierwszej rozmowie, gdy zrozumiem skalę i charakter Twojego procesu.</p>
-    </div>
-
-    <!-- WYKRES CZŁOWIEK VS SYSTEM -->
-    <div class="chart-wrap">
-      <div class="chart-head">
-        <div class="chart-title">Człowiek vs system</div>
-        <div class="chart-legend">
-          <span class="legend-item"><span class="legend-dot legend-human"></span>Ręcznie (człowiek)</span>
-          <span class="legend-item"><span class="legend-dot legend-system"></span>Skrzynka e-mail AI</span>
+    <div class="chart">
+      <div class="chart-group">
+        <div class="bars">
+          <div class="bar bar-human" style="height:85%"><span class="bar-value">~90 min</span></div>
+          <div class="bar bar-system" style="height:4%"><span class="bar-value">0 min</span></div>
         </div>
+        <div class="bar-label">Sortowanie skrzynki<span>dziennie</span></div>
       </div>
-
-      <div class="chart">
-        <!-- Grupa 1: Sortowanie dziennie -->
-        <div class="chart-group">
-          <div class="bars">
-            <div class="bar bar-human" style="height:85%"><span class="bar-value">~90 min</span></div>
-            <div class="bar bar-system" style="height:4%"><span class="bar-value">0 min</span></div>
-          </div>
-          <div class="bar-label">Sortowanie skrzynki<br><span>dziennie</span></div>
+      <div class="chart-group">
+        <div class="bars">
+          <div class="bar bar-human" style="height:95%"><span class="bar-value">~2 h</span></div>
+          <div class="bar bar-system" style="height:6%"><span class="bar-value">&lt;1 min</span></div>
         </div>
-
-        <!-- Grupa 2: Reakcja na reklamację -->
-        <div class="chart-group">
-          <div class="bars">
-            <div class="bar bar-human" style="height:95%"><span class="bar-value">~2 h</span></div>
-            <div class="bar bar-system" style="height:6%"><span class="bar-value">&lt;1 min</span></div>
-          </div>
-          <div class="bar-label">Reakcja na reklamację<br><span>od otrzymania</span></div>
+        <div class="bar-label">Reakcja na reklamację<span>od otrzymania</span></div>
+      </div>
+      <div class="chart-group">
+        <div class="bars">
+          <div class="bar bar-human" style="height:75%"><span class="bar-value">~30 h</span></div>
+          <div class="bar bar-system" style="height:4%"><span class="bar-value">0 h</span></div>
         </div>
-
-        <!-- Grupa 3: Miesięczne straty -->
-        <div class="chart-group">
-          <div class="bars">
-            <div class="bar bar-human" style="height:75%"><span class="bar-value">~30 h</span></div>
-            <div class="bar bar-system" style="height:4%"><span class="bar-value">0 h</span></div>
-          </div>
-          <div class="bar-label">Czas stracony<br><span>miesięcznie</span></div>
-        </div>
-      </div>
-
-      <div class="chart-note">Szacunki modelowe dla firmy MŚP otrzymującej ~50 maili dziennie.</div>
-    </div>
-  </section>
-
-  <!-- JAK TO DZIAŁA -->
-  <section>
-    <div class="section-eyebrow">Jak to działa</div>
-    <h2 class="section-title">Cztery kroki, jeden przepływ</h2>
-    <p>System działa w pełni automatycznie — od momentu otrzymania nowej wiadomości do wykonania finalnej akcji mija zazwyczaj mniej niż minuta. Całość jest bezobsługowa: nie wymaga codziennego logowania, nadzorowania ani ręcznej konfiguracji.</p>
-
-    <div class="flow">
-      <div class="flow-step">
-        <div class="flow-num">01 · DETEKCJA</div>
-        <div class="flow-title">Nowy e-mail</div>
-        <div class="flow-desc">System wykrywa nową wiadomość w skrzynce odbiorczej niemal natychmiast po jej nadejściu.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-num">02 · ANALIZA</div>
-        <div class="flow-title">Klasyfikacja AI</div>
-        <div class="flow-desc">Model sztucznej inteligencji analizuje temat i treść, przypisuje kategorię, priorytet i tworzy polskie podsumowanie.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-num">03 · DECYZJA</div>
-        <div class="flow-title">Wybór ścieżki</div>
-        <div class="flow-desc">W zależności od kategorii system uruchamia jedną z pięciu zdefiniowanych akcji biznesowych.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-num">04 · AKCJA</div>
-        <div class="flow-title">Wykonanie</div>
-        <div class="flow-desc">Odpowiedź, zapis do rejestru, archiwizacja lub oznaczenie do przeglądu. Zespół widzi rezultat w arkuszu.</div>
+        <div class="bar-label">Czas stracony<span>miesięcznie</span></div>
       </div>
     </div>
-  </section>
+    <div class="chart-note">Szacunki modelowe dla firmy MŚP otrzymującej ~50 maili dziennie.</div>
+  </div>
+</section>
 
-  <!-- KATEGORIE -->
-  <section>
-    <div class="section-eyebrow">Kategorie wiadomości</div>
-    <h2 class="section-title">Pięć reakcji, pięć ścieżek</h2>
-    <p>System rozpoznaje pięć kategorii wiadomości. Każda ma przypisaną własną ścieżkę obsługi, zaprojektowaną pod konkretny typ biznesowej reakcji.</p>
+<!-- JAK TO DZIAŁA -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Jak to działa</div>
+    <h2 class="sec-title">Cztery kroki, jeden przepływ</h2>
+    <p class="sec-sub" style="color:var(--text-dim);font-size:14px;line-height:1.65;max-width:620px;margin:0 auto">System działa w pełni automatycznie — od momentu otrzymania nowej wiadomości do wykonania akcji mija zazwyczaj mniej niż minuta.</p>
+  </div>
 
-    <div class="cats">
-      <div class="cat">
-        <span class="cat-tag complaint">Reklamacja</span>
-        <div class="cat-body">
-          <div class="cat-title">Natychmiastowa automatyczna odpowiedź</div>
-          <div class="cat-desc">Klient od razu dostaje potwierdzenie, że jego zgłoszenie zostało zauważone. Zespół ma kilka godzin na spokojną, merytoryczną odpowiedź.</div>
-        </div>
-      </div>
-      <div class="cat">
-        <span class="cat-tag request">Prośba</span>
-        <div class="cat-body">
-          <div class="cat-title">Zapis do rejestru zgłoszeń</div>
-          <div class="cat-desc">Wszystkie prośby o ofertę, spotkanie lub współpracę trafiają do uporządkowanego arkusza z datą, nadawcą, priorytetem i podsumowaniem.</div>
-        </div>
-      </div>
-      <div class="cat">
-        <span class="cat-tag question">Pytanie</span>
-        <div class="cat-body">
-          <div class="cat-title">Osobny arkusz pytań</div>
-          <div class="cat-desc">Pytania od klientów są katalogowane oddzielnie, żeby nie ginęły w natłoku innych zgłoszeń i mogły być odpowiadane cyklicznie.</div>
-        </div>
-      </div>
-      <div class="cat">
-        <span class="cat-tag information">Informacja</span>
-        <div class="cat-body">
-          <div class="cat-title">Archiwizacja i rejestr</div>
-          <div class="cat-desc">Powiadomienia, raporty i potwierdzenia są automatycznie przenoszone do osobnego folderu — Inbox zostaje czysty.</div>
-        </div>
-      </div>
-      <div class="cat">
-        <span class="cat-tag other">Inne</span>
-        <div class="cat-body">
-          <div class="cat-title">Oznaczenie do ręcznej weryfikacji</div>
-          <div class="cat-desc">Niejednoznaczne maile trafiają do arkusza „do przeglądu”, który człowiek przegląda raz dziennie. Żadna wiadomość nigdy nie ginie.</div>
-        </div>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-num">01 · Detekcja</div>
+      <div class="flow-title">Nowy e-mail</div>
+      <div class="flow-desc">System wykrywa nową wiadomość w skrzynce odbiorczej niemal natychmiast po jej nadejściu.</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">02 · Analiza</div>
+      <div class="flow-title">Klasyfikacja AI</div>
+      <div class="flow-desc">AI analizuje temat i treść, przypisuje kategorię, priorytet i tworzy polskie podsumowanie.</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">03 · Decyzja</div>
+      <div class="flow-title">Wybór ścieżki</div>
+      <div class="flow-desc">W zależności od kategorii system uruchamia jedną z pięciu zdefiniowanych akcji biznesowych.</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">04 · Akcja</div>
+      <div class="flow-title">Wykonanie</div>
+      <div class="flow-desc">Odpowiedź, zapis do rejestru, archiwizacja lub oznaczenie do przeglądu. Zespół widzi rezultat w arkuszu.</div>
+    </div>
+  </div>
+</section>
+
+<!-- KATEGORIE -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Kategorie wiadomości</div>
+    <h2 class="sec-title">Pięć reakcji, pięć ścieżek</h2>
+    <p class="sec-sub" style="color:var(--text-dim);font-size:14px;line-height:1.65;max-width:620px;margin:0 auto">Każda kategoria ma przypisaną własną ścieżkę obsługi, zaprojektowaną pod konkretny typ biznesowej reakcji.</p>
+  </div>
+
+  <div class="cats">
+    <div class="cat">
+      <span class="cat-tag complaint">Reklamacja</span>
+      <div class="cat-body">
+        <div class="cat-title">Natychmiastowa automatyczna odpowiedź</div>
+        <div class="cat-desc">Klient od razu dostaje potwierdzenie, że jego zgłoszenie zostało zauważone. Zespół ma kilka godzin na spokojną, merytoryczną odpowiedź.</div>
       </div>
     </div>
-  </section>
-
-  <!-- DLA KOGO -->
-  <section>
-    <div class="section-eyebrow">Dla kogo</div>
-    <h2 class="section-title">Idealne dopasowanie</h2>
-    <p>System sprawdza się najlepiej w firmach, które mają jeden lub więcej z poniższych problemów:</p>
-
-    <div class="target">
-      <div class="target-item">Otrzymują co najmniej 20 wiadomości dziennie od klientów lub partnerów</div>
-      <div class="target-item">Mają osobę lub zespół dedykowany pierwszej linii kontaktu</div>
-      <div class="target-item">Chcą mieć pewność, że żadna reklamacja nie zostanie pominięta</div>
-      <div class="target-item">Potrzebują audytu i raportowania komunikacji e-mailowej</div>
-      <div class="target-item">Skrzynka kontaktowa puchnie i trudno znaleźć w niej cokolwiek</div>
-      <div class="target-item">Zespół spędza godziny dziennie na ręcznym sortowaniu</div>
+    <div class="cat">
+      <span class="cat-tag request">Prośba</span>
+      <div class="cat-body">
+        <div class="cat-title">Zapis do rejestru zgłoszeń</div>
+        <div class="cat-desc">Wszystkie prośby o ofertę, spotkanie lub współpracę trafiają do uporządkowanego arkusza z datą, nadawcą, priorytetem i podsumowaniem.</div>
+      </div>
     </div>
-  </section>
+    <div class="cat">
+      <span class="cat-tag question">Pytanie</span>
+      <div class="cat-body">
+        <div class="cat-title">Osobny arkusz pytań</div>
+        <div class="cat-desc">Pytania od klientów są katalogowane oddzielnie, żeby nie ginęły w natłoku innych zgłoszeń i mogły być odpowiadane cyklicznie.</div>
+      </div>
+    </div>
+    <div class="cat">
+      <span class="cat-tag information">Informacja</span>
+      <div class="cat-body">
+        <div class="cat-title">Archiwizacja i rejestr</div>
+        <div class="cat-desc">Powiadomienia, raporty i potwierdzenia są automatycznie przenoszone do osobnego folderu — Inbox zostaje czysty.</div>
+      </div>
+    </div>
+    <div class="cat">
+      <span class="cat-tag other">Inne</span>
+      <div class="cat-body">
+        <div class="cat-title">Oznaczenie do ręcznej weryfikacji</div>
+        <div class="cat-desc">Niejednoznaczne maile trafiają do arkusza „do przeglądu", który człowiek przegląda raz dziennie. Żadna wiadomość nigdy nie ginie.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <!-- CTA -->
-  <section>
-    <div class="cta-section">
-      <h2>Chcesz zobaczyć to u siebie?</h2>
-      <p>Jeśli Twój zespół traci godziny dziennie na sortowaniu maili — porozmawiajmy. Po krótkiej rozmowie przedstawię konkretną ofertę dopasowaną do Twojego wolumenu i procesu.</p>
-      <a href="#" class="btn btn-primary" data-contact="1">Napisz do mnie &rarr;</a>
-    </div>
-  </section>
+<!-- DLA KOGO -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Dla kogo</div>
+    <h2 class="sec-title">Idealne dopasowanie</h2>
+    <p class="sec-sub" style="color:var(--text-dim);font-size:14px;line-height:1.65;max-width:620px;margin:0 auto">System sprawdza się najlepiej w firmach, które mają jeden lub więcej z poniższych problemów:</p>
+  </div>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-brand">
-      <svg class="footer-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="lgf" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs>
-        <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgf)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span class="footer-name">SiroFlow <span class="ai-accent">AI</span></span>
-    </div>
-    <div class="footer-tagline">„Automatyzacje AI, które oddają Ci czas."</div>
-    <div class="footer-line"></div>
-    <div class="footer-links">
-      <a href="/uslugi">Usługi</a>·<a href="/cennik">Cennik</a>·<a href="/o-mnie">O mnie</a>·<a href="/kontakt">Kontakt</a>
-      <br>
-      <a href="#" data-contact="1" id="footer-email">kontakt</a>
-    </div>
-    <div class="footer-copyright">© 2026 SiroFlow AI</div>
-  </footer>
+  <div class="target">
+    <div class="target-item">Otrzymują co najmniej 20 wiadomości dziennie od klientów lub partnerów</div>
+    <div class="target-item">Mają osobę lub zespół dedykowany pierwszej linii kontaktu</div>
+    <div class="target-item">Chcą mieć pewność, że żadna reklamacja nie zostanie pominięta</div>
+    <div class="target-item">Potrzebują audytu i raportowania komunikacji e-mailowej</div>
+    <div class="target-item">Skrzynka kontaktowa puchnie i trudno znaleźć w niej cokolwiek</div>
+    <div class="target-item">Zespół spędza godziny dziennie na ręcznym sortowaniu</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section>
+  <div class="cta-box">
+    <h2>Chcesz zobaczyć to u siebie?</h2>
+    <p>Jeśli Twój zespół traci godziny dziennie na sortowaniu maili — porozmawiajmy. Po krótkiej rozmowie przedstawimy konkretną ofertę dopasowaną do Twojego wolumenu i procesu.</p>
+    <a href="#" class="btn btn-primary" data-contact="1">Napisz do nas →</a>
+  </div>
+</section>
+
+<footer>
+<div class="fi">
+  <div class="fb">
+    <svg class="fl" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lgfooter" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#6366F1"><animate attributeName="stop-color" values="#6366F1;#818CF8;#6366F1" dur="4s" repeatCount="indefinite"/></stop>
+          <stop offset="100%" stop-color="#818CF8"><animate attributeName="stop-color" values="#818CF8;#6366F1;#818CF8" dur="4s" repeatCount="indefinite"/></stop>
+        </linearGradient>
+      </defs>
+      <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgfooter)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="fn">SiroFlow <span class="ai-accent">AI</span></span>
+  </div>
+  <div class="ft">„Automatyzacje AI, które oddają Ci czas."</div>
+  <div class="fline"></div>
+  <div class="flinks">
+    <a href="/uslugi">Usługi</a>·<a href="/cennik">Cennik</a>·<a href="/o-mnie">O nas</a>·<a href="/kontakt">Kontakt</a>
+    <br>
+    <a href="#" data-contact="1" id="fe">kontakt</a>
+  </div>
+  <div class="fcopy">© 2026 SiroFlow AI</div>
+</div>
+</footer>
 
 </div>
 
 <script>
+/* Email obfuscation */
 (function(){
   var u='hello',d='siroflowai',t='pl';
-  var email=u+String.fromCharCode(64)+d+'.'+t;
-  var mailtoLink='mail'+'to:'+email+'?subject=Pytanie%20o%20Skrzynk%C4%99%20e-mail%20AI';
-  var contacts=document.querySelectorAll('[data-contact="1"]');
-  for(var i=0;i<contacts.length;i++){contacts[i].href=mailtoLink}
-  var fe=document.getElementById('footer-email');
-  if(fe)fe.textContent=email;
+  var e=u+String.fromCharCode(64)+d+'.'+t;
+  var m='mail'+'to:'+e+'?subject=Pytanie%20o%20Skrzynk%C4%99%20e-mail%20AI';
+  document.querySelectorAll('[data-contact="1"]').forEach(function(el){el.href=m});
+  var fe=document.getElementById('fe');
+  if(fe)fe.textContent=e;
 })();
 </script>
 
