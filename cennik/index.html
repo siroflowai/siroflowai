@@ -4,102 +4,120 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cennik — SiroFlow AI</title>
-<meta name="description" content="Jak pracuję z klientami. Indywidualna wycena po pierwszej rozmowie.">
+<meta name="description" content="Każda wycena jest indywidualna — stała kwota, jasny zakres, harmonogram. Bez ukrytych kosztów i dopłat za dodatkowe godziny.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%236366F1'/%3E%3Cstop offset='100%25' stop-color='%23818CF8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72' fill='none' stroke='url(%23g)' stroke-width='13' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="alternate icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#050714;--violet:#6366F1;--violet-light:#818CF8;--cyan:#22D3EE;--text:#E2E8F0;--text-dim:#94A3B8;--text-faint:#475569;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.14)}
+  :root{
+    --bg:#050714; --navy:#0B1437; --violet:#6366F1; --violet-light:#818CF8; --violet-dim:#4F46E5;
+    --text:#E2E8F0; --text-dim:#94A3B8; --text-faint:#475569;
+    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
+  }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;font-size:15px;line-height:1.6;padding-top:68px}
-  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 1000px 700px at 20% 0%,rgba(99,102,241,0.14) 0%,transparent 55%),radial-gradient(ellipse 900px 500px at 85% 25%,rgba(34,211,238,0.1) 0%,transparent 55%);pointer-events:none;z-index:0}
-  .container{max-width:1080px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-top:68px;font-size:15px;line-height:1.6}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 1200px 800px at 50% 30%,rgba(99,102,241,0.15) 0%,transparent 55%),radial-gradient(ellipse 800px 600px at 20% 80%,rgba(99,102,241,0.08) 0%,transparent 60%);pointer-events:none;z-index:0}
+  .container{max-width:1100px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
 
   /* NAV */
   nav{position:fixed;top:0;left:0;right:0;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;z-index:100;background:rgba(5,7,20,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
   .nav-inner{max-width:1080px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
   .nav-brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;letter-spacing:-0.2px;text-decoration:none}
-  .ai-accent{background:linear-gradient(135deg,var(--violet) 0%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .ai-accent{color:var(--violet-light);font-weight:500;margin-left:2px}
   .nav-logo{width:24px;height:24px}
   .nav-links{display:flex;gap:32px;align-items:center}
   .nav-link{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
-  .nav-link:hover,.nav-link.active{color:var(--text)}
+  .nav-link:hover{color:var(--text)}
   .nav-link.active{color:var(--violet-light)}
 
   /* HERO */
-  .page-hero{padding:80px 0 56px;max-width:760px;margin:0 auto;text-align:center}
-  .page-hero-eyebrow{display:inline-block;font-family:'Space Grotesk',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--violet-light);margin-bottom:20px}
-  .page-hero-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.4vw,40px);font-weight:600;line-height:1.15;letter-spacing:-0.8px;color:#fff;margin-bottom:20px}
-  .page-hero-sub{font-size:16px;line-height:1.65;color:var(--text-dim);max-width:580px;margin:0 auto}
+  .hero{padding:56px 0 48px;max-width:780px;margin:0 auto;text-align:center}
+  .hero-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(32px,4vw,48px);font-weight:600;line-height:1.1;letter-spacing:-1px;color:#fff;margin-bottom:22px}
+  .hero-title .grad{background:linear-gradient(135deg,var(--violet) 0%,var(--violet-light) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .hero-sub{font-size:16px;line-height:1.7;color:var(--text-dim);max-width:640px;margin:0 auto}
 
-  /* SECTION base */
-  section{padding:56px 0;position:relative}
+  /* SECTIONS */
+  section{padding:64px 0;position:relative}
   .section-head{text-align:center;margin-bottom:44px}
-  .section-eyebrow{font-family:'Space Grotesk',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--violet-light);margin-bottom:14px;display:inline-block}
-  h2.section-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,2.6vw,28px);font-weight:600;color:#fff;letter-spacing:-0.5px;line-height:1.25;max-width:640px;margin:0 auto 14px}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:var(--text-dim);margin-bottom:18px;display:inline-block}
+  h2.sec-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.4vw,38px);font-weight:600;color:#fff;letter-spacing:-0.6px;line-height:1.2;max-width:760px;margin:0 auto 16px}
+  .sec-sub{color:var(--text-dim);font-size:14px;line-height:1.65;max-width:600px;margin:0 auto}
 
-  /* PROCES - 3 kroki */
-  .steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;max-width:960px;margin:0 auto;position:relative}
-  .step{padding:32px 28px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:14px;position:relative;overflow:hidden;transition:all 0.25s}
-  .step::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet) 0%,var(--cyan) 100%);opacity:0.6;transition:opacity 0.25s}
-  .step:hover{border-color:var(--border-strong);background:rgba(255,255,255,0.04);transform:translateY(-2px)}
-  .step:hover::before{opacity:1}
-  .step-num{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;color:var(--violet-light);letter-spacing:1px;margin-bottom:16px}
-  .step-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;color:#fff;margin-bottom:10px;letter-spacing:-0.3px;line-height:1.3}
-  .step-desc{font-size:13px;line-height:1.65;color:var(--text-dim)}
+  /* STEPS - proces */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:880px;margin:0 auto;position:relative}
+  .steps::before{content:'';position:absolute;top:48px;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.3),rgba(99,102,241,0.3),transparent);z-index:0}
+  .step{padding:28px 26px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:14px;transition:all 0.25s;position:relative;z-index:1}
+  .step:hover{border-color:rgba(99,102,241,0.3);background:linear-gradient(145deg,rgba(99,102,241,0.06),rgba(255,255,255,0.015));transform:translateY(-2px)}
+  .step-num{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:linear-gradient(135deg,rgba(99,102,241,0.3),rgba(99,102,241,0.1));border:1px solid rgba(99,102,241,0.35);border-radius:10px;font-family:'JetBrains Mono',monospace;font-weight:500;font-size:14px;color:var(--violet-light);margin-bottom:16px;letter-spacing:-0.3px}
+  .step-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;color:#fff;margin-bottom:10px;letter-spacing:-0.3px}
+  .step-desc{font-size:13px;line-height:1.6;color:var(--text-dim)}
 
-  /* CO ZAWSZE DOSTAJESZ - 3 karty */
-  .includes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;max-width:880px;margin:0 auto}
-  .include{padding:28px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:12px;transition:all 0.25s;text-align:center}
-  .include:hover{border-color:var(--border-strong);background:rgba(255,255,255,0.04)}
-  .include-icon{width:44px;height:44px;margin:0 auto 18px;background:linear-gradient(135deg,var(--violet),var(--cyan));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;font-weight:700;font-family:'Space Grotesk',sans-serif}
-  .include-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;margin-bottom:8px;letter-spacing:-0.3px}
+  /* INCLUDES */
+  .includes{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;margin:0 auto}
+  .include{padding:28px 24px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:14px;transition:all 0.25s;text-align:center}
+  .include:hover{border-color:rgba(99,102,241,0.3);background:linear-gradient(145deg,rgba(99,102,241,0.05),rgba(255,255,255,0.015))}
+  .include-icon{width:48px;height:48px;margin:0 auto 16px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(99,102,241,0.05));border:1px solid rgba(99,102,241,0.22);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--violet-light)}
+  .include-icon svg{width:22px;height:22px}
+  .include-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;margin-bottom:8px;letter-spacing:-0.2px}
   .include-desc{font-size:13px;line-height:1.6;color:var(--text-dim)}
 
   /* FILOZOFIA */
-  .philosophy{max-width:720px;margin:0 auto;padding:40px 48px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:16px;text-align:center;position:relative;overflow:hidden}
-  .philosophy::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60px;height:2px;background:linear-gradient(90deg,var(--violet),var(--cyan))}
-  .philosophy-text{font-family:Georgia,serif;font-style:italic;font-size:17px;line-height:1.7;color:var(--text);max-width:580px;margin:0 auto}
-  .philosophy-text em{font-style:normal;color:var(--cyan);font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:500}
+  .philosophy{max-width:720px;margin:0 auto;padding:40px 44px;background:linear-gradient(145deg,rgba(99,102,241,0.06),rgba(255,255,255,0.01));border:1px solid rgba(99,102,241,0.2);border-radius:14px;text-align:center;position:relative}
+  .philosophy::before{content:'"';position:absolute;top:8px;left:18px;font-family:Georgia,serif;font-size:72px;color:var(--violet);opacity:0.3;line-height:1}
+  .philosophy-text{font-family:Georgia,serif;font-style:italic;font-size:17px;line-height:1.65;color:var(--text);max-width:560px;margin:0 auto}
 
   /* CTA */
-  .cta-section{max-width:720px;margin:0 auto;padding:56px 40px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:16px;text-align:center}
-  .cta-section h2{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:600;color:#fff;margin-bottom:12px;letter-spacing:-0.5px}
-  .cta-section p{color:var(--text-dim);margin-bottom:28px;font-size:15px;line-height:1.6}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;text-decoration:none;transition:all 0.25s ease;border:1px solid transparent;cursor:pointer}
-  .btn-primary{background:linear-gradient(135deg,var(--violet) 0%,var(--cyan) 100%);color:#fff;box-shadow:0 6px 20px rgba(99,102,241,0.25)}
+  .cta-box{max-width:720px;margin:0 auto;padding:56px 40px;background:linear-gradient(145deg,rgba(99,102,241,0.08),rgba(255,255,255,0.01));border:1px solid rgba(99,102,241,0.2);border-radius:16px;text-align:center}
+  .cta-box h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,2.6vw,28px);font-weight:600;color:#fff;margin-bottom:14px;letter-spacing:-0.5px}
+  .cta-box p{color:var(--text-dim);margin-bottom:28px;font-size:15px;line-height:1.6;max-width:520px;margin-left:auto;margin-right:auto}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;text-decoration:none;transition:all 0.25s ease;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:linear-gradient(135deg,var(--violet) 0%,var(--violet-dim) 100%);color:#fff;box-shadow:0 6px 20px rgba(99,102,241,0.25)}
   .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(99,102,241,0.35)}
 
   /* FOOTER */
   footer{padding:64px 0 40px;border-top:1px solid var(--border);margin-top:40px;text-align:center}
-  .footer-brand{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
-  .footer-logo{width:24px;height:24px;opacity:0.9}
-  .footer-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff}
-  .footer-tagline{font-family:Georgia,serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-bottom:22px}
-  .footer-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);margin:0 auto 22px}
-  .footer-links{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);line-height:2}
-  .footer-links a{color:var(--cyan);text-decoration:none;margin:0 6px}
-  .footer-copyright{margin-top:18px;font-family:'Space Grotesk',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-faint)}
+  .fi{max-width:720px;margin:0 auto}
+  .fb{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
+  .fl{width:24px;height:24px;opacity:0.9}
+  .fn{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff}
+  .ft{font-family:Georgia,serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-bottom:22px}
+  .fline{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);margin:0 auto 22px}
+  .flinks{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);line-height:2}
+  .flinks a{color:var(--violet-light);text-decoration:none;margin:0 6px;transition:color 0.2s}
+  .flinks a:hover{color:#fff}
+  .fcopy{margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-faint)}
 
-  @media (max-width:720px){
-    nav{padding:16px 20px}body{padding-top:60px}.container{padding:0 20px}
-    .nav-links{gap:14px}.nav-link{font-size:12px}
-    .page-hero{padding:56px 0 40px}
-    .steps,.includes{grid-template-columns:1fr;gap:14px}
-    .philosophy{padding:32px 28px}
+  @media (max-width:820px){
+    nav{padding:16px 20px}
+    body{padding-top:60px}
+    .container{padding:0 20px}
+    .nav-links{gap:14px}
+    .nav-link{font-size:12px}
+    .steps{grid-template-columns:1fr;gap:12px}
+    .steps::before{display:none}
+    .includes{grid-template-columns:1fr;gap:12px}
+    .philosophy{padding:32px 24px}
     .philosophy-text{font-size:15px}
-    .cta-section{padding:40px 24px}
-    section{padding:40px 0}
-    h2.section-title{font-size:22px}
+    .cta-box{padding:40px 24px}
+    section{padding:48px 0}
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <a href="/" class="nav-brand">
       <svg class="nav-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="lgnav" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs>
+        <defs>
+          <linearGradient id="lgnav" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6366F1"><animate attributeName="stop-color" values="#6366F1;#818CF8;#6366F1" dur="4s" repeatCount="indefinite"/></stop>
+            <stop offset="100%" stop-color="#818CF8"><animate attributeName="stop-color" values="#818CF8;#6366F1;#818CF8" dur="4s" repeatCount="indefinite"/></stop>
+          </linearGradient>
+        </defs>
         <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgnav)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       SiroFlow <span class="ai-accent">AI</span>
@@ -107,7 +125,7 @@
     <div class="nav-links">
       <a href="/uslugi" class="nav-link">Usługi</a>
       <a href="/cennik" class="nav-link active">Cennik</a>
-      <a href="/o-mnie" class="nav-link">O mnie</a>
+      <a href="/o-mnie" class="nav-link">O nas</a>
       <a href="/kontakt" class="nav-link">Kontakt</a>
     </div>
   </div>
@@ -115,109 +133,132 @@
 
 <div class="container">
 
-  <!-- HERO -->
-  <header class="page-hero">
-    <div class="page-hero-eyebrow">Jak pracuję</div>
-    <h1 class="page-hero-title">Każda wycena jest indywidualna</h1>
-    <p class="page-hero-sub">Po krótkiej rozmowie o Twoim procesie dostaniesz pełną, stałą ofertę z harmonogramem i zakresem prac.</p>
-  </header>
+<!-- HERO -->
+<header class="hero">
+  <h1 class="hero-title">Cennik<br><span class="grad">Każda wycena jest indywidualna.</span></h1>
+  <p class="hero-sub">Po krótkiej rozmowie o Twoim procesie dostajesz pełną, stałą ofertę z harmonogramem i zakresem prac. Bez ukrytych kosztów, bez dopłat za „dodatkowe godziny".</p>
+</header>
 
-  <!-- PROCES -->
-  <section>
-    <div class="section-head">
-      <div class="section-eyebrow">Proces</div>
-      <h2 class="section-title">Trzy kroki do oferty</h2>
+<!-- PROCES -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Proces</div>
+    <h2 class="sec-title">Trzy kroki do oferty</h2>
+    <p class="sec-sub">Od pierwszej wiadomości do konkretnej wyceny — zazwyczaj mniej niż 48 godzin.</p>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-title">Piszesz do nas</div>
+      <div class="step-desc">Krótki opis problemu. Co chcesz zautomatyzować, jakiego efektu oczekujesz. Nie musisz wiedzieć „jak" — tylko „co".</div>
     </div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-title">Piszesz do mnie</div>
-        <div class="step-desc">Krótki opis problemu. Czego potrzebujesz zautomatyzować, jakiego efektu oczekujesz.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-title">Rozmawiamy</div>
-        <div class="step-desc">Przedstawiasz problem, następnie analizuję proces i zakres prac. Sprawdzamy czy to dobre dopasowanie.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-title">Dostajesz ofertę</div>
-        <div class="step-desc">Pełna, stała kwota. Zakres prac. Harmonogram realizacji. Żadnych niespodzianek w trakcie.</div>
-      </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-title">Rozmawiamy</div>
+      <div class="step-desc">Przedstawiasz problem, analizujemy proces i zakres prac. Sprawdzamy, czy to dobre dopasowanie — obie strony.</div>
     </div>
-  </section>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-title">Dostajesz ofertę</div>
+      <div class="step-desc">Pełna, stała kwota. Zakres prac. Harmonogram realizacji. Żadnych niespodzianek w trakcie projektu.</div>
+    </div>
+  </div>
+</section>
 
-  <!-- CO ZAWSZE DOSTAJESZ -->
-  <section>
-    <div class="section-head">
-      <div class="section-eyebrow">W każdej wycenie</div>
-      <h2 class="section-title">Co zawsze dostajesz</h2>
-    </div>
-    <div class="includes">
-      <div class="include">
-        <div class="include-icon">📖</div>
-        <div class="include-title">Instrukcja obsługi</div>
-        <div class="include-desc">Proste wytłumaczenie jak korzystać z gotowego rozwiązania. Twój zespół nauczy się obsługi w 30 minut.</div>
+<!-- CO ZAWSZE DOSTAJESZ -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">W każdej wycenie</div>
+    <h2 class="sec-title">Co zawsze dostajesz</h2>
+    <p class="sec-sub">Niezależnie od skali projektu — każda współpraca zawiera te same elementy.</p>
+  </div>
+  <div class="includes">
+    <div class="include">
+      <div class="include-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
       </div>
-      <div class="include">
-        <div class="include-icon">🛠</div>
-        <div class="include-title">30 dni wsparcia</div>
-        <div class="include-desc">Miesiąc po oddaniu projektu — bezpłatne poprawki bugów i drobne modyfikacje.</div>
+      <div class="include-title">Instrukcja obsługi</div>
+      <div class="include-desc">Proste wytłumaczenie, jak korzystać z gotowego rozwiązania. Twój zespół nauczy się obsługi w 30 minut.</div>
+    </div>
+    <div class="include">
+      <div class="include-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </svg>
       </div>
-      <div class="include">
-        <div class="include-icon">📄</div>
-        <div class="include-title">Dokument rozliczeniowy</div>
-        <div class="include-desc">Faktura lub umowa o dzieło — szczegóły formalne ustalamy przy pierwszej rozmowie.</div>
+      <div class="include-title">30 dni wsparcia</div>
+      <div class="include-desc">Miesiąc po oddaniu projektu — bezpłatne poprawki bugów i drobne modyfikacje. Wdrażamy rozwiązanie, nie tylko dostarczamy kod.</div>
+    </div>
+    <div class="include">
+      <div class="include-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
       </div>
+      <div class="include-title">Dokument rozliczeniowy</div>
+      <div class="include-desc">Faktura lub umowa o dzieło — szczegóły formalne ustalamy przy pierwszej rozmowie.</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FILOZOFIA CEN -->
-  <section>
-    <div class="philosophy">
-      <p class="philosophy-text">Każdy projekt wyceniam na podstawie realnego problemu który rozwiązujemy. Raz ustalona kwota nie zmienia się — żadnych dopłat za „dodatkowe godziny" czy „rozszerzony zakres".</p>
-    </div>
-  </section>
+<!-- FILOZOFIA -->
+<section>
+  <div class="philosophy">
+    <p class="philosophy-text">Każdy projekt wyceniamy na podstawie realnego problemu, który rozwiązujemy. Raz ustalona kwota nie zmienia się — żadnych dopłat za „dodatkowe godziny" czy „rozszerzony zakres".</p>
+  </div>
+</section>
 
-  <!-- CTA -->
-  <section>
-    <div class="cta-section">
-      <h2>Masz pomysł na projekt?</h2>
-      <p>Napisz do mnie — odezwę się w ciągu 24 godzin, ustalimy termin rozmowy.</p>
-      <a href="#" class="btn btn-primary" data-contact="1">Napisz do mnie &rarr;</a>
-    </div>
-  </section>
+<!-- CTA -->
+<section>
+  <div class="cta-box">
+    <h2>Masz pomysł na projekt?</h2>
+    <p>Napisz do nas — odezwiemy się w ciągu 24 godzin, ustalimy termin rozmowy.</p>
+    <a href="#" class="btn btn-primary" data-contact="1">Napisz do nas →</a>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-brand">
-      <svg class="footer-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="lgf" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs>
-        <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgf)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span class="footer-name">SiroFlow <span class="ai-accent">AI</span></span>
-    </div>
-    <div class="footer-tagline">„Automatyzacje AI, które oddają Ci czas."</div>
-    <div class="footer-line"></div>
-    <div class="footer-links">
-      <a href="/uslugi">Usługi</a>·<a href="/cennik">Cennik</a>·<a href="/o-mnie">O mnie</a>·<a href="/kontakt">Kontakt</a>
-      <br>
-      <a href="#" data-contact="1" id="footer-email">kontakt</a>
-    </div>
-    <div class="footer-copyright">© 2026 SiroFlow AI</div>
-  </footer>
+<footer>
+<div class="fi">
+  <div class="fb">
+    <svg class="fl" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lgfooter" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#6366F1"><animate attributeName="stop-color" values="#6366F1;#818CF8;#6366F1" dur="4s" repeatCount="indefinite"/></stop>
+          <stop offset="100%" stop-color="#818CF8"><animate attributeName="stop-color" values="#818CF8;#6366F1;#818CF8" dur="4s" repeatCount="indefinite"/></stop>
+        </linearGradient>
+      </defs>
+      <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgfooter)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="fn">SiroFlow <span class="ai-accent">AI</span></span>
+  </div>
+  <div class="ft">„Automatyzacje AI, które oddają Ci czas."</div>
+  <div class="fline"></div>
+  <div class="flinks">
+    <a href="/uslugi">Usługi</a>·<a href="/cennik">Cennik</a>·<a href="/o-mnie">O nas</a>·<a href="/kontakt">Kontakt</a>
+    <br>
+    <a href="#" data-contact="1" id="fe">kontakt</a>
+  </div>
+  <div class="fcopy">© 2026 SiroFlow AI</div>
+</div>
+</footer>
 
 </div>
 
 <script>
 (function(){
   var u='hello',d='siroflowai',t='pl';
-  var email=u+String.fromCharCode(64)+d+'.'+t;
-  var mailtoLink='mail'+'to:'+email+'?subject=Pytanie%20o%20automatyzacj%C4%99%20AI';
-  var contacts=document.querySelectorAll('[data-contact="1"]');
-  for(var i=0;i<contacts.length;i++){contacts[i].href=mailtoLink}
-  var fe=document.getElementById('footer-email');
-  if(fe)fe.textContent=email;
+  var e=u+String.fromCharCode(64)+d+'.'+t;
+  var m='mail'+'to:'+e+'?subject=Pytanie%20o%20cennik';
+  document.querySelectorAll('[data-contact="1"]').forEach(function(el){el.href=m});
+  var fe=document.getElementById('fe');
+  if(fe)fe.textContent=e;
 })();
 </script>
 
