@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Przypomnienia Płatnicze AI · SiroFlow AI</title>
+<meta name="description" content="System automatycznych przypomnień o fakturach. Sekwencja e-maili wysyłana przed i po terminie płatności — bez Twojej ingerencji.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%236366F1'/%3E%3Cstop offset='100%25' stop-color='%23818CF8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72' fill='none' stroke='url(%23g)' stroke-width='13' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050714; --navy:#0B1437; --violet:#6366F1; --violet-light:#818CF8; --violet-dim:#4F46E5;
+  --text:#E2E8F0; --text-dim:#94A3B8; --text-faint:#475569;
+  --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-top:68px;font-size:15px;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 1200px 800px at 50% 30%,rgba(99,102,241,0.15) 0%,transparent 55%),radial-gradient(ellipse 800px 600px at 20% 80%,rgba(99,102,241,0.08) 0%,transparent 60%);pointer-events:none;z-index:0}
+.container{max-width:1100px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;z-index:100;background:rgba(5,7,20,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1080px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;letter-spacing:-0.2px;text-decoration:none}
+.ai-accent{color:var(--violet-light);font-weight:500;margin-left:2px}
+.nav-logo{width:24px;height:24px}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-link{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--text-dim);text-decoration:none;transition:color 0.2s}
+.nav-link:hover{color:var(--text)}
+.nav-link.active{color:var(--violet-light)}
+
+/* HERO */
+.hero{padding:48px 0 40px;max-width:780px;margin:0 auto;text-align:center}
+.hero-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(32px,4vw,48px);font-weight:600;line-height:1.1;letter-spacing:-1px;color:#fff;margin-bottom:22px}
+.hero-title .grad{background:linear-gradient(135deg,var(--violet) 0%,var(--violet-light) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:16px;line-height:1.7;color:var(--text-dim);max-width:620px;margin:0 auto}
+
+/* EMAIL PREVIEW SCENE */
+.email-scene{position:relative;max-width:680px;margin:48px auto 0}
+.email-scene::before{content:'';position:absolute;inset:-40px -20px;background:radial-gradient(ellipse at center,rgba(99,102,241,0.08) 0%,transparent 60%);z-index:-1;pointer-events:none}
+
+.preview-frame{background:#0F172A;border:1px solid rgba(99,102,241,0.22);border-radius:14px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,0.5)}
+.preview-bar{padding:12px 16px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px}
+.preview-bar .dot{width:7px;height:7px;border-radius:50%}
+.preview-bar .dot.r{background:#475569}
+.preview-bar .dot.y{background:#475569}
+.preview-bar .dot.g{background:#475569}
+.preview-bar .url{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-faint);letter-spacing:0.08em}
+.preview-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);overflow-x:auto}
+.preview-tab{flex:1;min-width:90px;padding:11px 8px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-faint);text-align:center;cursor:pointer;transition:all 0.2s;border:none;background:transparent;letter-spacing:0.1em;text-transform:uppercase}
+.preview-tab.active{color:var(--violet-light);border-bottom:2px solid var(--violet)}
+.email-body{background:#FBF9F2;padding:28px 32px;color:#2C2A26;font-family:Georgia,serif;display:none}
+.email-body.active{display:block}
+.email-meta{font-family:'Inter',sans-serif;font-size:10px;color:#8A8070;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #E8E4D8}
+.email-meta span{display:block;margin-bottom:3px}
+.email-subject{font-size:15px;font-weight:700;color:#1A1A1A;margin-bottom:16px;letter-spacing:-0.3px;line-height:1.3}
+.email-greeting{font-size:13px;color:#2C2A26;margin-bottom:12px;line-height:1.6}
+.email-p{font-size:13px;line-height:1.65;color:#3A3630;margin-bottom:12px}
+.email-highlight{background:#F0EDE4;border-left:3px solid #6366F1;padding:10px 14px;border-radius:0 6px 6px 0;margin:14px 0;font-size:12px;color:#2C2A26}
+.email-highlight strong{font-weight:700;color:#1A1A1A}
+.email-cta-wrap{text-align:center;margin:18px 0 14px}
+.email-cta-btn{display:inline-block;padding:10px 22px;background:#6366F1;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:6px;text-decoration:none}
+.email-sign{font-size:11px;color:#8A8070;margin-top:16px;padding-top:12px;border-top:1px solid #E8E4D8;line-height:1.6;font-style:italic}
+.email-tag{display:inline-block;font-family:'Inter',sans-serif;font-size:9px;padding:2px 8px;border-radius:99px;font-style:normal;font-weight:600;letter-spacing:0.5px;margin-bottom:8px}
+.email-tag.before{background:#EEF2FF;color:#4338CA}
+.email-tag.after{background:#FEF3C7;color:#92400E}
+.email-tag.overdue{background:#FEE2E2;color:#991B1B}
+.email-tag.thanks{background:#DCFCE7;color:#166534}
+.preview-caption{text-align:center;color:var(--text-dim);font-size:13px;margin:18px auto 0;max-width:600px;line-height:1.6}
+
+/* SECTIONS */
+section{padding:72px 0;position:relative}
+.section-head{text-align:center;margin-bottom:48px}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:var(--text-dim);margin-bottom:18px;display:inline-block}
+h2.sec-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.4vw,38px);font-weight:600;color:#fff;letter-spacing:-0.6px;line-height:1.2;max-width:760px;margin:0 auto 16px}
+.sec-sub{color:var(--text-dim);font-size:14px;line-height:1.65;max-width:620px;margin:0 auto}
+
+/* TIMELINE / FLOW */
+.flow-wrap{max-width:760px;margin:0 auto}
+.flow-item{display:grid;grid-template-columns:120px 1fr;margin-bottom:0;position:relative}
+.flow-item:last-child .flow-line{display:none}
+.flow-left{display:flex;flex-direction:column;align-items:center;padding-right:24px}
+.flow-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;position:relative;z-index:2;margin-top:6px;border:2px solid var(--bg)}
+.flow-dot.purple{background:var(--violet);box-shadow:0 0 0 3px rgba(99,102,241,0.2)}
+.flow-dot.amber{background:#F59E0B;box-shadow:0 0 0 3px rgba(245,158,11,0.2)}
+.flow-dot.red{background:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.2)}
+.flow-dot.teal{background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,0.2)}
+.flow-line{width:1px;flex:1;background:linear-gradient(180deg,rgba(255,255,255,0.1),rgba(255,255,255,0.03));margin:6px 0;min-height:40px}
+.flow-when{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-faint);text-align:right;padding-top:5px;line-height:1.4}
+.flow-right{padding:0 0 28px}
+.flow-card{padding:20px 22px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:12px;transition:all 0.25s}
+.flow-card:hover{border-color:rgba(99,102,241,0.3);background:linear-gradient(145deg,rgba(99,102,241,0.06),rgba(255,255,255,0.015))}
+.flow-card-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff;margin-bottom:6px;letter-spacing:-0.2px;line-height:1.25}
+.flow-card-desc{font-size:12.5px;line-height:1.55;color:var(--text-dim)}
+.flow-tag{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:8px;padding:3px 9px;border-radius:4px;letter-spacing:0.1em;text-transform:uppercase;font-weight:500}
+.flow-tag.mail{background:rgba(99,102,241,0.12);color:var(--violet-light);border:1px solid rgba(99,102,241,0.25)}
+.flow-tag.stop{background:rgba(16,185,129,0.12);color:#34D399;border:1px solid rgba(16,185,129,0.22)}
+.flow-tag.opt{background:rgba(245,158,11,0.12);color:#FCD34D;border:1px solid rgba(245,158,11,0.22)}
+
+/* STEPS */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:960px;margin:0 auto;position:relative}
+.step{padding:24px 22px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:12px;transition:all 0.25s;position:relative}
+.step:hover{border-color:rgba(99,102,241,0.3);background:linear-gradient(145deg,rgba(99,102,241,0.06),rgba(255,255,255,0.015))}
+.snum{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:linear-gradient(135deg,rgba(99,102,241,0.25),rgba(99,102,241,0.08));border:1px solid rgba(99,102,241,0.3);border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:500;font-size:13px;color:var(--violet-light);margin-bottom:14px;letter-spacing:-0.3px}
+.stitle{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff;margin-bottom:8px;letter-spacing:-0.2px;line-height:1.25}
+.sdesc{font-size:12.5px;line-height:1.55;color:var(--text-dim)}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:860px;margin:0 auto}
+.stat{padding:32px 24px;background:linear-gradient(145deg,rgba(99,102,241,0.08),rgba(255,255,255,0.01));border:1px solid rgba(99,102,241,0.2);border-radius:14px;text-align:center;position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet) 0%,var(--violet-light) 100%)}
+.stat-v{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:36px;color:#fff;letter-spacing:-1.2px;line-height:1;margin-bottom:12px}
+.stat-l{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;line-height:1.5}
+
+/* USE CASES */
+.use-cases{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;margin:0 auto}
+.uc{padding:26px;background:linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:14px;transition:all 0.25s;display:flex;gap:18px;align-items:flex-start}
+.uc:hover{border-color:rgba(99,102,241,0.3);background:linear-gradient(145deg,rgba(99,102,241,0.05),rgba(255,255,255,0.015))}
+.uc-icon{flex-shrink:0;width:44px;height:44px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(99,102,241,0.05));border:1px solid rgba(99,102,241,0.22);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--violet-light)}
+.uc-icon svg{width:22px;height:22px}
+.uc-body{flex:1;min-width:0}
+.uc-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;margin-bottom:8px;letter-spacing:-0.3px;line-height:1.25}
+.uc-desc{font-size:13px;line-height:1.6;color:var(--text-dim)}
+
+/* CTA */
+.cta-box{max-width:720px;margin:0 auto;padding:56px 40px;background:linear-gradient(145deg,rgba(99,102,241,0.08),rgba(255,255,255,0.01));border:1px solid rgba(99,102,241,0.2);border-radius:16px;text-align:center}
+.cta-box h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,2.6vw,28px);font-weight:600;color:#fff;margin-bottom:14px;letter-spacing:-0.5px}
+.cta-box p{color:var(--text-dim);margin-bottom:28px;font-size:15px;line-height:1.6;max-width:520px;margin-left:auto;margin-right:auto}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;text-decoration:none;transition:all 0.25s ease;border:1px solid transparent;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--violet) 0%,var(--violet-dim) 100%);color:#fff;box-shadow:0 6px 20px rgba(99,102,241,0.25)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(99,102,241,0.35)}
+
+/* FOOTER */
+footer{padding:64px 0 40px;border-top:1px solid var(--border);margin-top:40px;text-align:center}
+.fi{max-width:720px;margin:0 auto}
+.fb{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
+.fl{width:24px;height:24px;opacity:0.9}
+.fn{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff}
+.ft{font-family:Georgia,serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-bottom:22px}
+.fline{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);margin:0 auto 22px}
+.flinks{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);line-height:2}
+.flinks a{color:var(--violet-light);text-decoration:none;margin:0 6px;transition:color 0.2s}
+.flinks a:hover{color:#fff}
+.fcopy{margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-faint)}
+
+@media (max-width:820px){
+  nav{padding:16px 20px}
+  body{padding-top:60px}
+  .container{padding:0 20px}
+  .nav-links{gap:14px}
+  .nav-link{font-size:12px}
+  .steps{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:1fr;gap:12px}
+  .stat{padding:24px 20px}
+  .stat-v{font-size:28px}
+  .use-cases{grid-template-columns:1fr}
+  .cta-box{padding:40px 24px}
+  section{padding:56px 0}
+  .flow-item{grid-template-columns:88px 1fr}
+  .flow-when{font-size:8px}
+  .preview-tabs{font-size:8px}
+  .email-body{padding:20px 18px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <svg class="nav-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lgnav" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6366F1"><animate attributeName="stop-color" values="#6366F1;#818CF8;#6366F1" dur="4s" repeatCount="indefinite"/></stop>
+            <stop offset="100%" stop-color="#818CF8"><animate attributeName="stop-color" values="#818CF8;#6366F1;#818CF8" dur="4s" repeatCount="indefinite"/></stop>
+          </linearGradient>
+        </defs>
+        <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgnav)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      SiroFlow <span class="ai-accent">AI</span>
+    </a>
+    <div class="nav-links">
+      <a href="/uslugi" class="nav-link active">Usługi</a>
+      <a href="/cennik" class="nav-link">Cennik</a>
+      <a href="/o-mnie" class="nav-link">O nas</a>
+      <a href="/kontakt" class="nav-link">Kontakt</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- HERO -->
+<header class="hero">
+  <h1 class="hero-title">Przypomnienia Płatnicze AI<br><span class="grad">Faktury, które same się przypominają.</span></h1>
+  <p class="hero-sub">Automatyczna sekwencja e-maili do klientów z nieopłaconymi fakturami — wysyłana we właściwym momencie, z właściwymi danymi, zatrzymywana automatycznie po wpłacie.</p>
+</header>
+
+<!-- EMAIL PREVIEW SCENE -->
+<div class="email-scene">
+  <div class="preview-frame">
+    <div class="preview-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="url">SKRZYNKA · KLIENT@FIRMA.PL</span>
+    </div>
+    <div class="preview-tabs">
+      <button class="preview-tab active" onclick="showEmail(0,this)">3 dni przed</button>
+      <button class="preview-tab" onclick="showEmail(1,this)">1 dzień przed</button>
+      <button class="preview-tab" onclick="showEmail(2,this)">1 dzień po</button>
+      <button class="preview-tab" onclick="showEmail(3,this)">7 dni po</button>
+      <button class="preview-tab" onclick="showEmail(4,this)">Podziękowanie</button>
+    </div>
+
+    <div class="email-body active" id="email-0">
+      <div class="email-meta">
+        <span><strong>Od:</strong> faktury@firma.pl</span>
+        <span><strong>Do:</strong> jan.kowalski@klient.pl</span>
+        <span><strong>Temat:</strong> Przypomnienie: faktura nr 2026/04/082 — termin płatności za 3 dni</span>
+      </div>
+      <span class="email-tag before">3 dni przed terminem</span>
+      <div class="email-subject">Przypomnienie o zbliżającym się terminie płatności</div>
+      <div class="email-greeting">Dzień dobry, Panie Janie,</div>
+      <p class="email-p">chcieliśmy przypomnieć o zbliżającym się terminie płatności za fakturę wystawioną przez naszą firmę.</p>
+      <div class="email-highlight">
+        <strong>Faktura nr 2026/04/082</strong><br>
+        Kwota: <strong>4 200,00 zł</strong><br>
+        Termin płatności: <strong>19 kwietnia 2026</strong>
+      </div>
+      <p class="email-p">Jeśli płatność została już zrealizowana — prosimy zignorować tę wiadomość.</p>
+      <div class="email-cta-wrap"><span class="email-cta-btn">Pobierz fakturę PDF →</span></div>
+      <div class="email-sign">Z poważaniem,<br>Zespół Firma Sp. z o.o.<br>faktury@firma.pl · +48 22 000 00 00</div>
+    </div>
+
+    <div class="email-body" id="email-1">
+      <div class="email-meta">
+        <span><strong>Od:</strong> faktury@firma.pl</span>
+        <span><strong>Do:</strong> jan.kowalski@klient.pl</span>
+        <span><strong>Temat:</strong> Jutro upływa termin płatności — faktura nr 2026/04/082</span>
+      </div>
+      <span class="email-tag before">1 dzień przed terminem</span>
+      <div class="email-subject">Ostatnie przypomnienie przed terminem płatności</div>
+      <div class="email-greeting">Dzień dobry, Panie Janie,</div>
+      <p class="email-p">jutro, <strong>19 kwietnia 2026</strong>, upływa termin płatności faktury nr 2026/04/082 na kwotę <strong>4 200,00 zł</strong>.</p>
+      <p class="email-p">Jeśli przelew jest już w realizacji — nie musisz nic robić. Jeśli potrzebujesz dodatkowego czasu, prosimy o kontakt.</p>
+      <div class="email-cta-wrap"><span class="email-cta-btn">Opłać online →</span></div>
+      <div class="email-sign">Z poważaniem,<br>Zespół Firma Sp. z o.o.<br>faktury@firma.pl · +48 22 000 00 00</div>
+    </div>
+
+    <div class="email-body" id="email-2">
+      <div class="email-meta">
+        <span><strong>Od:</strong> faktury@firma.pl</span>
+        <span><strong>Do:</strong> jan.kowalski@klient.pl</span>
+        <span><strong>Temat:</strong> Faktura nr 2026/04/082 — termin płatności minął</span>
+      </div>
+      <span class="email-tag after">1 dzień po terminie</span>
+      <div class="email-subject">Faktura oczekuje na opłacenie</div>
+      <div class="email-greeting">Dzień dobry, Panie Janie,</div>
+      <p class="email-p">termin płatności faktury nr 2026/04/082 na kwotę <strong>4 200,00 zł</strong> minął wczoraj, 19 kwietnia 2026.</p>
+      <p class="email-p">Prosimy o realizację przelewu lub kontakt, jeśli pojawiły się okoliczności wymagające indywidualnych ustaleń.</p>
+      <div class="email-cta-wrap"><span class="email-cta-btn">Skontaktuj się →</span></div>
+      <div class="email-sign">Z poważaniem,<br>Zespół Firma Sp. z o.o.<br>faktury@firma.pl · +48 22 000 00 00</div>
+    </div>
+
+    <div class="email-body" id="email-3">
+      <div class="email-meta">
+        <span><strong>Od:</strong> faktury@firma.pl</span>
+        <span><strong>Do:</strong> jan.kowalski@klient.pl</span>
+        <span><strong>Temat:</strong> Pilne: nieuregulowana należność — faktura nr 2026/04/082</span>
+      </div>
+      <span class="email-tag overdue">7 dni po terminie</span>
+      <div class="email-subject">Prośba o pilne uregulowanie należności</div>
+      <div class="email-greeting">Dzień dobry, Panie Janie,</div>
+      <p class="email-p">mimo wcześniejszych przypomnień faktura nr 2026/04/082 na kwotę <strong>4 200,00 zł</strong> pozostaje nieuregulowana. Termin płatności minął 7 dni temu.</p>
+      <p class="email-p">Prosimy o pilne uregulowanie należności lub kontakt w ciągu 3 dni roboczych.</p>
+      <div class="email-cta-wrap"><span class="email-cta-btn">Skontaktuj się pilnie →</span></div>
+      <div class="email-sign">Z poważaniem,<br>Dział Należności, Firma Sp. z o.o.<br>faktury@firma.pl · +48 22 000 00 00</div>
+    </div>
+
+    <div class="email-body" id="email-4">
+      <div class="email-meta">
+        <span><strong>Od:</strong> faktury@firma.pl</span>
+        <span><strong>Do:</strong> jan.kowalski@klient.pl</span>
+        <span><strong>Temat:</strong> Potwierdzenie płatności — faktura nr 2026/04/082</span>
+      </div>
+      <span class="email-tag thanks">Po zaksięgowaniu wpłaty</span>
+      <div class="email-subject">Dziękujemy za płatność</div>
+      <div class="email-greeting">Dzień dobry, Panie Janie,</div>
+      <p class="email-p">potwierdzamy otrzymanie płatności za fakturę nr 2026/04/082 na kwotę <strong>4 200,00 zł</strong>. Rozliczenie zostało zaksięgowane.</p>
+      <p class="email-p">Dziękujemy za terminową współpracę i do zobaczenia przy kolejnej okazji.</p>
+      <div class="email-sign">Z poważaniem,<br>Zespół Firma Sp. z o.o.<br>faktury@firma.pl · +48 22 000 00 00</div>
+    </div>
+  </div>
+  <p class="preview-caption">↑ Klient widzi sekwencję spersonalizowanych e-maili — ton dostosowany do etapu, dane faktury wstawione automatycznie z Twojego systemu.</p>
+</div>
+
+<!-- FLOW SEKWENCJI -->
+<section id="flow">
+  <div class="section-head">
+    <div class="eyebrow">Harmonogram</div>
+    <h2 class="sec-title">Sekwencja 6 kroków — w pełni automatyczna</h2>
+    <p class="sec-sub">System sam pilnuje terminów i wysyła właściwą wiadomość we właściwym momencie. Zatrzymuje się automatycznie po zaksięgowaniu wpłaty.</p>
+  </div>
+
+  <div class="flow-wrap">
+    <div class="flow-item">
+      <div class="flow-left">
+        <div class="flow-when">3 dni przed</div>
+        <div class="flow-dot purple"></div>
+        <div class="flow-line"></div>
+      </div>
+      <div class="flow-right">
+        <div class="flow-card">
+          <div class="flow-card-title">Pierwsze przypomnienie</div>
+          <div class="flow-card-desc">Uprzejme przypomnienie o zbliżającym się terminie. Ton partnerski — klient ma czas żeby zaplanować przelew.</div>
+          <span class="flow-tag mail">e-mail</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left">
+        <div class="flow-when">1 dzień przed</div>
+        <div class="flow-dot purple"></div>
+        <div class="flow-line"></div>
+      </div>
+      <div class="flow-right">
+        <div class="flow-card">
+          <div class="flow-card-title">Ostatnie przypomnienie przed terminem</div>
+          <div class="flow-card-desc">Krótki, rzeczowy e-mail. Klient ma jeszcze jeden dzień — ostatnia szansa żeby zapłacić terminowo.</div>
+          <span class="flow-tag mail">e-mail</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left">
+        <div class="flow-when">1 dzień po</div>
+        <div class="flow-dot amber"></div>
+        <div class="flow-line"></div>
+      </div>
+      <div class="flow-right">
+        <div class="flow-card">
+          <div class="flow-card-title">Informacja o przekroczeniu terminu</div>
+          <div class="flow-card-desc">Bez pretensji — prośba o potwierdzenie przelewu lub kontakt. Wciąż otwarte drzwi do rozmowy.</div>
+          <span class="flow-tag mail">e-mail</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left">
+        <div class="flow-when">7 dni po</div>
+        <div class="flow-dot amber"></div>
+        <div class="flow-line"></div>
+      </div>
+      <div class="flow-right">
+        <div class="flow-card">
+          <div class="flow-card-title">Formalna prośba o uregulowanie</div>
+          <div class="flow-card-desc">Bardziej stanowczy ton — prośba o pilne działanie lub kontakt w ciągu 3 dni roboczych.</div>
+          <span class="flow-tag mail">e-mail</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left">
+        <div class="flow-when">14 dni po</div>
+        <div class="flow-dot red"></div>
+        <div class="flow-line"></div>
+      </div>
+      <div class="flow-right">
+        <div class="flow-card">
+          <div class="flow-card-title">Finalne pismo z informacją o dalszych krokach</div>
+          <div class="flow-card-desc">Formalne, ostateczne wezwanie. Krok opcjonalny — można włączyć lub wyłączyć w zależności od polityki firmy.</div>
+          <span class="flow-tag mail">e-mail</span>
+          <span class="flow-tag opt">opcjonalne</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-left">
+        <div class="flow-when">Po wpłacie</div>
+        <div class="flow-dot teal"></div>
+        <div class="flow-line"></div>
+      </div>
+      <div class="flow-right">
+        <div class="flow-card">
+          <div class="flow-card-title">Automatyczne zatrzymanie + podziękowanie</div>
+          <div class="flow-card-desc">Sekwencja zatrzymuje się natychmiast po zaksięgowaniu płatności. System wysyła krótki e-mail z potwierdzeniem odbioru wpłaty.</div>
+          <span class="flow-tag stop">sekwencja zakończona</span>
+          <span class="flow-tag stop">podziękowanie wysłane</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JAK TO DZIAŁA -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Jak to działa</div>
+    <h2 class="sec-title">Cztery kroki, w pełni automatycznie</h2>
+    <p class="sec-sub">Od podłączenia systemu fakturowania do potwierdzenia wpłaty — wszystko bez Twojej ingerencji.</p>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="snum">01</div>
+      <div class="stitle">Łączymy się z Twoim systemem</div>
+      <div class="sdesc">Fakturownia, inFakt, iFirma, Google Sheets lub własny CRM — integrujemy się ze źródłem, które już masz.</div>
+    </div>
+    <div class="step">
+      <div class="snum">02</div>
+      <div class="stitle">System monitoruje terminy</div>
+      <div class="sdesc">Automatycznie sprawdza status każdej faktury. Kiedy termin się zbliża lub mija — uruchamia odpowiednią wiadomość.</div>
+    </div>
+    <div class="step">
+      <div class="snum">03</div>
+      <div class="stitle">E-maile idą z Twojej domeny</div>
+      <div class="sdesc">Wiadomości są wysyłane z Twojego adresu e-mail. Klient widzi wiadomość od Ciebie — nie od narzędzia.</div>
+    </div>
+    <div class="step">
+      <div class="snum">04</div>
+      <div class="stitle">Sekwencja zatrzymuje się sama</div>
+      <div class="sdesc">Po zaksięgowaniu wpłaty system automatycznie kończy sekwencję i wysyła podziękowanie.</div>
+    </div>
+  </div>
+</section>
+
+<!-- WARTOŚĆ BIZNESOWA -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Czas i koszt</div>
+    <h2 class="sec-title">Bez Twojej ingerencji. 24/7.</h2>
+  </div>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-v">0h</div>
+      <div class="stat-l">czasu na ręczne przypomnienia</div>
+    </div>
+    <div class="stat">
+      <div class="stat-v">24/7</div>
+      <div class="stat-l">działanie bez nadzoru</div>
+    </div>
+    <div class="stat">
+      <div class="stat-v">100%</div>
+      <div class="stat-l">faktur objętych sekwencją</div>
+    </div>
+  </div>
+</section>
+
+<!-- DLA KOGO -->
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Zastosowania</div>
+    <h2 class="sec-title">System pasuje wszędzie, gdzie się fakturuje</h2>
+    <p class="sec-sub">Każda firma wystawiająca faktury z odroczonym terminem płatności może wdrożyć ten system w ciągu 2 tygodni.</p>
+  </div>
+  <div class="use-cases">
+    <div class="uc">
+      <div class="uc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+      <div class="uc-body">
+        <div class="uc-title">Agencje i firmy usługowe B2B</div>
+        <div class="uc-desc">Regularne faktury za usługi, wielu klientów jednocześnie. System pilnuje terminów za każdego z nich bez Twojego zaangażowania.</div>
+      </div>
+    </div>
+    <div class="uc">
+      <div class="uc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l6-6"/><circle cx="9.5" cy="9.5" r="1.5"/><circle cx="14.5" cy="14.5" r="1.5"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
+      <div class="uc-body">
+        <div class="uc-title">Biura rachunkowe i doradcze</div>
+        <div class="uc-desc">Dziesiątki klientów z różnymi cyklami rozliczeniowymi. Automatyzacja eliminuje ręczne śledzenie i wysyłanie przypomnień jeden po drugim.</div>
+      </div>
+    </div>
+    <div class="uc">
+      <div class="uc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div>
+      <div class="uc-body">
+        <div class="uc-title">Firmy handlowe i dystrybucyjne</div>
+        <div class="uc-desc">Duże wolumeny faktur, terminy 30–60 dni. System obsługuje całą bazę należności i reaguje automatycznie na każde przekroczenie.</div>
+      </div>
+    </div>
+    <div class="uc">
+      <div class="uc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+      <div class="uc-body">
+        <div class="uc-title">Freelancerzy z regularnymi klientami</div>
+        <div class="uc-desc">Mało faktur, ale każda ważna. System dba o terminowość wpłat, żebyś nie musiał samodzielnie upominać się o swoje wynagrodzenie.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section>
+  <div class="cta-box">
+    <h2>Chcesz wdrożyć ten system u siebie?</h2>
+    <p>Powiedz nam, ile czasu tracisz na ściąganie należności. Pokażemy, jak to zautomatyzować — bez zobowiązań, konkretnie.</p>
+    <a href="#" class="btn btn-primary" data-contact="1">Napisz do nas →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="fi">
+  <div class="fb">
+    <svg class="fl" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lgfooter" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#6366F1"><animate attributeName="stop-color" values="#6366F1;#818CF8;#6366F1" dur="4s" repeatCount="indefinite"/></stop>
+          <stop offset="100%" stop-color="#818CF8"><animate attributeName="stop-color" values="#818CF8;#6366F1;#818CF8" dur="4s" repeatCount="indefinite"/></stop>
+        </linearGradient>
+      </defs>
+      <path d="M 78 28 Q 78 14 60 14 L 40 14 Q 22 14 22 32 Q 22 50 40 50 L 60 50 Q 78 50 78 68 Q 78 86 60 86 L 40 86 Q 22 86 22 72" fill="none" stroke="url(#lgfooter)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="fn">SiroFlow <span class="ai-accent">AI</span></span>
+  </div>
+  <div class="ft">„Automatyzacje AI, które oddają Ci czas."</div>
+  <div class="fline"></div>
+  <div class="flinks">
+    <a href="/uslugi">Usługi</a>·<a href="/cennik">Cennik</a>·<a href="/o-mnie">O nas</a>·<a href="/kontakt">Kontakt</a>
+    <br>
+    <a href="#" data-contact="1" id="footer-email">kontakt</a>
+  </div>
+  <div class="fcopy">© 2026 SiroFlow AI</div>
+</div>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var u='hello',d='siroflowai',t='pl';
+  var e=u+String.fromCharCode(64)+d+'.'+t;
+  var m='mail'+'to:'+e+'?subject=Pytanie%20o%20Przypomnienia%20P%C5%82atnicze%20AI';
+  document.querySelectorAll('[data-contact="1"]').forEach(function(el){el.href=m});
+  var fe=document.getElementById('footer-email');
+  if(fe)fe.textContent=e;
+})();
+
+function showEmail(idx,btn){
+  for(var i=0;i<5;i++){
+    var el=document.getElementById('email-'+i);
+    if(el)el.classList.toggle('active',i===idx);
+  }
+  document.querySelectorAll('.preview-tab').forEach(function(t){t.classList.toggle('active',t===btn)});
+}
+</script>
+
+</body>
+</html>
